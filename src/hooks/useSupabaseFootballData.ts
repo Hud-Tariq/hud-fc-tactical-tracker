@@ -234,6 +234,60 @@ export const useSupabaseFootballData = () => {
     }
   };
 
+  // Helper function to update a single player's stats
+  const updatePlayerStats = async (playerId: string, updates: { 
+    matches_played?: number;
+    total_goals?: number;
+    total_assists?: number;
+    total_saves?: number;
+    clean_sheets?: number;
+    rating?: number;
+  }) => {
+    // Fetch current player data
+    const { data: currentPlayer, error: fetchError } = await supabase
+      .from('players')
+      .select('*')
+      .eq('id', playerId)
+      .single();
+    
+    if (fetchError || !currentPlayer) {
+      console.error('Error fetching player for update:', fetchError);
+      return;
+    }
+
+    // Calculate new values
+    const newStats = {
+      matches_played: (updates.matches_played !== undefined) 
+        ? currentPlayer.matches_played + updates.matches_played 
+        : currentPlayer.matches_played,
+      total_goals: (updates.total_goals !== undefined) 
+        ? currentPlayer.total_goals + updates.total_goals 
+        : currentPlayer.total_goals,
+      total_assists: (updates.total_assists !== undefined) 
+        ? currentPlayer.total_assists + updates.total_assists 
+        : currentPlayer.total_assists,
+      total_saves: (updates.total_saves !== undefined) 
+        ? currentPlayer.total_saves + updates.total_saves 
+        : currentPlayer.total_saves,
+      clean_sheets: (updates.clean_sheets !== undefined) 
+        ? currentPlayer.clean_sheets + updates.clean_sheets 
+        : currentPlayer.clean_sheets,
+      rating: (updates.rating !== undefined) 
+        ? Math.max(1, Math.min(100, currentPlayer.rating + updates.rating))
+        : currentPlayer.rating
+    };
+
+    // Update the player
+    const { error: updateError } = await supabase
+      .from('players')
+      .update(newStats)
+      .eq('id', playerId);
+    
+    if (updateError) {
+      console.error('Error updating player stats:', updateError);
+    }
+  };
+
   // Update player statistics
   const updatePlayerStatistics = async (matchId: string, goals: Goal[], saves: Record<string, number>) => {
     try {
@@ -244,54 +298,32 @@ export const useSupabaseFootballData = () => {
       
       // Update matches played for all players
       for (const playerId of allPlayers) {
-        const { error } = await supabase
-          .from('players')
-          .update({
-            matches_played: supabase.raw('matches_played + 1')
-          } as any)
-          .eq('id', playerId);
-        
-        if (error) console.error('Error updating matches played:', error);
+        await updatePlayerStats(playerId, { matches_played: 1 });
       }
 
       // Update goals and assists
       for (const goal of goals) {
         // Update goals for scorer
-        const { error: goalError } = await supabase
-          .from('players')
-          .update({
-            total_goals: supabase.raw('total_goals + 1'),
-            rating: supabase.raw('LEAST(100, rating + 3)')
-          } as any)
-          .eq('id', goal.scorer);
-        
-        if (goalError) console.error('Error updating goals:', goalError);
+        await updatePlayerStats(goal.scorer, { 
+          total_goals: 1,
+          rating: 3
+        });
 
         // Update assists for assister
         if (goal.assister) {
-          const { error: assistError } = await supabase
-            .from('players')
-            .update({
-              total_assists: supabase.raw('total_assists + 1'),
-              rating: supabase.raw('LEAST(100, rating + 2)')
-            } as any)
-            .eq('id', goal.assister);
-          
-          if (assistError) console.error('Error updating assists:', assistError);
+          await updatePlayerStats(goal.assister, {
+            total_assists: 1,
+            rating: 2
+          });
         }
       }
 
       // Update saves
       for (const [playerId, saveCount] of Object.entries(saves)) {
-        const { error: saveError } = await supabase
-          .from('players')
-          .update({
-            total_saves: supabase.raw(`total_saves + ${saveCount}`),
-            rating: supabase.raw(`LEAST(100, rating + ${saveCount})`)
-          } as any)
-          .eq('id', playerId);
-        
-        if (saveError) console.error('Error updating saves:', saveError);
+        await updatePlayerStats(playerId, {
+          total_saves: saveCount,
+          rating: saveCount
+        });
       }
 
       // Update clean sheets and defensive penalties
@@ -303,15 +335,10 @@ export const useSupabaseFootballData = () => {
         for (const playerId of match.teamA) {
           const player = players.find(p => p.id === playerId);
           if (player && (player.position === 'Defender' || player.position === 'Goalkeeper')) {
-            const { error } = await supabase
-              .from('players')
-              .update({
-                clean_sheets: supabase.raw('clean_sheets + 1'),
-                rating: supabase.raw('LEAST(100, rating + 2)')
-              } as any)
-              .eq('id', playerId);
-            
-            if (error) console.error('Error updating clean sheets:', error);
+            await updatePlayerStats(playerId, {
+              clean_sheets: 1,
+              rating: 2
+            });
           }
         }
       }
@@ -321,15 +348,10 @@ export const useSupabaseFootballData = () => {
         for (const playerId of match.teamB) {
           const player = players.find(p => p.id === playerId);
           if (player && (player.position === 'Defender' || player.position === 'Goalkeeper')) {
-            const { error } = await supabase
-              .from('players')
-              .update({
-                clean_sheets: supabase.raw('clean_sheets + 1'),
-                rating: supabase.raw('LEAST(100, rating + 2)')
-              } as any)
-              .eq('id', playerId);
-            
-            if (error) console.error('Error updating clean sheets:', error);
+            await updatePlayerStats(playerId, {
+              clean_sheets: 1,
+              rating: 2
+            });
           }
         }
       }
@@ -341,15 +363,7 @@ export const useSupabaseFootballData = () => {
 
   const updatePlayerRating = async (playerId: string, ratingChange: number) => {
     try {
-      const { error } = await supabase
-        .from('players')
-        .update({
-          rating: supabase.raw(`GREATEST(1, LEAST(100, rating + ${ratingChange}))`)
-        } as any)
-        .eq('id', playerId);
-      
-      if (error) throw error;
-      
+      await updatePlayerStats(playerId, { rating: ratingChange });
       await fetchPlayers();
     } catch (error) {
       console.error('Error updating player rating:', error);
