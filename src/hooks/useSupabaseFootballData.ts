@@ -31,7 +31,9 @@ export const useSupabaseFootballData = () => {
         totalGoals: player.total_goals,
         totalAssists: player.total_assists,
         totalSaves: player.total_saves,
-        cleanSheets: player.clean_sheets
+        cleanSheets: player.clean_sheets,
+        averageMatchRating: player.matches_played > 0 ? player.rating / 10 : 0, // Default calculation
+        matchRatings: [] // Initialize empty array - we'll need to fetch this separately in the future
       })) || [];
       
       setPlayers(mappedPlayers);
@@ -85,7 +87,10 @@ export const useSupabaseFootballData = () => {
         saves: match.match_saves?.reduce((acc: Record<string, number>, save: any) => {
           acc[save.player_id] = save.saves_count;
           return acc;
-        }, {}) || {}
+        }, {}) || {},
+        matchRatings: {}, // Initialize empty - we'll populate this from match data
+        averageTeamARating: 0, // Initialize - we'll calculate this
+        averageTeamBRating: 0  // Initialize - we'll calculate this
       })) || [];
       
       setMatches(formattedMatches);
@@ -168,7 +173,6 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  // Complete match with results
   const completeMatch = async (matchId: string, scoreA: number, scoreB: number, goals: Goal[], saves: Record<string, number>) => {
     try {
       // Update match score and completion status
@@ -234,7 +238,6 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  // Helper function to update a single player's stats
   const updatePlayerStats = async (playerId: string, updates: { 
     matches_played?: number;
     total_goals?: number;
@@ -288,7 +291,6 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  // Update player statistics
   const updatePlayerStatistics = async (matchId: string, goals: Goal[], saves: Record<string, number>) => {
     try {
       const match = matches.find(m => m.id === matchId);

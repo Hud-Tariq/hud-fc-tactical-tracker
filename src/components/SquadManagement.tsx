@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,7 +31,9 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
         name: newPlayer.name,
         age: parseInt(newPlayer.age),
         position: newPlayer.position as any,
-        rating: newPlayer.rating
+        rating: newPlayer.rating,
+        averageMatchRating: 0,
+        matchRatings: []
       });
       setNewPlayer({ name: '', age: '', position: '', rating: 50 });
       setIsDialogOpen(false);
