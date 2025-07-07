@@ -19,6 +19,7 @@ export interface Goal {
   scorer: string;
   assister?: string;
   team: 'A' | 'B';
+  isOwnGoal?: boolean;
 }
 
 export interface Match {

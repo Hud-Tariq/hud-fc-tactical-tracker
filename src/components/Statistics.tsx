@@ -33,6 +33,15 @@ const Statistics = ({ players }: StatisticsProps) => {
     return 'text-red-600';
   };
 
+  const getPerformanceGrade = (rating: number) => {
+    if (rating >= 90) return 'S';
+    if (rating >= 80) return 'A';
+    if (rating >= 70) return 'B';
+    if (rating >= 60) return 'C';
+    if (rating >= 50) return 'D';
+    return 'F';
+  };
+
   const topScorer = players.reduce((prev, current) => 
     (prev.totalGoals > current.totalGoals) ? prev : current
   );
@@ -45,12 +54,20 @@ const Statistics = ({ players }: StatisticsProps) => {
     (prev.matchesPlayed > current.matchesPlayed) ? prev : current
   );
 
+  const bestKeeper = players
+    .filter(p => p.position === 'Goalkeeper')
+    .reduce((prev, current) => {
+      const prevCleanSheetRatio = prev.matchesPlayed > 0 ? prev.cleanSheets / prev.matchesPlayed : 0;
+      const currentCleanSheetRatio = current.matchesPlayed > 0 ? current.cleanSheets / current.matchesPlayed : 0;
+      return prevCleanSheetRatio > currentCleanSheetRatio ? prev : current;
+    }, players.find(p => p.position === 'Goalkeeper') || players[0]);
+
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Player Statistics</h2>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader>
             <CardTitle className="text-green-600">Top Scorer</CardTitle>
@@ -59,6 +76,9 @@ const Statistics = ({ players }: StatisticsProps) => {
             <div className="text-2xl font-bold">{topScorer.name}</div>
             <div className="text-sm text-muted-foreground">
               {topScorer.totalGoals} goals in {topScorer.matchesPlayed} matches
+            </div>
+            <div className="text-xs text-muted-foreground">
+              Avg: {topScorer.matchesPlayed > 0 ? (topScorer.totalGoals / topScorer.matchesPlayed).toFixed(2) : '0.00'} goals/match
             </div>
           </CardContent>
         </Card>
@@ -72,6 +92,9 @@ const Statistics = ({ players }: StatisticsProps) => {
             <div className="text-sm text-muted-foreground">
               {topAssister.totalAssists} assists in {topAssister.matchesPlayed} matches
             </div>
+            <div className="text-xs text-muted-foreground">
+              Avg: {topAssister.matchesPlayed > 0 ? (topAssister.totalAssists / topAssister.matchesPlayed).toFixed(2) : '0.00'} assists/match
+            </div>
           </CardContent>
         </Card>
 
@@ -84,6 +107,24 @@ const Statistics = ({ players }: StatisticsProps) => {
             <div className="text-sm text-muted-foreground">
               {mostExperienced.matchesPlayed} matches played
             </div>
+            <div className="text-xs text-muted-foreground">
+              Rating: {mostExperienced.rating}/100
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-orange-600">Best Keeper</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{bestKeeper.name}</div>
+            <div className="text-sm text-muted-foreground">
+              {bestKeeper.cleanSheets} clean sheets
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {bestKeeper.matchesPlayed > 0 ? ((bestKeeper.cleanSheets / bestKeeper.matchesPlayed) * 100).toFixed(1) : '0'}% clean sheet ratio
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -91,7 +132,7 @@ const Statistics = ({ players }: StatisticsProps) => {
       {/* All Players Table */}
       <Card>
         <CardHeader>
-          <CardTitle>All Players</CardTitle>
+          <CardTitle>All Players Performance</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -102,12 +143,14 @@ const Statistics = ({ players }: StatisticsProps) => {
                   <th className="text-left p-2">Name</th>
                   <th className="text-left p-2">Position</th>
                   <th className="text-left p-2">Rating</th>
+                  <th className="text-left p-2">Grade</th>
                   <th className="text-left p-2">Matches</th>
                   <th className="text-left p-2">Goals</th>
                   <th className="text-left p-2">Assists</th>
                   <th className="text-left p-2">Saves</th>
                   <th className="text-left p-2">Clean Sheets</th>
-                  <th className="text-left p-2">G/A per Match</th>
+                  <th className="text-left p-2">G+A/Match</th>
+                  <th className="text-left p-2">Performance</th>
                 </tr>
               </thead>
               <tbody>
@@ -115,6 +158,14 @@ const Statistics = ({ players }: StatisticsProps) => {
                   const goalsAndAssistsPerMatch = player.matchesPlayed > 0 
                     ? ((player.totalGoals + player.totalAssists) / player.matchesPlayed).toFixed(2)
                     : '0.00';
+                  
+                  const cleanSheetRatio = player.matchesPlayed > 0 
+                    ? ((player.cleanSheets / player.matchesPlayed) * 100).toFixed(1)
+                    : '0';
+
+                  const savesPerMatch = player.matchesPlayed > 0 
+                    ? (player.totalSaves / player.matchesPlayed).toFixed(1)
+                    : '0.0';
 
                   return (
                     <tr key={player.id} className="border-b hover:bg-gray-50">
@@ -122,6 +173,8 @@ const Statistics = ({ players }: StatisticsProps) => {
                         <div className="flex items-center">
                           {index + 1}
                           {index === 0 && <span className="ml-1 text-yellow-500">👑</span>}
+                          {index === 1 && <span className="ml-1 text-gray-400">🥈</span>}
+                          {index === 2 && <span className="ml-1 text-amber-600">🥉</span>}
                         </div>
                       </td>
                       <td className="p-2">
@@ -139,25 +192,61 @@ const Statistics = ({ players }: StatisticsProps) => {
                         </div>
                       </td>
                       <td className="p-2">
+                        <Badge variant="outline" className={`${getRatingColor(player.rating)} border-current`}>
+                          {getPerformanceGrade(player.rating)}
+                        </Badge>
+                      </td>
+                      <td className="p-2">
                         <div className="font-medium">{player.matchesPlayed}</div>
                         <div className="text-sm text-muted-foreground">
-                          {player.matchesPlayed * 60} min
+                          {player.matchesPlayed * 90} min
                         </div>
                       </td>
                       <td className="p-2">
                         <div className="text-green-600 font-bold">{player.totalGoals}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {player.matchesPlayed > 0 ? (player.totalGoals / player.matchesPlayed).toFixed(2) : '0.00'}/match
+                        </div>
                       </td>
                       <td className="p-2">
                         <div className="text-blue-600 font-bold">{player.totalAssists}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {player.matchesPlayed > 0 ? (player.totalAssists / player.matchesPlayed).toFixed(2) : '0.00'}/match
+                        </div>
                       </td>
                       <td className="p-2">
                         <div className="text-yellow-600 font-bold">{player.totalSaves}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {savesPerMatch}/match
+                        </div>
                       </td>
                       <td className="p-2">
                         <div className="text-purple-600 font-bold">{player.cleanSheets}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {cleanSheetRatio}% ratio
+                        </div>
                       </td>
                       <td className="p-2">
                         <div className="font-medium">{goalsAndAssistsPerMatch}</div>
+                      </td>
+                      <td className="p-2">
+                        <div className="space-y-1">
+                          <div className="text-xs">
+                            <span className="text-green-600">G:</span> {player.totalGoals}
+                            <span className="text-blue-600 ml-2">A:</span> {player.totalAssists}
+                          </div>
+                          {player.position === 'Goalkeeper' && (
+                            <div className="text-xs">
+                              <span className="text-yellow-600">Saves:</span> {player.totalSaves}
+                              <span className="text-purple-600 ml-1">CS:</span> {player.cleanSheets}
+                            </div>
+                          )}
+                          {(player.position === 'Defender' || player.position === 'Goalkeeper') && (
+                            <div className="text-xs text-purple-600">
+                              Clean Sheets: {cleanSheetRatio}%
+                            </div>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );

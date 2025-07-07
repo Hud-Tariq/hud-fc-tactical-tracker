@@ -19,9 +19,8 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
   const [teamA, setTeamA] = useState<Player[]>([]);
   const [teamB, setTeamB] = useState<Player[]>([]);
   const [availablePlayers, setAvailablePlayers] = useState<Player[]>(players);
-  const [teamAScore, setTeamAScore] = useState(0);
-  const [teamBScore, setTeamBScore] = useState(0);
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [saves, setSaves] = useState<Record<string, number>>({});
 
   const handlePlayerSelect = (player: Player, team: 'A' | 'B') => {
     if (team === 'A' && teamA.length < 5) {
@@ -43,49 +42,73 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
   };
 
   const addGoal = (team: 'A' | 'B') => {
-    setGoals([...goals, { scorer: '', assister: '', team }]);
+    setGoals([...goals, { scorer: '', assister: '', team, isOwnGoal: false }]);
   };
 
   const removeGoal = (index: number) => {
     setGoals(goals.filter((_, i) => i !== index));
   };
 
-  const updateGoal = (index: number, field: keyof Goal, value: string) => {
+  const updateGoal = (index: number, field: keyof Goal, value: string | boolean) => {
     const updatedGoals = [...goals];
     updatedGoals[index] = { ...updatedGoals[index], [field]: value };
     setGoals(updatedGoals);
+  };
+
+  const updateSaves = (playerId: string, saveCount: number) => {
+    setSaves(prev => ({
+      ...prev,
+      [playerId]: saveCount
+    }));
   };
 
   const getTeamPlayers = (team: 'A' | 'B') => {
     return team === 'A' ? teamA : teamB;
   };
 
+  const getOpposingTeamPlayers = (team: 'A' | 'B') => {
+    return team === 'A' ? teamB : teamA;
+  };
+
+  const calculateScore = (team: 'A' | 'B') => {
+    return goals.filter(g => {
+      if (g.isOwnGoal) {
+        return g.team !== team; // Own goals count for the opposing team
+      }
+      return g.team === team && g.scorer;
+    }).length;
+  };
+
   const handleCreateMatch = () => {
     if (matchDate && teamA.length === 5 && teamB.length === 5) {
+      const validGoals = goals.filter(g => g.scorer);
+      const scoreA = calculateScore('A');
+      const scoreB = calculateScore('B');
+      
       const match: Omit<Match, 'id'> = {
         date: matchDate,
         teamA: teamA.map(p => p.id),
         teamB: teamB.map(p => p.id),
-        scoreA: teamAScore,
-        scoreB: teamBScore,
-        goals: goals.filter(g => g.scorer),
-        saves: {},
+        scoreA,
+        scoreB,
+        goals: validGoals,
+        saves,
         completed: true
       };
       onCreateMatch(match);
+      
       // Reset form
       setMatchDate('');
       setTeamA([]);
       setTeamB([]);
       setAvailablePlayers(players);
-      setTeamAScore(0);
-      setTeamBScore(0);
       setGoals([]);
+      setSaves({});
     }
   };
 
-  const teamAGoals = goals.filter(g => g.team === 'A').length;
-  const teamBGoals = goals.filter(g => g.team === 'B').length;
+  const teamAGoals = calculateScore('A');
+  const teamBGoals = calculateScore('B');
 
   return (
     <div className="space-y-6">
@@ -108,24 +131,12 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="teamAScore">Team A Score</Label>
-                <Input
-                  id="teamAScore"
-                  type="number"
-                  min="0"
-                  value={teamAScore}
-                  onChange={(e) => setTeamAScore(Number(e.target.value))}
-                />
+                <Label>Team A Score</Label>
+                <div className="text-2xl font-bold text-blue-600">{teamAGoals}</div>
               </div>
               <div>
-                <Label htmlFor="teamBScore">Team B Score</Label>
-                <Input
-                  id="teamBScore"
-                  type="number"
-                  min="0"
-                  value={teamBScore}
-                  onChange={(e) => setTeamBScore(Number(e.target.value))}
-                />
+                <Label>Team B Score</Label>
+                <div className="text-2xl font-bold text-red-600">{teamBGoals}</div>
               </div>
             </div>
           </div>
@@ -215,92 +226,161 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
       </Card>
 
       {(teamA.length === 5 && teamB.length === 5) && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Goals & Assists
-              <div className="text-sm text-muted-foreground">
-                Team A: {teamAGoals} | Team B: {teamBGoals}
+        <>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                Goals & Assists
+                <div className="text-sm text-muted-foreground">
+                  Team A: {teamAGoals} | Team B: {teamBGoals}
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex space-x-4">
+                <Button
+                  onClick={() => addGoal('A')}
+                  variant="outline"
+                  className="text-blue-600 hover:bg-blue-50"
+                >
+                  Add Team A Goal
+                </Button>
+                <Button
+                  onClick={() => addGoal('B')}
+                  variant="outline"
+                  className="text-red-600 hover:bg-red-50"
+                >
+                  Add Team B Goal
+                </Button>
               </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex space-x-4">
-              <Button
-                onClick={() => addGoal('A')}
-                variant="outline"
-                className="text-blue-600 hover:bg-blue-50"
-              >
-                Add Team A Goal
-              </Button>
-              <Button
-                onClick={() => addGoal('B')}
-                variant="outline"
-                className="text-red-600 hover:bg-red-50"
-              >
-                Add Team B Goal
-              </Button>
-            </div>
 
-            {goals.map((goal, index) => (
-              <Card key={index} className="p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className={`font-medium ${goal.team === 'A' ? 'text-blue-600' : 'text-red-600'}`}>
-                    Goal {index + 1} - Team {goal.team}
-                  </h4>
-                  <Button
-                    onClick={() => removeGoal(index)}
-                    variant="destructive"
-                    size="sm"
-                  >
-                    Remove
-                  </Button>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label>Scorer *</Label>
-                    <Select
-                      value={goal.scorer}
-                      onValueChange={(value) => updateGoal(index, 'scorer', value)}
+              {goals.map((goal, index) => (
+                <Card key={index} className="p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className={`font-medium ${goal.team === 'A' ? 'text-blue-600' : 'text-red-600'}`}>
+                      Goal {index + 1} - Team {goal.team}
+                    </h4>
+                    <Button
+                      onClick={() => removeGoal(index)}
+                      variant="destructive"
+                      size="sm"
                     >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select scorer" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {getTeamPlayers(goal.team).map((player) => (
-                          <SelectItem key={player.id} value={player.id}>
-                            {player.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      Remove
+                    </Button>
                   </div>
-                  <div>
-                    <Label>Assister (Optional)</Label>
-                    <Select
-                      value={goal.assister || ''}
-                      onValueChange={(value) => updateGoal(index, 'assister', value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select assister" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">No assist</SelectItem>
-                        {getTeamPlayers(goal.team)
-                          .filter(p => p.id !== goal.scorer)
-                          .map((player) => (
-                            <SelectItem key={player.id} value={player.id}>
-                              {player.name}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`own-goal-${index}`}
+                        checked={goal.isOwnGoal || false}
+                        onCheckedChange={(checked) => updateGoal(index, 'isOwnGoal', checked as boolean)}
+                      />
+                      <Label htmlFor={`own-goal-${index}`} className="text-sm text-orange-600">
+                        Own Goal
+                      </Label>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label>Scorer *</Label>
+                        <Select
+                          value={goal.scorer}
+                          onValueChange={(value) => updateGoal(index, 'scorer', value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select scorer" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {(goal.isOwnGoal ? getOpposingTeamPlayers(goal.team) : getTeamPlayers(goal.team)).map((player) => (
+                              <SelectItem key={player.id} value={player.id}>
+                                {player.name} {goal.isOwnGoal && '(Own Goal)'}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label>Assister (Optional)</Label>
+                        <Select
+                          value={goal.assister || ''}
+                          onValueChange={(value) => updateGoal(index, 'assister', value)}
+                          disabled={goal.isOwnGoal}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select assister" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="">No assist</SelectItem>
+                            {getTeamPlayers(goal.team)
+                              .filter(p => p.id !== goal.scorer)
+                              .map((player) => (
+                                <SelectItem key={player.id} value={player.id}>
+                                  {player.name}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Saves</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-medium text-blue-600 mb-3">Team A Players</h4>
+                  <div className="space-y-3">
+                    {teamA.map((player) => (
+                      <div key={player.id} className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium">{player.name}</div>
+                          <div className="text-sm text-muted-foreground">{player.position}</div>
+                        </div>
+                        <div className="w-20">
+                          <Input
+                            type="number"
+                            min="0"
+                            value={saves[player.id] || 0}
+                            onChange={(e) => updateSaves(player.id, parseInt(e.target.value) || 0)}
+                            placeholder="0"
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </Card>
-            ))}
-          </CardContent>
-        </Card>
+                <div>
+                  <h4 className="font-medium text-red-600 mb-3">Team B Players</h4>
+                  <div className="space-y-3">
+                    {teamB.map((player) => (
+                      <div key={player.id} className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium">{player.name}</div>
+                          <div className="text-sm text-muted-foreground">{player.position}</div>
+                        </div>
+                        <div className="w-20">
+                          <Input
+                            type="number"
+                            min="0"
+                            value={saves[player.id] || 0}
+                            onChange={(e) => updateSaves(player.id, parseInt(e.target.value) || 0)}
+                            placeholder="0"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </>
       )}
 
       <div className="flex justify-center">
