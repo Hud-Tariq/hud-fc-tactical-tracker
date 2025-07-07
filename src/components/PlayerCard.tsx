@@ -16,14 +16,14 @@ const PlayerCard = ({ player, onClick, selectable = false, selected = false }: P
     switch (position) {
       case 'Goalkeeper': return 'bg-yellow-500';
       case 'Defender': return 'bg-red-500';
-      case 'Midfielder': return 'bg-blue-500';
+      case 'Midfielder': return 'bg-teal-600';
       case 'Forward': return 'bg-green-500';
       default: return 'bg-gray-500';
     }
   };
 
   const getRatingColor = (rating: number) => {
-    if (rating >= 80) return 'text-green-500';
+    if (rating >= 80) return 'text-teal-600';
     if (rating >= 70) return 'text-blue-500';
     if (rating >= 60) return 'text-yellow-500';
     return 'text-red-500';
@@ -32,8 +32,8 @@ const PlayerCard = ({ player, onClick, selectable = false, selected = false }: P
   return (
     <Card 
       className={`cursor-pointer transition-all hover:shadow-lg ${
-        selected ? 'ring-2 ring-emerald-500' : ''
-      } ${selectable ? 'hover:ring-1 hover:ring-emerald-300' : ''}`}
+        selected ? 'ring-2 ring-teal-600' : ''
+      } ${selectable ? 'hover:ring-1 hover:ring-teal-300' : ''}`}
       onClick={onClick}
     >
       <CardContent className="p-4">

@@ -62,7 +62,7 @@ const Index = () => {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   {selectedPlayer.name}
-                  <div className="text-3xl font-bold text-emerald-600">
+                  <div className="text-3xl font-bold text-teal-600">
                     {selectedPlayer.rating}
                   </div>
                 </CardTitle>
