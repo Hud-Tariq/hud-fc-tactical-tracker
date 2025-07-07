@@ -17,6 +17,8 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
   const [teamA, setTeamA] = useState<Player[]>([]);
   const [teamB, setTeamB] = useState<Player[]>([]);
   const [availablePlayers, setAvailablePlayers] = useState<Player[]>(players);
+  const [teamAScore, setTeamAScore] = useState(0);
+  const [teamBScore, setTeamBScore] = useState(0);
 
   const handlePlayerSelect = (player: Player, team: 'A' | 'B') => {
     if (team === 'A' && teamA.length < 5) {
@@ -43,11 +45,11 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
         date: matchDate,
         teamA: teamA.map(p => p.id),
         teamB: teamB.map(p => p.id),
-        scoreA: 0,
-        scoreB: 0,
+        scoreA: teamAScore,
+        scoreB: teamBScore,
         goals: [],
         saves: {},
-        completed: false
+        completed: true // Mark as completed since we're entering final scores
       };
       onCreateMatch(match);
       // Reset form
@@ -55,12 +57,14 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
       setTeamA([]);
       setTeamB([]);
       setAvailablePlayers(players);
+      setTeamAScore(0);
+      setTeamBScore(0);
     }
   };
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Create Training Match</h2>
+      <h2 className="text-2xl font-bold">Create Match</h2>
       
       <Card>
         <CardHeader>
@@ -76,6 +80,28 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                 value={matchDate}
                 onChange={(e) => setMatchDate(e.target.value)}
               />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="teamAScore">Team A Score</Label>
+                <Input
+                  id="teamAScore"
+                  type="number"
+                  min="0"
+                  value={teamAScore}
+                  onChange={(e) => setTeamAScore(Number(e.target.value))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="teamBScore">Team B Score</Label>
+                <Input
+                  id="teamBScore"
+                  type="number"
+                  min="0"
+                  value={teamBScore}
+                  onChange={(e) => setTeamBScore(Number(e.target.value))}
+                />
+              </div>
             </div>
           </div>
         </CardContent>

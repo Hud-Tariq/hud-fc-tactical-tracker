@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import SquadManagement from '@/components/SquadManagement';
 import MatchCreation from '@/components/MatchCreation';
-import MatchSimulation from '@/components/MatchSimulation';
+import MatchView from '@/components/MatchView';
 import { useSupabaseFootballData } from '@/hooks/useSupabaseFootballData';
 import { Player } from '@/types/football';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,18 +18,12 @@ const Index = () => {
     loading, 
     addPlayer, 
     createMatch, 
-    completeMatchWithRatings,
     getPlayerById 
   } = useSupabaseFootballData();
 
   const handlePlayerClick = (player: Player) => {
     setSelectedPlayer(player);
     setActiveTab('stats');
-  };
-
-  const handleMatchComplete = (matchId: string, teamAScore: number, teamBScore: number, playerRatings: Record<string, number>) => {
-    console.log('Match completion requested:', { matchId, teamAScore, teamBScore, playerRatings });
-    completeMatchWithRatings(matchId, teamAScore, teamBScore, playerRatings);
   };
 
   if (loading) {
@@ -71,12 +65,11 @@ const Index = () => {
             </CardContent>
           </Card>
         );
-      case 'simulation':
+      case 'view-matches':
         return (
-          <MatchSimulation
+          <MatchView
             matches={matches}
             players={players}
-            onMatchComplete={handleMatchComplete}
             onBack={() => setActiveTab('matches')}
           />
         );

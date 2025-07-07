@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Users, Trophy, BarChart3, History, Play } from 'lucide-react';
+import { Users, Trophy, BarChart3, History, Eye } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: string;
@@ -11,7 +11,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
   const tabs = [
     { id: 'squad', label: 'Squad', icon: Users },
     { id: 'matches', label: 'Create Match', icon: Trophy },
-    { id: 'simulation', label: 'Simulate', icon: Play },
+    { id: 'view-matches', label: 'View Matches', icon: Eye },
     { id: 'stats', label: 'Statistics', icon: BarChart3 },
     { id: 'history', label: 'History', icon: History },
   ];
