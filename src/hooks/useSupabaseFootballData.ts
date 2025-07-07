@@ -20,7 +20,21 @@ export const useSupabaseFootballData = () => {
       
       if (error) throw error;
       
-      setPlayers(data || []);
+      // Map database fields to frontend types
+      const mappedPlayers = data?.map(player => ({
+        id: player.id,
+        name: player.name,
+        age: player.age,
+        position: player.position as 'Goalkeeper' | 'Defender' | 'Midfielder' | 'Forward',
+        rating: player.rating,
+        matchesPlayed: player.matches_played,
+        totalGoals: player.total_goals,
+        totalAssists: player.total_assists,
+        totalSaves: player.total_saves,
+        cleanSheets: player.clean_sheets
+      })) || [];
+      
+      setPlayers(mappedPlayers);
     } catch (error) {
       console.error('Error fetching players:', error);
       toast({
@@ -233,7 +247,7 @@ export const useSupabaseFootballData = () => {
         const { error } = await supabase
           .from('players')
           .update({
-            matches_played: supabase.sql`matches_played + 1`
+            matches_played: supabase.rpc('increment', { x: 1 })
           })
           .eq('id', playerId);
         
@@ -243,35 +257,29 @@ export const useSupabaseFootballData = () => {
       // Update goals and assists
       for (const goal of goals) {
         // Update goals
-        await supabase
-          .from('players')
-          .update({
-            total_goals: supabase.sql`total_goals + 1`,
-            rating: supabase.sql`LEAST(100, rating + 3)`
-          })
-          .eq('id', goal.scorer);
+        await supabase.rpc('update_player_stats', {
+          player_id: goal.scorer,
+          goals: 1,
+          rating_change: 3
+        });
 
         // Update assists
         if (goal.assister) {
-          await supabase
-            .from('players')
-            .update({
-              total_assists: supabase.sql`total_assists + 1`,
-              rating: supabase.sql`LEAST(100, rating + 2)`
-            })
-            .eq('id', goal.assister);
+          await supabase.rpc('update_player_stats', {
+            player_id: goal.assister,
+            assists: 1,
+            rating_change: 2
+          });
         }
       }
 
       // Update saves
       for (const [playerId, saveCount] of Object.entries(saves)) {
-        await supabase
-          .from('players')
-          .update({
-            total_saves: supabase.sql`total_saves + ${saveCount}`,
-            rating: supabase.sql`LEAST(100, rating + ${saveCount})`
-          })
-          .eq('id', playerId);
+        await supabase.rpc('update_player_stats', {
+          player_id: playerId,
+          saves: saveCount,
+          rating_change: saveCount
+        });
       }
 
       // Update clean sheets and defensive penalties
@@ -283,13 +291,11 @@ export const useSupabaseFootballData = () => {
         for (const playerId of match.teamA) {
           const player = players.find(p => p.id === playerId);
           if (player && (player.position === 'Defender' || player.position === 'Goalkeeper')) {
-            await supabase
-              .from('players')
-              .update({
-                clean_sheets: supabase.sql`clean_sheets + 1`,
-                rating: supabase.sql`LEAST(100, rating + 2)`
-              })
-              .eq('id', playerId);
+            await supabase.rpc('update_player_stats', {
+              player_id: playerId,
+              clean_sheets: 1,
+              rating_change: 2
+            });
           }
         }
       }
@@ -299,13 +305,11 @@ export const useSupabaseFootballData = () => {
         for (const playerId of match.teamB) {
           const player = players.find(p => p.id === playerId);
           if (player && (player.position === 'Defender' || player.position === 'Goalkeeper')) {
-            await supabase
-              .from('players')
-              .update({
-                clean_sheets: supabase.sql`clean_sheets + 1`,
-                rating: supabase.sql`LEAST(100, rating + 2)`
-              })
-              .eq('id', playerId);
+            await supabase.rpc('update_player_stats', {
+              player_id: playerId,
+              clean_sheets: 1,
+              rating_change: 2
+            });
           }
         }
       }
@@ -320,7 +324,7 @@ export const useSupabaseFootballData = () => {
       const { error } = await supabase
         .from('players')
         .update({
-          rating: supabase.sql`GREATEST(1, LEAST(100, rating + ${ratingChange}))`
+          rating: supabase.rpc('update_rating', { current_rating: 0, change: ratingChange })
         })
         .eq('id', playerId);
       
