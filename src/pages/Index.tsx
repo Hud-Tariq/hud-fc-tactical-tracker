@@ -3,20 +3,32 @@ import React, { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import SquadManagement from '@/components/SquadManagement';
 import MatchCreation from '@/components/MatchCreation';
-import { useFootballData } from '@/hooks/useFootballData';
+import { useSupabaseFootballData } from '@/hooks/useSupabaseFootballData';
 import { Player } from '@/types/football';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Loader2 } from 'lucide-react';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('squad');
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-  const { players, matches, addPlayer, createMatch, getPlayerById } = useFootballData();
+  const { players, matches, loading, addPlayer, createMatch, getPlayerById } = useSupabaseFootballData();
 
   const handlePlayerClick = (player: Player) => {
     setSelectedPlayer(player);
     setActiveTab('stats');
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="flex items-center space-x-2">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <span>Loading Hud FC...</span>
+        </div>
+      </div>
+    );
+  }
 
   const renderContent = () => {
     switch (activeTab) {

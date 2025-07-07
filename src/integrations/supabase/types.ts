@@ -14,7 +14,178 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      match_goals: {
+        Row: {
+          assister_id: string | null
+          created_at: string | null
+          id: string
+          match_id: string
+          minute: number | null
+          scorer_id: string
+          team: string
+        }
+        Insert: {
+          assister_id?: string | null
+          created_at?: string | null
+          id?: string
+          match_id: string
+          minute?: number | null
+          scorer_id: string
+          team: string
+        }
+        Update: {
+          assister_id?: string | null
+          created_at?: string | null
+          id?: string
+          match_id?: string
+          minute?: number | null
+          scorer_id?: string
+          team?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_goals_assister_id_fkey"
+            columns: ["assister_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "match_goals_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "match_goals_scorer_id_fkey"
+            columns: ["scorer_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      match_saves: {
+        Row: {
+          created_at: string | null
+          id: string
+          match_id: string
+          player_id: string
+          saves_count: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          match_id: string
+          player_id: string
+          saves_count?: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          match_id?: string
+          player_id?: string
+          saves_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_saves_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "match_saves_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      matches: {
+        Row: {
+          completed: boolean
+          created_at: string | null
+          date: string
+          id: string
+          score_a: number
+          score_b: number
+          team_a_players: string[]
+          team_b_players: string[]
+          updated_at: string | null
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string | null
+          date: string
+          id?: string
+          score_a?: number
+          score_b?: number
+          team_a_players: string[]
+          team_b_players: string[]
+          updated_at?: string | null
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string | null
+          date?: string
+          id?: string
+          score_a?: number
+          score_b?: number
+          team_a_players?: string[]
+          team_b_players?: string[]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      players: {
+        Row: {
+          age: number
+          clean_sheets: number
+          created_at: string | null
+          id: string
+          matches_played: number
+          name: string
+          position: Database["public"]["Enums"]["player_position"]
+          rating: number
+          total_assists: number
+          total_goals: number
+          total_saves: number
+          updated_at: string | null
+        }
+        Insert: {
+          age: number
+          clean_sheets?: number
+          created_at?: string | null
+          id?: string
+          matches_played?: number
+          name: string
+          position: Database["public"]["Enums"]["player_position"]
+          rating?: number
+          total_assists?: number
+          total_goals?: number
+          total_saves?: number
+          updated_at?: string | null
+        }
+        Update: {
+          age?: number
+          clean_sheets?: number
+          created_at?: string | null
+          id?: string
+          matches_played?: number
+          name?: string
+          position?: Database["public"]["Enums"]["player_position"]
+          rating?: number
+          total_assists?: number
+          total_goals?: number
+          total_saves?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +194,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      player_position: "Goalkeeper" | "Defender" | "Midfielder" | "Forward"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +321,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      player_position: ["Goalkeeper", "Defender", "Midfielder", "Forward"],
+    },
   },
 } as const
