@@ -14,126 +14,13 @@ export type Database = {
   }
   public: {
     Tables: {
-      profiles: {
-        Row: {
-          access_count: number | null
-          created_at: string | null
-          culture: string | null
-          data_encrypted: boolean | null
-          display_name: string | null
-          face_photo_url: string | null
-          id: string
-          last_accessed: string | null
-          location: string | null
-          preferred_style: string | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          access_count?: number | null
-          created_at?: string | null
-          culture?: string | null
-          data_encrypted?: boolean | null
-          display_name?: string | null
-          face_photo_url?: string | null
-          id?: string
-          last_accessed?: string | null
-          location?: string | null
-          preferred_style?: string | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          access_count?: number | null
-          created_at?: string | null
-          culture?: string | null
-          data_encrypted?: boolean | null
-          display_name?: string | null
-          face_photo_url?: string | null
-          id?: string
-          last_accessed?: string | null
-          location?: string | null
-          preferred_style?: string | null
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_deletion_log: {
-        Row: {
-          cleanup_completed: boolean | null
-          deleted_at: string
-          deleted_user_id: string
-          id: string
-        }
-        Insert: {
-          cleanup_completed?: boolean | null
-          deleted_at?: string
-          deleted_user_id: string
-          id?: string
-        }
-        Update: {
-          cleanup_completed?: boolean | null
-          deleted_at?: string
-          deleted_user_id?: string
-          id?: string
-        }
-        Relationships: []
-      }
-      wardrobe_items: {
-        Row: {
-          category: string
-          color: string[] | null
-          created_at: string | null
-          id: string
-          name: string
-          occasion: string[] | null
-          photo_url: string | null
-          season: string[] | null
-          style: string | null
-          tags: string[] | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          category: string
-          color?: string[] | null
-          created_at?: string | null
-          id?: string
-          name: string
-          occasion?: string[] | null
-          photo_url?: string | null
-          season?: string[] | null
-          style?: string | null
-          tags?: string[] | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          category?: string
-          color?: string[] | null
-          created_at?: string | null
-          id?: string
-          name?: string
-          occasion?: string[] | null
-          photo_url?: string | null
-          season?: string[] | null
-          style?: string | null
-          tags?: string[] | null
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      log_profile_access: {
-        Args: { profile_user_id: string }
-        Returns: undefined
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
