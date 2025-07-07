@@ -42,7 +42,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
   };
 
   const addGoal = (team: 'A' | 'B') => {
-    setGoals([...goals, { scorer: '', assister: '', team, isOwnGoal: false }]);
+    setGoals([...goals, { scorer: '', assister: undefined, team, isOwnGoal: false }]);
   };
 
   const removeGoal = (index: number) => {
@@ -51,7 +51,11 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
 
   const updateGoal = (index: number, field: keyof Goal, value: string | boolean) => {
     const updatedGoals = [...goals];
-    updatedGoals[index] = { ...updatedGoals[index], [field]: value };
+    if (field === 'assister' && value === 'no-assist') {
+      updatedGoals[index] = { ...updatedGoals[index], [field]: undefined };
+    } else {
+      updatedGoals[index] = { ...updatedGoals[index], [field]: value };
+    }
     setGoals(updatedGoals);
   };
 
@@ -301,7 +305,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                       <div>
                         <Label>Assister (Optional)</Label>
                         <Select
-                          value={goal.assister || ''}
+                          value={goal.assister || 'no-assist'}
                           onValueChange={(value) => updateGoal(index, 'assister', value)}
                           disabled={goal.isOwnGoal}
                         >
@@ -309,7 +313,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                             <SelectValue placeholder="Select assister" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="">No assist</SelectItem>
+                            <SelectItem value="no-assist">No assist</SelectItem>
                             {getTeamPlayers(goal.team)
                               .filter(p => p.id !== goal.scorer)
                               .map((player) => (
