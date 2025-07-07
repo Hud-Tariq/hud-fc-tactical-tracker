@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import SquadManagement from '@/components/SquadManagement';
 import MatchCreation from '@/components/MatchCreation';
+import MatchSimulation from '@/components/MatchSimulation';
 import { useSupabaseFootballData } from '@/hooks/useSupabaseFootballData';
 import { Player } from '@/types/football';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,11 +13,19 @@ import { Loader2 } from 'lucide-react';
 const Index = () => {
   const [activeTab, setActiveTab] = useState('squad');
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-  const { players, matches, loading, addPlayer, createMatch, getPlayerById } = useSupabaseFootballData();
+  const { players, matches, loading, addPlayer, createMatch, completeMatch, getPlayerById } = useSupabaseFootballData();
 
   const handlePlayerClick = (player: Player) => {
     setSelectedPlayer(player);
     setActiveTab('stats');
+  };
+
+  const handleMatchComplete = (matchId: string, teamAScore: number, teamBScore: number, playerRatings: Record<string, number>) => {
+    // Convert player ratings to the format expected by completeMatch
+    const goals: any[] = []; // We'll need to extract this from the simulation
+    const saves: Record<string, number> = {}; // We'll need to extract this from the simulation
+    
+    completeMatch(matchId, teamAScore, teamBScore, goals, saves);
   };
 
   if (loading) {
@@ -58,6 +67,15 @@ const Index = () => {
             </CardContent>
           </Card>
         );
+      case 'simulation':
+        return (
+          <MatchSimulation
+            matches={matches}
+            players={players}
+            onMatchComplete={handleMatchComplete}
+            onBack={() => setActiveTab('matches')}
+          />
+        );
       case 'stats':
         return selectedPlayer ? (
           <div className="space-y-6">
@@ -74,8 +92,19 @@ const Index = () => {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   {selectedPlayer.name}
-                  <div className="text-3xl font-bold text-teal-600">
-                    {selectedPlayer.rating}
+                  <div className="flex items-center space-x-4">
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-teal-600">
+                        {selectedPlayer.rating}
+                      </div>
+                      <div className="text-xs text-muted-foreground">Overall</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-blue-600">
+                        {selectedPlayer.averageMatchRating?.toFixed(1) || 'N/A'}
+                      </div>
+                      <div className="text-xs text-muted-foreground">Avg Match</div>
+                    </div>
                   </div>
                 </CardTitle>
               </CardHeader>
@@ -117,6 +146,24 @@ const Index = () => {
                     <div className="text-sm text-muted-foreground">Clean Sheets</div>
                   </div>
                 </div>
+
+                {/* Match Ratings History */}
+                {selectedPlayer.matchRatings && selectedPlayer.matchRatings.length > 0 && (
+                  <div className="pt-4 border-t">
+                    <h4 className="font-medium mb-2">Recent Match Ratings</h4>
+                    <div className="flex space-x-2 overflow-x-auto">
+                      {selectedPlayer.matchRatings.slice(-10).map((rating, index) => (
+                        <Badge
+                          key={index}
+                          variant={rating >= 7 ? "default" : rating >= 6 ? "secondary" : "destructive"}
+                          className="min-w-12 justify-center"
+                        >
+                          {rating.toFixed(1)}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -144,6 +191,11 @@ const Index = () => {
                           <p className="text-sm text-muted-foreground">
                             Team A vs Team B
                           </p>
+                          {match.averageTeamARating && match.averageTeamBRating && (
+                            <div className="text-xs text-muted-foreground mt-1">
+                              Avg Ratings: {match.averageTeamARating.toFixed(1)} - {match.averageTeamBRating.toFixed(1)}
+                            </div>
+                          )}
                         </div>
                         <div className="text-right">
                           <div className="text-lg font-bold">

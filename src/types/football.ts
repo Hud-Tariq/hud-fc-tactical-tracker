@@ -10,6 +10,9 @@ export interface Player {
   totalAssists: number;
   totalSaves: number;
   cleanSheets: number;
+  // New rating fields
+  averageMatchRating: number;
+  matchRatings: number[];
 }
 
 export interface Goal {
@@ -28,6 +31,10 @@ export interface Match {
   goals: Goal[];
   saves: Record<string, number>;
   completed: boolean;
+  // New match rating fields
+  matchRatings?: Record<string, number>;
+  averageTeamARating?: number;
+  averageTeamBRating?: number;
 }
 
 export interface MatchEvent {

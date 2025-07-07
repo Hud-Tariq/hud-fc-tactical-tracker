@@ -1,7 +1,6 @@
 
 import React from 'react';
-import { Users, Calendar, BarChart, Trophy } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Users, Trophy, BarChart3, History, Play } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: string;
@@ -11,38 +10,33 @@ interface NavigationProps {
 const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
   const tabs = [
     { id: 'squad', label: 'Squad', icon: Users },
-    { id: 'matches', label: 'Matches', icon: Calendar },
-    { id: 'stats', label: 'Statistics', icon: BarChart },
-    { id: 'history', label: 'History', icon: Trophy }
+    { id: 'matches', label: 'Create Match', icon: Trophy },
+    { id: 'simulation', label: 'Simulate', icon: Play },
+    { id: 'stats', label: 'Statistics', icon: BarChart3 },
+    { id: 'history', label: 'History', icon: History },
   ];
 
   return (
-    <nav className="bg-slate-900 border-b border-slate-700">
+    <nav className="bg-white border-b shadow-sm">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center h-16">
-          <div className="flex items-center space-x-3 mr-8">
-            <img 
-              src="/lovable-uploads/8a2c4cdf-03e5-4be7-8042-dab0c10d3f49.png" 
-              alt="Hud FC Logo" 
-              className="w-10 h-10"
-            />
-            <span className="text-white font-bold text-xl">Hud FC</span>
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center space-x-4">
+            <h1 className="text-xl font-bold text-emerald-600">Hud FC Manager</h1>
           </div>
-          <div className="flex space-x-1">
+          <div className="flex space-x-6">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
                   onClick={() => onTabChange(tab.id)}
-                  className={cn(
-                    "flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     activeTab === tab.id
-                      ? "bg-teal-600 text-white"
-                      : "text-slate-300 hover:text-white hover:bg-slate-700"
-                  )}
+                      ? 'bg-emerald-100 text-emerald-700'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
                 >
-                  <Icon size={16} />
+                  <Icon className="w-4 h-4" />
                   <span>{tab.label}</span>
                 </button>
               );
