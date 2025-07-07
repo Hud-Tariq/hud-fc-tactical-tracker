@@ -169,14 +169,24 @@ const FootballPitch = ({ match, players, onMatchComplete }: FootballPitchProps) 
       description: "Simulating match events...",
     });
 
-    // Simulate match events
-    const events = Math.floor(Math.random() * 15) + 10; // 10-25 events
+    // Reset scores
     let currentTeamAScore = 0;
     let currentTeamBScore = 0;
 
+    // Simulate match events
+    const events = Math.floor(Math.random() * 15) + 10; // 10-25 events
+    console.log(`Simulating ${events} match events`);
+
     for (let i = 0; i < events; i++) {
       setTimeout(() => {
-        simulateEvent(currentTeamAScore, currentTeamBScore);
+        const eventResult = simulateEvent();
+        if (eventResult.goal) {
+          if (eventResult.team === 'A') {
+            currentTeamAScore++;
+          } else {
+            currentTeamBScore++;
+          }
+        }
       }, i * 500);
     }
 
@@ -184,17 +194,20 @@ const FootballPitch = ({ match, players, onMatchComplete }: FootballPitchProps) 
     setTimeout(() => {
       setTeamAScore(currentTeamAScore);
       setTeamBScore(currentTeamBScore);
-      completeMatch();
+      completeMatch(currentTeamAScore, currentTeamBScore);
     }, events * 500 + 1000);
   };
 
-  const simulateEvent = (currentScoreA: number, currentScoreB: number) => {
+  const simulateEvent = () => {
     const eventTypes = ['goal', 'assist', 'save', 'tackle', 'pass', 'interception', 'shot', 'foul'];
     const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
     
     const allPlayerIds = [...match.teamA, ...match.teamB];
     const randomPlayerId = allPlayerIds[Math.floor(Math.random() * allPlayerIds.length)];
     
+    let goalScored = false;
+    let scoringTeam = null;
+
     setPlayerPositions(prev => {
       const updated = { ...prev };
       if (updated[randomPlayerId]) {
@@ -203,11 +216,9 @@ const FootballPitch = ({ match, players, onMatchComplete }: FootballPitchProps) 
         switch (eventType) {
           case 'goal':
             stats.goals += 1;
-            if (match.teamA.includes(randomPlayerId)) {
-              currentScoreA += 1;
-            } else {
-              currentScoreB += 1;
-            }
+            goalScored = true;
+            scoringTeam = match.teamA.includes(randomPlayerId) ? 'A' : 'B';
+            console.log(`Goal scored by ${updated[randomPlayerId].player.name} for team ${scoringTeam}`);
             break;
           case 'assist':
             stats.assists += 1;
@@ -245,23 +256,33 @@ const FootballPitch = ({ match, players, onMatchComplete }: FootballPitchProps) 
       }
       return updated;
     });
+
+    return { goal: goalScored, team: scoringTeam };
   };
 
-  const completeMatch = () => {
+  const completeMatch = (finalScoreA: number, finalScoreB: number) => {
     setMatchInProgress(false);
     setMatchCompleted(true);
     
+    // Prepare comprehensive player ratings for database update
     const playerRatings: Record<string, number> = {};
     Object.entries(playerPositions).forEach(([playerId, data]) => {
       playerRatings[playerId] = data.matchRating;
     });
 
-    toast({
-      title: "Match Completed!",
-      description: `Final Score: Team A ${teamAScore} - ${teamBScore} Team B`,
+    console.log('Match completed with comprehensive ratings:', {
+      finalScoreA,
+      finalScoreB,
+      playerRatings
     });
 
-    onMatchComplete(match.id, teamAScore, teamBScore, playerRatings);
+    toast({
+      title: "Match Completed!",
+      description: `Final Score: Team A ${finalScoreA} - ${finalScoreB} Team B`,
+    });
+
+    // Call the parent component's match completion handler with comprehensive ratings
+    onMatchComplete(match.id, finalScoreA, finalScoreB, playerRatings);
   };
 
   const getPlayerColor = (playerId: string) => {

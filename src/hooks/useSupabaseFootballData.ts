@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Player, Match, Goal } from '@/types/football';
@@ -32,8 +31,8 @@ export const useSupabaseFootballData = () => {
         totalAssists: player.total_assists,
         totalSaves: player.total_saves,
         cleanSheets: player.clean_sheets,
-        averageMatchRating: player.matches_played > 0 ? player.rating / 10 : 0, // Default calculation
-        matchRatings: [] // Initialize empty array - we'll need to fetch this separately in the future
+        averageMatchRating: player.matches_played > 0 ? player.rating / 10 : 0,
+        matchRatings: []
       })) || [];
       
       setPlayers(mappedPlayers);
@@ -88,9 +87,9 @@ export const useSupabaseFootballData = () => {
           acc[save.player_id] = save.saves_count;
           return acc;
         }, {}) || {},
-        matchRatings: {}, // Initialize empty - we'll populate this from match data
-        averageTeamARating: 0, // Initialize - we'll calculate this
-        averageTeamBRating: 0  // Initialize - we'll calculate this
+        matchRatings: {},
+        averageTeamARating: 0,
+        averageTeamBRating: 0
       })) || [];
       
       setMatches(formattedMatches);
@@ -120,7 +119,7 @@ export const useSupabaseFootballData = () => {
       
       if (error) throw error;
       
-      await fetchPlayers(); // Refresh players list
+      await fetchPlayers();
       
       toast({
         title: "Success",
@@ -154,7 +153,7 @@ export const useSupabaseFootballData = () => {
       
       if (error) throw error;
       
-      await fetchMatches(); // Refresh matches list
+      await fetchMatches();
       
       toast({
         title: "Success",
@@ -173,69 +172,155 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  const completeMatch = async (matchId: string, scoreA: number, scoreB: number, goals: Goal[], saves: Record<string, number>) => {
+  // Complete match with comprehensive ratings
+  const completeMatchWithRatings = async (
+    matchId: string, 
+    teamAScore: number, 
+    teamBScore: number, 
+    playerRatings: Record<string, number>
+  ) => {
     try {
+      console.log('Completing match with ratings:', { matchId, teamAScore, teamBScore, playerRatings });
+
       // Update match score and completion status
       const { error: matchError } = await supabase
         .from('matches')
         .update({
-          score_a: scoreA,
-          score_b: scoreB,
+          score_a: teamAScore,
+          score_b: teamBScore,
           completed: true
         })
         .eq('id', matchId);
       
       if (matchError) throw matchError;
 
-      // Insert goals
-      if (goals.length > 0) {
-        const { error: goalsError } = await supabase
-          .from('match_goals')
-          .insert(
-            goals.map(goal => ({
-              match_id: matchId,
-              scorer_id: goal.scorer,
-              assister_id: goal.assister || null,
-              team: goal.team
-            }))
-          );
-        
-        if (goalsError) throw goalsError;
+      // Update player statistics with match ratings
+      const match = matches.find(m => m.id === matchId);
+      if (!match) throw new Error('Match not found');
+
+      // Calculate team average ratings
+      const teamARatings = match.teamA.map(playerId => playerRatings[playerId] || 6.0);
+      const teamBRatings = match.teamB.map(playerId => playerRatings[playerId] || 6.0);
+      const averageTeamARating = teamARatings.reduce((sum, rating) => sum + rating, 0) / teamARatings.length;
+      const averageTeamBRating = teamBRatings.reduce((sum, rating) => sum + rating, 0) / teamBRatings.length;
+
+      console.log('Team average ratings calculated:', { averageTeamARating, averageTeamBRating });
+
+      // Update each player's stats and ratings
+      for (const [playerId, matchRating] of Object.entries(playerRatings)) {
+        await updatePlayerWithMatchRating(playerId, matchRating);
       }
 
-      // Insert saves
-      const savesData = Object.entries(saves).map(([playerId, saveCount]) => ({
-        match_id: matchId,
-        player_id: playerId,
-        saves_count: saveCount
-      }));
-      
-      if (savesData.length > 0) {
-        const { error: savesError } = await supabase
-          .from('match_saves')
-          .insert(savesData);
-        
-        if (savesError) throw savesError;
+      // Update matches played for all players
+      const allPlayers = [...match.teamA, ...match.teamB];
+      for (const playerId of allPlayers) {
+        await incrementMatchesPlayed(playerId);
       }
-
-      // Update player statistics
-      await updatePlayerStatistics(matchId, goals, saves);
       
       await fetchMatches();
       await fetchPlayers();
       
       toast({
         title: "Success",
-        description: "Match completed successfully!",
+        description: `Match completed! Team A: ${teamAScore} - ${teamBScore} Team B`,
       });
+
+      console.log('Match completion successful');
     } catch (error) {
-      console.error('Error completing match:', error);
+      console.error('Error completing match with ratings:', error);
       toast({
         title: "Error",
         description: "Failed to complete match",
         variant: "destructive",
       });
     }
+  };
+
+  // Update player with match rating
+  const updatePlayerWithMatchRating = async (playerId: string, matchRating: number) => {
+    try {
+      // Fetch current player data
+      const { data: currentPlayer, error: fetchError } = await supabase
+        .from('players')
+        .select('*')
+        .eq('id', playerId)
+        .single();
+      
+      if (fetchError || !currentPlayer) {
+        console.error('Error fetching player for rating update:', fetchError);
+        return;
+      }
+
+      // Calculate new overall rating (weighted average of current rating and match rating)
+      const currentRating = currentPlayer.rating;
+      const matchesPlayed = currentPlayer.matches_played;
+      const newOverallRating = matchesPlayed > 0 
+        ? Math.round((currentRating * 0.8) + (matchRating * 2)) // Match rating has more impact
+        : Math.round(matchRating * 10); // First match sets the base
+
+      // Ensure rating stays within bounds (1-100)
+      const finalRating = Math.max(1, Math.min(100, newOverallRating));
+
+      console.log(`Updating player ${playerId}: current rating ${currentRating}, match rating ${matchRating}, new rating ${finalRating}`);
+
+      // Update the player's overall rating
+      const { error: updateError } = await supabase
+        .from('players')
+        .update({ 
+          rating: finalRating
+        })
+        .eq('id', playerId);
+      
+      if (updateError) {
+        console.error('Error updating player rating:', updateError);
+      }
+    } catch (error) {
+      console.error('Error in updatePlayerWithMatchRating:', error);
+    }
+  };
+
+  // Increment matches played for a player
+  const incrementMatchesPlayed = async (playerId: string) => {
+    try {
+      const { data: currentPlayer, error: fetchError } = await supabase
+        .from('players')
+        .select('matches_played')
+        .eq('id', playerId)
+        .single();
+      
+      if (fetchError || !currentPlayer) {
+        console.error('Error fetching player for matches played update:', fetchError);
+        return;
+      }
+
+      const { error: updateError } = await supabase
+        .from('players')
+        .update({ 
+          matches_played: currentPlayer.matches_played + 1
+        })
+        .eq('id', playerId);
+      
+      if (updateError) {
+        console.error('Error updating matches played:', updateError);
+      }
+    } catch (error) {
+      console.error('Error in incrementMatchesPlayed:', error);
+    }
+  };
+
+  // Legacy function for backward compatibility
+  const completeMatch = async (matchId: string, scoreA: number, scoreB: number, goals: Goal[], saves: Record<string, number>) => {
+    console.log('Legacy completeMatch called, redirecting to completeMatchWithRatings');
+    // For backward compatibility, create basic ratings
+    const match = matches.find(m => m.id === matchId);
+    if (!match) return;
+    
+    const playerRatings: Record<string, number> = {};
+    [...match.teamA, ...match.teamB].forEach(playerId => {
+      playerRatings[playerId] = 6.0; // Default rating
+    });
+    
+    return completeMatchWithRatings(matchId, scoreA, scoreB, playerRatings);
   };
 
   const updatePlayerStats = async (playerId: string, updates: { 
@@ -246,7 +331,6 @@ export const useSupabaseFootballData = () => {
     clean_sheets?: number;
     rating?: number;
   }) => {
-    // Fetch current player data
     const { data: currentPlayer, error: fetchError } = await supabase
       .from('players')
       .select('*')
@@ -258,7 +342,6 @@ export const useSupabaseFootballData = () => {
       return;
     }
 
-    // Calculate new values
     const newStats = {
       matches_played: (updates.matches_played !== undefined) 
         ? currentPlayer.matches_played + updates.matches_played 
@@ -280,7 +363,6 @@ export const useSupabaseFootballData = () => {
         : currentPlayer.rating
     };
 
-    // Update the player
     const { error: updateError } = await supabase
       .from('players')
       .update(newStats)
@@ -298,20 +380,16 @@ export const useSupabaseFootballData = () => {
 
       const allPlayers = [...match.teamA, ...match.teamB];
       
-      // Update matches played for all players
       for (const playerId of allPlayers) {
         await updatePlayerStats(playerId, { matches_played: 1 });
       }
 
-      // Update goals and assists
       for (const goal of goals) {
-        // Update goals for scorer
         await updatePlayerStats(goal.scorer, { 
           total_goals: 1,
           rating: 3
         });
 
-        // Update assists for assister
         if (goal.assister) {
           await updatePlayerStats(goal.assister, {
             total_assists: 1,
@@ -320,7 +398,6 @@ export const useSupabaseFootballData = () => {
         }
       }
 
-      // Update saves
       for (const [playerId, saveCount] of Object.entries(saves)) {
         await updatePlayerStats(playerId, {
           total_saves: saveCount,
@@ -328,12 +405,10 @@ export const useSupabaseFootballData = () => {
         });
       }
 
-      // Update clean sheets and defensive penalties
       const scoreA = goals.filter(g => g.team === 'A').length;
       const scoreB = goals.filter(g => g.team === 'B').length;
       
       if (scoreB === 0) {
-        // Team A clean sheet
         for (const playerId of match.teamA) {
           const player = players.find(p => p.id === playerId);
           if (player && (player.position === 'Defender' || player.position === 'Goalkeeper')) {
@@ -346,7 +421,6 @@ export const useSupabaseFootballData = () => {
       }
       
       if (scoreA === 0) {
-        // Team B clean sheet
         for (const playerId of match.teamB) {
           const player = players.find(p => p.id === playerId);
           if (player && (player.position === 'Defender' || player.position === 'Goalkeeper')) {
@@ -374,7 +448,6 @@ export const useSupabaseFootballData = () => {
 
   const getPlayerById = (id: string) => players.find(p => p.id === id);
 
-  // Initial data fetch
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -392,6 +465,7 @@ export const useSupabaseFootballData = () => {
     addPlayer,
     createMatch,
     completeMatch,
+    completeMatchWithRatings,
     getPlayerById,
     updatePlayerRating,
     refreshData: () => Promise.all([fetchPlayers(), fetchMatches()])

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import SquadManagement from '@/components/SquadManagement';
@@ -13,7 +12,15 @@ import { Loader2 } from 'lucide-react';
 const Index = () => {
   const [activeTab, setActiveTab] = useState('squad');
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-  const { players, matches, loading, addPlayer, createMatch, completeMatch, getPlayerById } = useSupabaseFootballData();
+  const { 
+    players, 
+    matches, 
+    loading, 
+    addPlayer, 
+    createMatch, 
+    completeMatchWithRatings,
+    getPlayerById 
+  } = useSupabaseFootballData();
 
   const handlePlayerClick = (player: Player) => {
     setSelectedPlayer(player);
@@ -21,11 +28,8 @@ const Index = () => {
   };
 
   const handleMatchComplete = (matchId: string, teamAScore: number, teamBScore: number, playerRatings: Record<string, number>) => {
-    // Convert player ratings to the format expected by completeMatch
-    const goals: any[] = []; // We'll need to extract this from the simulation
-    const saves: Record<string, number> = {}; // We'll need to extract this from the simulation
-    
-    completeMatch(matchId, teamAScore, teamBScore, goals, saves);
+    console.log('Match completion requested:', { matchId, teamAScore, teamBScore, playerRatings });
+    completeMatchWithRatings(matchId, teamAScore, teamBScore, playerRatings);
   };
 
   if (loading) {
@@ -147,7 +151,6 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Match Ratings History */}
                 {selectedPlayer.matchRatings && selectedPlayer.matchRatings.length > 0 && (
                   <div className="pt-4 border-t">
                     <h4 className="font-medium mb-2">Recent Match Ratings</h4>
