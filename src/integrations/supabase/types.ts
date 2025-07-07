@@ -19,6 +19,7 @@ export type Database = {
           assister_id: string | null
           created_at: string | null
           id: string
+          is_own_goal: boolean | null
           match_id: string
           minute: number | null
           scorer_id: string
@@ -28,6 +29,7 @@ export type Database = {
           assister_id?: string | null
           created_at?: string | null
           id?: string
+          is_own_goal?: boolean | null
           match_id: string
           minute?: number | null
           scorer_id: string
@@ -37,6 +39,7 @@ export type Database = {
           assister_id?: string | null
           created_at?: string | null
           id?: string
+          is_own_goal?: boolean | null
           match_id?: string
           minute?: number | null
           scorer_id?: string

@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import PlayerCard from './PlayerCard';
-import { Player, Match } from '@/types/football';
+import { Player, Match, Goal } from '@/types/football';
 
 interface MatchCreationProps {
   players: Player[];
@@ -19,6 +21,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
   const [availablePlayers, setAvailablePlayers] = useState<Player[]>(players);
   const [teamAScore, setTeamAScore] = useState(0);
   const [teamBScore, setTeamBScore] = useState(0);
+  const [goals, setGoals] = useState<Goal[]>([]);
 
   const handlePlayerSelect = (player: Player, team: 'A' | 'B') => {
     if (team === 'A' && teamA.length < 5) {
@@ -39,6 +42,24 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
     setAvailablePlayers([...availablePlayers, player]);
   };
 
+  const addGoal = (team: 'A' | 'B') => {
+    setGoals([...goals, { scorer: '', assister: '', team }]);
+  };
+
+  const removeGoal = (index: number) => {
+    setGoals(goals.filter((_, i) => i !== index));
+  };
+
+  const updateGoal = (index: number, field: keyof Goal, value: string) => {
+    const updatedGoals = [...goals];
+    updatedGoals[index] = { ...updatedGoals[index], [field]: value };
+    setGoals(updatedGoals);
+  };
+
+  const getTeamPlayers = (team: 'A' | 'B') => {
+    return team === 'A' ? teamA : teamB;
+  };
+
   const handleCreateMatch = () => {
     if (matchDate && teamA.length === 5 && teamB.length === 5) {
       const match: Omit<Match, 'id'> = {
@@ -47,9 +68,9 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
         teamB: teamB.map(p => p.id),
         scoreA: teamAScore,
         scoreB: teamBScore,
-        goals: [],
+        goals: goals.filter(g => g.scorer),
         saves: {},
-        completed: true // Mark as completed since we're entering final scores
+        completed: true
       };
       onCreateMatch(match);
       // Reset form
@@ -59,8 +80,12 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
       setAvailablePlayers(players);
       setTeamAScore(0);
       setTeamBScore(0);
+      setGoals([]);
     }
   };
+
+  const teamAGoals = goals.filter(g => g.team === 'A').length;
+  const teamBGoals = goals.filter(g => g.team === 'B').length;
 
   return (
     <div className="space-y-6">
@@ -188,6 +213,95 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
           )}
         </CardContent>
       </Card>
+
+      {(teamA.length === 5 && teamB.length === 5) && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              Goals & Assists
+              <div className="text-sm text-muted-foreground">
+                Team A: {teamAGoals} | Team B: {teamBGoals}
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex space-x-4">
+              <Button
+                onClick={() => addGoal('A')}
+                variant="outline"
+                className="text-blue-600 hover:bg-blue-50"
+              >
+                Add Team A Goal
+              </Button>
+              <Button
+                onClick={() => addGoal('B')}
+                variant="outline"
+                className="text-red-600 hover:bg-red-50"
+              >
+                Add Team B Goal
+              </Button>
+            </div>
+
+            {goals.map((goal, index) => (
+              <Card key={index} className="p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className={`font-medium ${goal.team === 'A' ? 'text-blue-600' : 'text-red-600'}`}>
+                    Goal {index + 1} - Team {goal.team}
+                  </h4>
+                  <Button
+                    onClick={() => removeGoal(index)}
+                    variant="destructive"
+                    size="sm"
+                  >
+                    Remove
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Scorer *</Label>
+                    <Select
+                      value={goal.scorer}
+                      onValueChange={(value) => updateGoal(index, 'scorer', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select scorer" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {getTeamPlayers(goal.team).map((player) => (
+                          <SelectItem key={player.id} value={player.id}>
+                            {player.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>Assister (Optional)</Label>
+                    <Select
+                      value={goal.assister || ''}
+                      onValueChange={(value) => updateGoal(index, 'assister', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select assister" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">No assist</SelectItem>
+                        {getTeamPlayers(goal.team)
+                          .filter(p => p.id !== goal.scorer)
+                          .map((player) => (
+                            <SelectItem key={player.id} value={player.id}>
+                              {player.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex justify-center">
         <Button

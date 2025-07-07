@@ -3,10 +3,10 @@ import Navigation from '@/components/Navigation';
 import SquadManagement from '@/components/SquadManagement';
 import MatchCreation from '@/components/MatchCreation';
 import MatchView from '@/components/MatchView';
+import Statistics from '@/components/Statistics';
 import { useSupabaseFootballData } from '@/hooks/useSupabaseFootballData';
 import { Player } from '@/types/football';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 
 const Index = () => {
@@ -74,104 +74,7 @@ const Index = () => {
           />
         );
       case 'stats':
-        return selectedPlayer ? (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">Player Statistics</h2>
-              <button 
-                onClick={() => setSelectedPlayer(null)}
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                Back to Squad
-              </button>
-            </div>
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  {selectedPlayer.name}
-                  <div className="flex items-center space-x-4">
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-teal-600">
-                        {selectedPlayer.rating}
-                      </div>
-                      <div className="text-xs text-muted-foreground">Overall</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-blue-600">
-                        {selectedPlayer.averageMatchRating?.toFixed(1) || 'N/A'}
-                      </div>
-                      <div className="text-xs text-muted-foreground">Avg Match</div>
-                    </div>
-                  </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold">{selectedPlayer.age}</div>
-                    <div className="text-sm text-muted-foreground">Age</div>
-                  </div>
-                  <div className="text-center">
-                    <Badge className="mb-2">{selectedPlayer.position}</Badge>
-                    <div className="text-sm text-muted-foreground">Position</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold">{selectedPlayer.matchesPlayed}</div>
-                    <div className="text-sm text-muted-foreground">Matches</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold">{selectedPlayer.matchesPlayed * 60}</div>
-                    <div className="text-sm text-muted-foreground">Minutes</div>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">{selectedPlayer.totalGoals}</div>
-                    <div className="text-sm text-muted-foreground">Goals</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">{selectedPlayer.totalAssists}</div>
-                    <div className="text-sm text-muted-foreground">Assists</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-yellow-600">{selectedPlayer.totalSaves}</div>
-                    <div className="text-sm text-muted-foreground">Saves</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600">{selectedPlayer.cleanSheets}</div>
-                    <div className="text-sm text-muted-foreground">Clean Sheets</div>
-                  </div>
-                </div>
-
-                {selectedPlayer.matchRatings && selectedPlayer.matchRatings.length > 0 && (
-                  <div className="pt-4 border-t">
-                    <h4 className="font-medium mb-2">Recent Match Ratings</h4>
-                    <div className="flex space-x-2 overflow-x-auto">
-                      {selectedPlayer.matchRatings.slice(-10).map((rating, index) => (
-                        <Badge
-                          key={index}
-                          variant={rating >= 7 ? "default" : rating >= 6 ? "secondary" : "destructive"}
-                          className="min-w-12 justify-center"
-                        >
-                          {rating.toFixed(1)}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        ) : (
-          <Card>
-            <CardContent className="p-8 text-center">
-              <p className="text-muted-foreground">
-                Select a player from the squad to view their statistics
-              </p>
-            </CardContent>
-          </Card>
-        );
+        return <Statistics players={players} />;
       case 'history':
         return (
           <div className="space-y-6">
@@ -197,9 +100,9 @@ const Index = () => {
                           <div className="text-lg font-bold">
                             {match.scoreA} - {match.scoreB}
                           </div>
-                          <Badge variant={match.completed ? "default" : "secondary"}>
+                          <div className="text-xs text-muted-foreground">
                             {match.completed ? "Completed" : "Pending"}
-                          </Badge>
+                          </div>
                         </div>
                       </div>
                     </CardContent>
