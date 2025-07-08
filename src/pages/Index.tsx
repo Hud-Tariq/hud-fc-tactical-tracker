@@ -8,6 +8,7 @@ import MatchSimulation from '@/components/MatchSimulation';
 import { useSupabaseFootballData } from '@/hooks/useSupabaseFootballData';
 import { useAuth } from '@/hooks/useAuth';
 import AuthPage from '@/components/AuthPage';
+import { Goal } from '@/types/football';
 
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
@@ -24,14 +25,26 @@ const Index = () => {
   } = useSupabaseFootballData();
 
   const handlePlayerClick = (player: any) => {
-    // Handle player click - could show player details or stats
     console.log('Player clicked:', player);
   };
 
-  const handleMatchComplete = (matchId: string, teamAScore: number, teamBScore: number, playerRatings: Record<string, number>) => {
-    // Convert the new signature to the existing completeMatch function
-    // For now, we'll create empty goals and saves arrays since the simulation doesn't provide them
-    completeMatch(matchId, teamAScore, teamBScore, [], {});
+  // Enhanced match completion handler
+  const handleMatchComplete = async (
+    matchId: string, 
+    teamAScore: number, 
+    teamBScore: number, 
+    goals: Goal[], 
+    saves: Record<string, number>
+  ) => {
+    console.log('Completing match with full data:', {
+      matchId,
+      teamAScore,
+      teamBScore,
+      goals,
+      saves
+    });
+    
+    await completeMatch(matchId, teamAScore, teamBScore, goals, saves);
   };
 
   if (authLoading) {

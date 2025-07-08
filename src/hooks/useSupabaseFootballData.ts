@@ -1,7 +1,9 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Player, Match, Goal } from '@/types/football';
 import { useToast } from '@/hooks/use-toast';
+import { StatisticsService } from '@/services/statisticsService';
 
 export const useSupabaseFootballData = () => {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -105,62 +107,11 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  // Calculate match rating based on performance
-  const calculateMatchRating = (
-    playerId: string,
-    match: Match,
-    goals: number,
-    assists: number,
-    saves: number,
-    cleanSheet: boolean,
-    teamWon: boolean,
-    teamLost: boolean
-  ): number => {
-    const player = players.find(p => p.id === playerId);
-    if (!player) return 6.0;
-
-    let rating = 6.0; // Base rating
-
-    // Performance bonuses
-    rating += goals * 1.5; // Goals are worth 1.5 points each
-    rating += assists * 1.0; // Assists are worth 1.0 point each
-    rating += saves * 0.1; // Saves are worth 0.1 points each
-    
-    // Clean sheet bonus (defenders and goalkeepers)
-    if (cleanSheet && (player.position === 'Defender' || player.position === 'Goalkeeper')) {
-      rating += 1.0;
-    }
-
-    // Team result bonuses
-    if (teamWon) {
-      rating += 0.5; // Winning team bonus
-    } else if (teamLost) {
-      rating -= 0.3; // Losing team penalty
-    }
-
-    // Position-specific adjustments
-    switch (player.position) {
-      case 'Forward':
-        if (goals === 0) rating -= 0.2; // Forwards expected to score
-        break;
-      case 'Midfielder':
-        if (assists === 0) rating -= 0.1; // Midfielders expected to assist
-        break;
-      case 'Goalkeeper':
-        if (saves > 5) rating += 0.5; // Reward excellent goalkeeping
-        break;
-    }
-
-    // Cap the rating between 1 and 10
-    return Math.max(1, Math.min(10, rating));
-  };
-
-  // Improved delete match function with better error handling
+  // Enhanced delete match function
   const deleteMatch = async (matchId: string) => {
     try {
       console.log('Starting match deletion for:', matchId);
       
-      // First, we need to reverse the player statistics
       const match = matches.find(m => m.id === matchId);
       if (!match) {
         console.error('Match not found:', matchId);
@@ -172,44 +123,10 @@ export const useSupabaseFootballData = () => {
         return;
       }
 
+      // Reverse statistics if match was completed
       if (match.completed) {
         console.log('Reversing statistics for completed match');
-        
-        const teamAScore = match.goals.filter(g => g.team === 'A' && !g.isOwnGoal).length + 
-                          match.goals.filter(g => g.team === 'B' && g.isOwnGoal).length;
-        const teamBScore = match.goals.filter(g => g.team === 'B' && !g.isOwnGoal).length + 
-                          match.goals.filter(g => g.team === 'A' && g.isOwnGoal).length;
-
-        const teamACleanSheet = teamBScore === 0;
-        const teamBCleanSheet = teamAScore === 0;
-
-        // Process each player to reverse their stats
-        const allPlayers = [...match.teamA, ...match.teamB];
-        console.log('Reversing stats for players:', allPlayers);
-
-        for (const playerId of allPlayers) {
-          const isTeamA = match.teamA.includes(playerId);
-          const playerGoals = match.goals.filter(g => g.scorer === playerId && !g.isOwnGoal).length;
-          const playerAssists = match.goals.filter(g => g.assister === playerId).length;
-          const playerSaves = match.saves[playerId] || 0;
-          const playerCleanSheet = isTeamA ? teamACleanSheet : teamBCleanSheet;
-
-          console.log(`Reversing stats for player ${playerId}:`, {
-            goals: playerGoals,
-            assists: playerAssists,
-            saves: playerSaves,
-            cleanSheet: playerCleanSheet
-          });
-
-          // Reverse player statistics
-          await reversePlayerStats(playerId, {
-            matches_played: 1,
-            total_goals: playerGoals,
-            total_assists: playerAssists,
-            total_saves: playerSaves,
-            clean_sheets: playerCleanSheet ? 1 : 0
-          });
-        }
+        await StatisticsService.reverseMatchStatistics(match, players);
       }
 
       // Delete in correct order to avoid foreign key constraints
@@ -266,47 +183,6 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  // Reverse player stats when deleting a match
-  const reversePlayerStats = async (playerId: string, updates: { 
-    matches_played?: number;
-    total_goals?: number;
-    total_assists?: number;
-    total_saves?: number;
-    clean_sheets?: number;
-  }) => {
-    try {
-      const { data: currentPlayer, error: fetchError } = await supabase
-        .from('players')
-        .select('*')
-        .eq('id', playerId)
-        .single();
-      
-      if (fetchError || !currentPlayer) {
-        console.error('Error fetching player for reversal:', fetchError);
-        return;
-      }
-
-      const newStats = {
-        matches_played: Math.max(0, currentPlayer.matches_played - (updates.matches_played || 0)),
-        total_goals: Math.max(0, currentPlayer.total_goals - (updates.total_goals || 0)),
-        total_assists: Math.max(0, currentPlayer.total_assists - (updates.total_assists || 0)),
-        total_saves: Math.max(0, currentPlayer.total_saves - (updates.total_saves || 0)),
-        clean_sheets: Math.max(0, currentPlayer.clean_sheets - (updates.clean_sheets || 0))
-      };
-
-      const { error: updateError } = await supabase
-        .from('players')
-        .update(newStats)
-        .eq('id', playerId);
-      
-      if (updateError) {
-        console.error('Error reversing player stats:', updateError);
-      }
-    } catch (error) {
-      console.error('Error in reversePlayerStats:', error);
-    }
-  };
-
   // Store match goals in database
   const storeMatchGoals = async (matchId: string, goals: Goal[]) => {
     try {
@@ -334,6 +210,7 @@ export const useSupabaseFootballData = () => {
       }
     } catch (error) {
       console.error('Error storing match goals:', error);
+      throw error;
     }
   };
 
@@ -364,114 +241,7 @@ export const useSupabaseFootballData = () => {
       }
     } catch (error) {
       console.error('Error storing match saves:', error);
-    }
-  };
-
-  // Calculate and update player statistics
-  const updatePlayerStatistics = async (matchId: string, goals: Goal[], saves: Record<string, number>) => {
-    try {
-      const match = matches.find(m => m.id === matchId);
-      if (!match) return;
-
-      const teamAScore = goals.filter(g => g.team === 'A' && !g.isOwnGoal).length + 
-                        goals.filter(g => g.team === 'B' && g.isOwnGoal).length;
-      const teamBScore = goals.filter(g => g.team === 'B' && !g.isOwnGoal).length + 
-                        goals.filter(g => g.team === 'A' && g.isOwnGoal).length;
-
-      const teamAWon = teamAScore > teamBScore;
-      const teamBWon = teamBScore > teamAScore;
-      const teamACleanSheet = teamBScore === 0;
-      const teamBCleanSheet = teamAScore === 0;
-
-      // Process each player
-      for (const playerId of [...match.teamA, ...match.teamB]) {
-        const isTeamA = match.teamA.includes(playerId);
-        const playerGoals = goals.filter(g => g.scorer === playerId && !g.isOwnGoal).length;
-        const playerAssists = goals.filter(g => g.assister === playerId).length;
-        const playerSaves = saves[playerId] || 0;
-        const playerCleanSheet = isTeamA ? teamACleanSheet : teamBCleanSheet;
-        const playerTeamWon = isTeamA ? teamAWon : teamBWon;
-        const playerTeamLost = isTeamA ? teamBWon : teamAWon;
-
-        // Calculate match rating
-        const matchRating = calculateMatchRating(
-          playerId,
-          match,
-          playerGoals,
-          playerAssists,
-          playerSaves,
-          playerCleanSheet,
-          playerTeamWon,
-          playerTeamLost
-        );
-
-        // Update player statistics
-        await updatePlayerStats(playerId, {
-          matches_played: 1,
-          total_goals: playerGoals,
-          total_assists: playerAssists,
-          total_saves: playerSaves,
-          clean_sheets: playerCleanSheet ? 1 : 0,
-          match_rating: matchRating
-        });
-      }
-    } catch (error) {
-      console.error('Error updating player statistics:', error);
-    }
-  };
-
-  // Update player stats with match rating consideration
-  const updatePlayerStats = async (playerId: string, updates: { 
-    matches_played?: number;
-    total_goals?: number;
-    total_assists?: number;
-    total_saves?: number;
-    clean_sheets?: number;
-    match_rating?: number;
-  }) => {
-    try {
-      const { data: currentPlayer, error: fetchError } = await supabase
-        .from('players')
-        .select('*')
-        .eq('id', playerId)
-        .single();
-      
-      if (fetchError || !currentPlayer) {
-        console.error('Error fetching player for update:', fetchError);
-        return;
-      }
-
-      const newMatchesPlayed = currentPlayer.matches_played + (updates.matches_played || 0);
-      
-      let newRating = currentPlayer.rating;
-      
-      // Update rating every 5 games based on recent performance
-      if (updates.match_rating && newMatchesPlayed > 0 && newMatchesPlayed % 5 === 0) {
-        // For simplicity, we'll use a weighted average approach
-        // In a real system, you'd want to store match ratings and calculate from last 5 games
-        const ratingAdjustment = (updates.match_rating - 6.0) * 2; // Amplify rating changes
-        newRating = Math.max(1, Math.min(100, currentPlayer.rating + ratingAdjustment));
-      }
-
-      const newStats = {
-        matches_played: newMatchesPlayed,
-        total_goals: currentPlayer.total_goals + (updates.total_goals || 0),
-        total_assists: currentPlayer.total_assists + (updates.total_assists || 0),
-        total_saves: currentPlayer.total_saves + (updates.total_saves || 0),
-        clean_sheets: currentPlayer.clean_sheets + (updates.clean_sheets || 0),
-        rating: Math.round(newRating)
-      };
-
-      const { error: updateError } = await supabase
-        .from('players')
-        .update(newStats)
-        .eq('id', playerId);
-      
-      if (updateError) {
-        console.error('Error updating player stats:', updateError);
-      }
-    } catch (error) {
-      console.error('Error in updatePlayerStats:', error);
+      throw error;
     }
   };
 
@@ -514,7 +284,7 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  // Create match in Supabase with user_id
+  // Enhanced create match function
   const createMatch = async (matchData: Omit<Match, 'id'>) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -539,11 +309,17 @@ export const useSupabaseFootballData = () => {
       
       if (error) throw error;
 
-      // Store goals and saves
+      // Store goals and saves, then process statistics
       if (matchData.completed) {
         await storeMatchGoals(data.id, matchData.goals);
         await storeMatchSaves(data.id, matchData.saves);
-        await updatePlayerStatistics(data.id, matchData.goals, matchData.saves);
+        
+        // Process statistics using the new service
+        const completeMatch = {
+          ...matchData,
+          id: data.id
+        };
+        await StatisticsService.processMatchStatistics(completeMatch, players);
       }
       
       await fetchMatches();
@@ -566,9 +342,10 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  // Legacy complete match function for backward compatibility
+  // Enhanced complete match function
   const completeMatch = async (matchId: string, scoreA: number, scoreB: number, goals: Goal[], saves: Record<string, number>) => {
     try {
+      // Update match completion
       const { error: matchError } = await supabase
         .from('matches')
         .update({
@@ -580,10 +357,25 @@ export const useSupabaseFootballData = () => {
       
       if (matchError) throw matchError;
 
+      // Store match details
       await storeMatchGoals(matchId, goals);
       await storeMatchSaves(matchId, saves);
-      await updatePlayerStatistics(matchId, goals, saves);
       
+      // Find the completed match and process statistics
+      const match = matches.find(m => m.id === matchId);
+      if (match) {
+        const completedMatch = {
+          ...match,
+          scoreA,
+          scoreB,
+          goals,
+          saves,
+          completed: true
+        };
+        
+        await StatisticsService.processMatchStatistics(completedMatch, players);
+      }
+
       await fetchMatches();
       await fetchPlayers();
       

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,12 +15,52 @@ interface MatchSimulationProps {
 
 const MatchSimulation = ({ matches, players, onMatchComplete, onBack }: MatchSimulationProps) => {
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [completedMatches, setCompletedMatches] = useState<string[]>([]);
 
   const pendingMatches = matches.filter(match => !match.completed);
 
   const handleMatchComplete = (matchId: string, teamAScore: number, teamBScore: number, playerRatings: Record<string, number>) => {
     onMatchComplete(matchId, teamAScore, teamBScore, playerRatings);
     setSelectedMatch(null);
+  };
+
+  const handleCompleteMatch = async (matchId: string) => {
+    const match = matches.find(m => m.id === matchId);
+    if (!match) return;
+
+    try {
+      setIsSimulating(true);
+      
+      // Simulate the match with proper goal and save tracking
+      const { teamAScore, teamBScore, matchGoals, matchSaves } = simulateMatch(match);
+      
+      console.log('Match simulation results:', {
+        teamAScore,
+        teamBScore,
+        goals: matchGoals,
+        saves: matchSaves
+      });
+
+      // Complete the match with proper statistics tracking
+      await onMatchComplete(matchId, teamAScore, teamBScore, matchGoals, matchSaves);
+      
+      setCompletedMatches(prev => [...prev, matchId]);
+      
+      toast({
+        title: "Match Completed!",
+        description: `Final Score: ${teamAScore} - ${teamBScore}`,
+      });
+    } catch (error) {
+      console.error('Error completing match:', error);
+      toast({
+        title: "Error",
+        description: "Failed to complete match",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSimulating(false);
+    }
   };
 
   if (selectedMatch) {
