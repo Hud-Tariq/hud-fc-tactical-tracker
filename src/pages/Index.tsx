@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import SquadManagement from '@/components/SquadManagement';
@@ -7,8 +6,11 @@ import MatchView from '@/components/MatchView';
 import Statistics from '@/components/Statistics';
 import MatchSimulation from '@/components/MatchSimulation';
 import { useSupabaseFootballData } from '@/hooks/useSupabaseFootballData';
+import { useAuth } from '@/hooks/useAuth';
+import AuthPage from '@/components/AuthPage';
 
 const Index = () => {
+  const { user, loading: authLoading } = useAuth();
   const [currentView, setCurrentView] = useState('squad');
   const { 
     players, 
@@ -32,15 +34,19 @@ const Index = () => {
     completeMatch(matchId, teamAScore, teamBScore, [], {});
   };
 
-  if (loading) {
+  if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-600 mx-auto"></div>
-          <p className="mt-4 text-orange-700 font-medium">Loading football management system...</p>
+          <p className="mt-4 text-orange-700 font-medium">Loading...</p>
         </div>
       </div>
     );
+  }
+
+  if (!user) {
+    return <AuthPage />;
   }
 
   const renderCurrentView = () => {

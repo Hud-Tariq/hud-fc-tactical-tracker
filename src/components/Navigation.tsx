@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { Users, Trophy, BarChart3, History, Eye, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import UserMenu from './UserMenu';
 
 interface NavigationProps {
   activeTab: string;
@@ -40,28 +40,32 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-1">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => onTabChange(tab.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    activeTab === tab.id
-                      ? 'bg-primary text-primary-foreground shadow-md'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-accent/60'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span className="hidden lg:block">{tab.label}</span>
-                </button>
-              );
-            })}
+          <div className="hidden md:flex items-center space-x-4">
+            <div className="flex space-x-1">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => onTabChange(tab.id)}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      activeTab === tab.id
+                        ? 'bg-primary text-primary-foreground shadow-md'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-accent/60'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span className="hidden lg:block">{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <UserMenu />
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-2">
+            <UserMenu />
             <button
               onClick={toggleMobileMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"

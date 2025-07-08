@@ -155,13 +155,26 @@ export const useSupabaseFootballData = () => {
     return Math.max(1, Math.min(10, rating));
   };
 
-  // Delete match and all related data
+  // Improved delete match function with better error handling
   const deleteMatch = async (matchId: string) => {
     try {
+      console.log('Starting match deletion for:', matchId);
+      
       // First, we need to reverse the player statistics
       const match = matches.find(m => m.id === matchId);
-      if (match && match.completed) {
-        // Reverse player statistics
+      if (!match) {
+        console.error('Match not found:', matchId);
+        toast({
+          title: "Error",
+          description: "Match not found",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (match.completed) {
+        console.log('Reversing statistics for completed match');
+        
         const teamAScore = match.goals.filter(g => g.team === 'A' && !g.isOwnGoal).length + 
                           match.goals.filter(g => g.team === 'B' && g.isOwnGoal).length;
         const teamBScore = match.goals.filter(g => g.team === 'B' && !g.isOwnGoal).length + 
@@ -171,12 +184,22 @@ export const useSupabaseFootballData = () => {
         const teamBCleanSheet = teamAScore === 0;
 
         // Process each player to reverse their stats
-        for (const playerId of [...match.teamA, ...match.teamB]) {
+        const allPlayers = [...match.teamA, ...match.teamB];
+        console.log('Reversing stats for players:', allPlayers);
+
+        for (const playerId of allPlayers) {
           const isTeamA = match.teamA.includes(playerId);
           const playerGoals = match.goals.filter(g => g.scorer === playerId && !g.isOwnGoal).length;
           const playerAssists = match.goals.filter(g => g.assister === playerId).length;
           const playerSaves = match.saves[playerId] || 0;
           const playerCleanSheet = isTeamA ? teamACleanSheet : teamBCleanSheet;
+
+          console.log(`Reversing stats for player ${playerId}:`, {
+            goals: playerGoals,
+            assists: playerAssists,
+            saves: playerSaves,
+            cleanSheet: playerCleanSheet
+          });
 
           // Reverse player statistics
           await reversePlayerStats(playerId, {
@@ -189,26 +212,43 @@ export const useSupabaseFootballData = () => {
         }
       }
 
-      // Delete match goals
-      await supabase
+      // Delete in correct order to avoid foreign key constraints
+      console.log('Deleting match goals...');
+      const { error: goalsError } = await supabase
         .from('match_goals')
         .delete()
         .eq('match_id', matchId);
 
-      // Delete match saves
-      await supabase
+      if (goalsError) {
+        console.error('Error deleting match goals:', goalsError);
+        throw goalsError;
+      }
+
+      console.log('Deleting match saves...');
+      const { error: savesError } = await supabase
         .from('match_saves')
         .delete()
         .eq('match_id', matchId);
 
-      // Delete the match
-      const { error } = await supabase
+      if (savesError) {
+        console.error('Error deleting match saves:', savesError);
+        throw savesError;
+      }
+
+      console.log('Deleting match...');
+      const { error: matchError } = await supabase
         .from('matches')
         .delete()
         .eq('id', matchId);
 
-      if (error) throw error;
+      if (matchError) {
+        console.error('Error deleting match:', matchError);
+        throw matchError;
+      }
 
+      console.log('Match deletion completed successfully');
+      
+      // Refresh data
       await fetchMatches();
       await fetchPlayers();
 
@@ -220,7 +260,7 @@ export const useSupabaseFootballData = () => {
       console.error('Error deleting match:', error);
       toast({
         title: "Error",
-        description: "Failed to delete match",
+        description: "Failed to delete match. Please try again.",
         variant: "destructive",
       });
     }
@@ -435,16 +475,23 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  // Add player to Supabase
+  // Add player to Supabase with user_id
   const addPlayer = async (playerData: Omit<Player, 'id' | 'matchesPlayed' | 'totalGoals' | 'totalAssists' | 'totalSaves' | 'cleanSheets'>) => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
+
       const { data, error } = await supabase
         .from('players')
         .insert([{
           name: playerData.name,
           age: playerData.age,
           position: playerData.position,
-          rating: playerData.rating
+          rating: playerData.rating,
+          user_id: user.id
         }])
         .select()
         .single();
@@ -467,9 +514,15 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  // Create match in Supabase
+  // Create match in Supabase with user_id
   const createMatch = async (matchData: Omit<Match, 'id'>) => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
+
       const { data, error } = await supabase
         .from('matches')
         .insert([{
@@ -478,7 +531,8 @@ export const useSupabaseFootballData = () => {
           team_b_players: matchData.teamB,
           score_a: matchData.scoreA,
           score_b: matchData.scoreB,
-          completed: matchData.completed
+          completed: matchData.completed,
+          user_id: user.id
         }])
         .select()
         .single();
@@ -551,9 +605,15 @@ export const useSupabaseFootballData = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      setLoading(true);
-      await Promise.all([fetchPlayers(), fetchMatches()]);
-      setLoading(false);
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        setLoading(true);
+        await Promise.all([fetchPlayers(), fetchMatches()]);
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
     };
     
     loadData();
