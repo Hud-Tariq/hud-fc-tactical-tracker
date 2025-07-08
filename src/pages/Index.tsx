@@ -21,6 +21,17 @@ const Index = () => {
     getPlayerById 
   } = useSupabaseFootballData();
 
+  const handlePlayerClick = (player: any) => {
+    // Handle player click - could show player details or stats
+    console.log('Player clicked:', player);
+  };
+
+  const handleMatchComplete = (matchId: string, teamAScore: number, teamBScore: number, playerRatings: Record<string, number>) => {
+    // Convert the new signature to the existing completeMatch function
+    // For now, we'll create empty goals and saves arrays since the simulation doesn't provide them
+    completeMatch(matchId, teamAScore, teamBScore, [], {});
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
@@ -35,7 +46,7 @@ const Index = () => {
   const renderCurrentView = () => {
     switch (currentView) {
       case 'squad':
-        return <SquadManagement players={players} onAddPlayer={addPlayer} />;
+        return <SquadManagement players={players} onAddPlayer={addPlayer} onPlayerClick={handlePlayerClick} />;
       case 'create-match':
         return (
           <MatchCreation 
@@ -59,18 +70,18 @@ const Index = () => {
           <MatchSimulation
             matches={matches}
             players={players}
-            onMatchComplete={completeMatch}
+            onMatchComplete={handleMatchComplete}
             onBack={() => setCurrentView('create-match')}
           />
         );
       default:
-        return <SquadManagement players={players} onAddPlayer={addPlayer} />;
+        return <SquadManagement players={players} onAddPlayer={addPlayer} onPlayerClick={handlePlayerClick} />;
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
-      <Navigation currentView={currentView} onViewChange={setCurrentView} />
+      <Navigation activeTab={currentView} onTabChange={setCurrentView} />
       <main className="container mx-auto px-4 py-8">
         {renderCurrentView()}
       </main>

@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 import { Users, Trophy, BarChart3, History, Eye, Menu, X } from 'lucide-react';
 import { useState } from 'react';
@@ -14,10 +13,10 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
 
   const tabs = [
     { id: 'squad', label: 'Squad', icon: Users },
-    { id: 'matches', label: 'Create Match', icon: Trophy },
+    { id: 'create-match', label: 'Create Match', icon: Trophy },
     { id: 'view-matches', label: 'View Matches', icon: Eye },
-    { id: 'stats', label: 'Statistics', icon: BarChart3 },
-    { id: 'history', label: 'History', icon: History },
+    { id: 'statistics', label: 'Statistics', icon: BarChart3 },
+    { id: 'simulation', label: 'Simulation', icon: History },
   ];
 
   const toggleMobileMenu = () => {
@@ -109,4 +108,3 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
 };
 
 export default Navigation;
-
