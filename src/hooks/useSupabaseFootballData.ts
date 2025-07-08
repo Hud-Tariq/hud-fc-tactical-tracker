@@ -155,6 +155,118 @@ export const useSupabaseFootballData = () => {
     return Math.max(1, Math.min(10, rating));
   };
 
+  // Delete match and all related data
+  const deleteMatch = async (matchId: string) => {
+    try {
+      // First, we need to reverse the player statistics
+      const match = matches.find(m => m.id === matchId);
+      if (match && match.completed) {
+        // Reverse player statistics
+        const teamAScore = match.goals.filter(g => g.team === 'A' && !g.isOwnGoal).length + 
+                          match.goals.filter(g => g.team === 'B' && g.isOwnGoal).length;
+        const teamBScore = match.goals.filter(g => g.team === 'B' && !g.isOwnGoal).length + 
+                          match.goals.filter(g => g.team === 'A' && g.isOwnGoal).length;
+
+        const teamACleanSheet = teamBScore === 0;
+        const teamBCleanSheet = teamAScore === 0;
+
+        // Process each player to reverse their stats
+        for (const playerId of [...match.teamA, ...match.teamB]) {
+          const isTeamA = match.teamA.includes(playerId);
+          const playerGoals = match.goals.filter(g => g.scorer === playerId && !g.isOwnGoal).length;
+          const playerAssists = match.goals.filter(g => g.assister === playerId).length;
+          const playerSaves = match.saves[playerId] || 0;
+          const playerCleanSheet = isTeamA ? teamACleanSheet : teamBCleanSheet;
+
+          // Reverse player statistics
+          await reversePlayerStats(playerId, {
+            matches_played: 1,
+            total_goals: playerGoals,
+            total_assists: playerAssists,
+            total_saves: playerSaves,
+            clean_sheets: playerCleanSheet ? 1 : 0
+          });
+        }
+      }
+
+      // Delete match goals
+      await supabase
+        .from('match_goals')
+        .delete()
+        .eq('match_id', matchId);
+
+      // Delete match saves
+      await supabase
+        .from('match_saves')
+        .delete()
+        .eq('match_id', matchId);
+
+      // Delete the match
+      const { error } = await supabase
+        .from('matches')
+        .delete()
+        .eq('id', matchId);
+
+      if (error) throw error;
+
+      await fetchMatches();
+      await fetchPlayers();
+
+      toast({
+        title: "Success",
+        description: "Match deleted successfully!",
+      });
+    } catch (error) {
+      console.error('Error deleting match:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete match",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Reverse player stats when deleting a match
+  const reversePlayerStats = async (playerId: string, updates: { 
+    matches_played?: number;
+    total_goals?: number;
+    total_assists?: number;
+    total_saves?: number;
+    clean_sheets?: number;
+  }) => {
+    try {
+      const { data: currentPlayer, error: fetchError } = await supabase
+        .from('players')
+        .select('*')
+        .eq('id', playerId)
+        .single();
+      
+      if (fetchError || !currentPlayer) {
+        console.error('Error fetching player for reversal:', fetchError);
+        return;
+      }
+
+      const newStats = {
+        matches_played: Math.max(0, currentPlayer.matches_played - (updates.matches_played || 0)),
+        total_goals: Math.max(0, currentPlayer.total_goals - (updates.total_goals || 0)),
+        total_assists: Math.max(0, currentPlayer.total_assists - (updates.total_assists || 0)),
+        total_saves: Math.max(0, currentPlayer.total_saves - (updates.total_saves || 0)),
+        clean_sheets: Math.max(0, currentPlayer.clean_sheets - (updates.clean_sheets || 0))
+      };
+
+      const { error: updateError } = await supabase
+        .from('players')
+        .update(newStats)
+        .eq('id', playerId);
+      
+      if (updateError) {
+        console.error('Error reversing player stats:', updateError);
+      }
+    } catch (error) {
+      console.error('Error in reversePlayerStats:', error);
+    }
+  };
+
   // Store match goals in database
   const storeMatchGoals = async (matchId: string, goals: Goal[]) => {
     try {
@@ -454,6 +566,7 @@ export const useSupabaseFootballData = () => {
     addPlayer,
     createMatch,
     completeMatch,
+    deleteMatch,
     getPlayerById,
     refreshData: () => Promise.all([fetchPlayers(), fetchMatches()])
   };
