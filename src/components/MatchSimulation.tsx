@@ -4,12 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft } from 'lucide-react';
 import FootballPitch from './FootballPitch';
-import { Player, Match } from '@/types/football';
+import { Player, Match, Goal } from '@/types/football';
+import { useToast } from '@/hooks/use-toast';
 
 interface MatchSimulationProps {
   matches: Match[];
   players: Player[];
-  onMatchComplete: (matchId: string, teamAScore: number, teamBScore: number, playerRatings: Record<string, number>) => void;
+  onMatchComplete: (matchId: string, teamAScore: number, teamBScore: number, goals: Goal[], saves: Record<string, number>) => Promise<void>;
   onBack: () => void;
 }
 
@@ -17,51 +18,43 @@ const MatchSimulation = ({ matches, players, onMatchComplete, onBack }: MatchSim
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [isSimulating, setIsSimulating] = useState(false);
   const [completedMatches, setCompletedMatches] = useState<string[]>([]);
+  const { toast } = useToast();
 
   const pendingMatches = matches.filter(match => !match.completed);
 
-  const handleMatchComplete = (matchId: string, teamAScore: number, teamBScore: number, playerRatings: Record<string, number>) => {
-    onMatchComplete(matchId, teamAScore, teamBScore, playerRatings);
+  const handleMatchComplete = async (matchId: string, teamAScore: number, teamBScore: number, playerRatings: Record<string, number>) => {
+    // Convert player ratings to goals and saves format for the backend
+    const goals: Goal[] = [];
+    const saves: Record<string, number> = {};
+    
+    // Process player ratings into match events
+    Object.entries(playerRatings).forEach(([playerId, rating]) => {
+      const player = players.find(p => p.id === playerId);
+      if (!player) return;
+      
+      // Simplified conversion: high ratings indicate good performance
+      if (player.position === 'Goalkeeper' && rating > 7) {
+        saves[playerId] = Math.floor((rating - 6) * 2); // Convert rating to saves
+      }
+      
+      // Add goals based on rating and position
+      if (rating > 8 && ['Forward', 'Midfielder'].includes(player.position)) {
+        const match = matches.find(m => m.id === matchId);
+        if (match) {
+          const team = match.teamA.includes(playerId) ? 'A' : 'B';
+          goals.push({
+            scorer: playerId,
+            team,
+            isOwnGoal: false
+          });
+        }
+      }
+    });
+    
+    await onMatchComplete(matchId, teamAScore, teamBScore, goals, saves);
     setSelectedMatch(null);
   };
 
-  const handleCompleteMatch = async (matchId: string) => {
-    const match = matches.find(m => m.id === matchId);
-    if (!match) return;
-
-    try {
-      setIsSimulating(true);
-      
-      // Simulate the match with proper goal and save tracking
-      const { teamAScore, teamBScore, matchGoals, matchSaves } = simulateMatch(match);
-      
-      console.log('Match simulation results:', {
-        teamAScore,
-        teamBScore,
-        goals: matchGoals,
-        saves: matchSaves
-      });
-
-      // Complete the match with proper statistics tracking
-      await onMatchComplete(matchId, teamAScore, teamBScore, matchGoals, matchSaves);
-      
-      setCompletedMatches(prev => [...prev, matchId]);
-      
-      toast({
-        title: "Match Completed!",
-        description: `Final Score: ${teamAScore} - ${teamBScore}`,
-      });
-    } catch (error) {
-      console.error('Error completing match:', error);
-      toast({
-        title: "Error",
-        description: "Failed to complete match",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSimulating(false);
-    }
-  };
 
   if (selectedMatch) {
     return (
