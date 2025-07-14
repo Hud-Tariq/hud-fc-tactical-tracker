@@ -49,10 +49,16 @@ const Index = () => {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-600 mx-auto"></div>
-          <p className="mt-4 text-orange-700 font-medium">Loading...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-primary/5">
+        <div className="text-center space-y-4 animate-fade-in">
+          <div className="relative">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto"></div>
+            <div className="absolute inset-0 rounded-full h-16 w-16 border-t-2 border-accent mx-auto animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+          </div>
+          <div className="space-y-2">
+            <p className="text-headline text-foreground">HUD FC Manager</p>
+            <p className="text-muted-foreground">Loading your tactical dashboard...</p>
+          </div>
         </div>
       </div>
     );
@@ -99,10 +105,12 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-primary/5">
       <Navigation activeTab={currentView} onTabChange={setCurrentView} />
-      <main className="container mx-auto px-4 py-8">
-        {renderCurrentView()}
+      <main className="container mx-auto px-4 py-8 animate-fade-in">
+        <div className="max-w-7xl mx-auto">
+          {renderCurrentView()}
+        </div>
       </main>
     </div>
   );

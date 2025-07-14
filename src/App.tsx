@@ -10,7 +10,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+        <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-primary/5">
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="*" element={<NotFound />} />
