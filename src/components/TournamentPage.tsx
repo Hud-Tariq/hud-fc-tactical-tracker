@@ -213,25 +213,22 @@ const TournamentPage = () => {
 
       {/* Tournament Tabs */}
       <Tabs defaultValue="browse" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 h-14 p-1 glass-card border border-white/20 rounded-2xl">
+        <TabsList className="grid w-full grid-cols-3 h-14 p-1 bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-2xl">
           <TabsTrigger
             value="browse"
-            className="rounded-xl font-medium text-on-dark-muted data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white"
-            style={{ backgroundColor: 'rgba(82, 41, 108, 0)' }}
+            className="rounded-xl font-medium text-on-dark hover:text-white hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300"
           >
             Browse Tournaments
           </TabsTrigger>
           <TabsTrigger
             value="my-tournaments"
-            className="rounded-xl font-medium text-on-dark-muted data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white"
-            style={{ backgroundColor: 'rgba(82, 41, 108, 0)' }}
+            className="rounded-xl font-medium text-on-dark hover:text-white hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300"
           >
             My Tournaments
           </TabsTrigger>
           <TabsTrigger
             value="leaderboard"
-            className="rounded-xl font-medium text-on-dark-muted data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white"
-            style={{ backgroundColor: 'rgba(82, 41, 108, 0)' }}
+            className="rounded-xl font-medium text-on-dark hover:text-white hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300"
           >
             Leaderboard
           </TabsTrigger>
