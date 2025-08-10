@@ -49,15 +49,15 @@ const Index = () => {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-primary/5">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-primary/5 p-4">
         <div className="text-center space-y-4 animate-fade-in">
           <div className="relative">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto"></div>
-            <div className="absolute inset-0 rounded-full h-16 w-16 border-t-2 border-accent mx-auto animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+            <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-primary mx-auto"></div>
+            <div className="absolute inset-0 rounded-full h-12 w-12 sm:h-16 sm:w-16 border-t-2 border-accent mx-auto animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
           </div>
           <div className="space-y-2">
-            <p className="text-headline text-foreground">HUD FC Manager</p>
-            <p className="text-muted-foreground">Loading your tactical dashboard...</p>
+            <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold tracking-tight text-foreground">HUD FC Manager</p>
+            <p className="text-sm sm:text-base text-muted-foreground">Loading your tactical dashboard...</p>
           </div>
         </div>
       </div>
