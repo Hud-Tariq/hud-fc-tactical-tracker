@@ -100,7 +100,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-primary/5">
       <Navigation activeTab={currentView} onTabChange={setCurrentView} />
-      <main className="container mx-auto px-4 py-8 animate-fade-in">
+      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8 animate-fade-in">
         <div className="max-w-7xl mx-auto">
           {renderCurrentView()}
         </div>
