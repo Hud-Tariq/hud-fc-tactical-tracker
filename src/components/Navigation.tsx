@@ -28,7 +28,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             </div>
             <div>
               <h1 className="text-xl font-bold bg-[var(--gradient-primary)] bg-clip-text text-transparent">
-                FUTBALMANIA
+                Hud FC Manager
               </h1>
               <p className="text-xs text-muted-foreground">Football Management System</p>
             </div>
