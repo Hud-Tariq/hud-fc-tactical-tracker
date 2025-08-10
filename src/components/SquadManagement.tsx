@@ -101,11 +101,11 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
         ].map((stat, index) => (
           <div key={stat.label} className={`floating-card animate-fade-in animate-stagger-${index + 1}`}>
             <div className="p-4 lg:p-8 text-center">
-              <div className="flex items-center justify-center w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20">
-                <stat.icon className={`w-7 h-7 ${stat.color}`} />
+              <div className="flex items-center justify-center w-12 h-12 lg:w-16 lg:h-16 mx-auto mb-3 lg:mb-6 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20">
+                <stat.icon className={`w-6 h-6 lg:w-8 lg:h-8 ${stat.color}`} />
               </div>
-              <p className="text-3xl font-bold text-on-dark mb-2">{stat.value}</p>
-              <p className="text-on-dark-muted text-sm">{stat.label}</p>
+              <p className="text-2xl lg:text-4xl font-bold text-on-dark mb-1 lg:mb-3">{stat.value}</p>
+              <p className="text-on-dark-muted text-xs lg:text-base">{stat.label}</p>
             </div>
           </div>
         ))}
