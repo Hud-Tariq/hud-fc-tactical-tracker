@@ -75,12 +75,12 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
   };
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in">
       {/* Header Section */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
         <div className="space-y-2">
-          <h1 className="text-display">Squad Management</h1>
-          <p className="text-muted-foreground text-lg">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight">Squad Management</h1>
+          <p className="text-muted-foreground text-sm sm:text-base lg:text-lg">
             Manage your team of {players.length} players
           </p>
         </div>
