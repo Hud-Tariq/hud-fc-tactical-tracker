@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 
 interface TournamentCreationProps {
   onCreateTournament?: (tournament: CreateTournamentRequest) => Promise<void>;
+  trigger?: React.ReactNode;
 }
 
 const TournamentCreation = ({ onCreateTournament }: TournamentCreationProps) => {
