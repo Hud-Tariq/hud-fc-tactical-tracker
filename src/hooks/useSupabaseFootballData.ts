@@ -14,6 +14,7 @@ export const useSupabaseFootballData = () => {
   // Fetch players from Supabase
   const fetchPlayers = async () => {
     try {
+      console.log('Fetching players...');
       const { data, error } = await supabase
         .from('players')
         .select('*')
@@ -21,7 +22,6 @@ export const useSupabaseFootballData = () => {
       
       if (error) throw error;
       
-      // Map database fields to frontend types
       const mappedPlayers = data?.map(player => ({
         id: player.id,
         name: player.name,
@@ -37,6 +37,7 @@ export const useSupabaseFootballData = () => {
         matchRatings: []
       })) || [];
       
+      console.log('Fetched players:', mappedPlayers.length);
       setPlayers(mappedPlayers);
     } catch (error) {
       console.error('Error fetching players:', error);
@@ -51,6 +52,7 @@ export const useSupabaseFootballData = () => {
   // Fetch matches from Supabase
   const fetchMatches = async () => {
     try {
+      console.log('Fetching matches...');
       const { data, error } = await supabase
         .from('matches')
         .select(`
@@ -96,6 +98,7 @@ export const useSupabaseFootballData = () => {
         averageTeamBRating: 0
       })) || [];
       
+      console.log('Fetched matches:', formattedMatches.length);
       setMatches(formattedMatches);
     } catch (error) {
       console.error('Error fetching matches:', error);
@@ -107,92 +110,16 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  // Enhanced delete match function
-  const deleteMatch = async (matchId: string) => {
-    try {
-      console.log('Starting match deletion for:', matchId);
-      
-      const match = matches.find(m => m.id === matchId);
-      if (!match) {
-        console.error('Match not found:', matchId);
-        toast({
-          title: "Error",
-          description: "Match not found",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Reverse statistics if match was completed
-      if (match.completed) {
-        console.log('Reversing statistics for completed match');
-        await StatisticsService.reverseMatchStatistics(match, players);
-      }
-
-      // Delete in correct order to avoid foreign key constraints
-      console.log('Deleting match goals...');
-      const { error: goalsError } = await supabase
-        .from('match_goals')
-        .delete()
-        .eq('match_id', matchId);
-
-      if (goalsError) {
-        console.error('Error deleting match goals:', goalsError);
-        throw goalsError;
-      }
-
-      console.log('Deleting match saves...');
-      const { error: savesError } = await supabase
-        .from('match_saves')
-        .delete()
-        .eq('match_id', matchId);
-
-      if (savesError) {
-        console.error('Error deleting match saves:', savesError);
-        throw savesError;
-      }
-
-      console.log('Deleting match...');
-      const { error: matchError } = await supabase
-        .from('matches')
-        .delete()
-        .eq('id', matchId);
-
-      if (matchError) {
-        console.error('Error deleting match:', matchError);
-        throw matchError;
-      }
-
-      console.log('Match deletion completed successfully');
-      
-      // Refresh data
-      await fetchMatches();
-      await fetchPlayers();
-
-      toast({
-        title: "Success",
-        description: "Match deleted successfully!",
-      });
-    } catch (error) {
-      console.error('Error deleting match:', error);
-      toast({
-        title: "Error",
-        description: "Failed to delete match. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
   // Store match goals in database
   const storeMatchGoals = async (matchId: string, goals: Goal[]) => {
     try {
-      // Delete existing goals for this match
+      console.log('Storing match goals for match:', matchId, goals);
+      
       await supabase
         .from('match_goals')
         .delete()
         .eq('match_id', matchId);
 
-      // Insert new goals
       if (goals.length > 0) {
         const goalData = goals.map(goal => ({
           match_id: matchId,
@@ -208,6 +135,8 @@ export const useSupabaseFootballData = () => {
 
         if (error) throw error;
       }
+      
+      console.log('Successfully stored match goals');
     } catch (error) {
       console.error('Error storing match goals:', error);
       throw error;
@@ -217,13 +146,13 @@ export const useSupabaseFootballData = () => {
   // Store match saves in database
   const storeMatchSaves = async (matchId: string, saves: Record<string, number>) => {
     try {
-      // Delete existing saves for this match
+      console.log('Storing match saves for match:', matchId, saves);
+      
       await supabase
         .from('match_saves')
         .delete()
         .eq('match_id', matchId);
 
-      // Insert new saves
       const saveData = Object.entries(saves)
         .filter(([_, count]) => count > 0)
         .map(([playerId, count]) => ({
@@ -239,6 +168,8 @@ export const useSupabaseFootballData = () => {
 
         if (error) throw error;
       }
+      
+      console.log('Successfully stored match saves');
     } catch (error) {
       console.error('Error storing match saves:', error);
       throw error;
@@ -284,9 +215,11 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  // Enhanced create match function
+  // Create match function with proper statistics processing
   const createMatch = async (matchData: Omit<Match, 'id'>) => {
     try {
+      console.log('Creating match with data:', matchData);
+      
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
@@ -309,21 +242,24 @@ export const useSupabaseFootballData = () => {
       
       if (error) throw error;
 
-      // Store goals and saves, then process statistics
+      console.log('Match created with ID:', data.id);
+
       if (matchData.completed) {
+        console.log('Match is completed, processing statistics...');
+        
         await storeMatchGoals(data.id, matchData.goals);
         await storeMatchSaves(data.id, matchData.saves);
         
-        // Process statistics using the new service
         const completeMatch = {
           ...matchData,
           id: data.id
         };
+        
         await StatisticsService.processMatchStatistics(completeMatch, players);
+        console.log('Statistics processing completed');
       }
       
-      await fetchMatches();
-      await fetchPlayers();
+      await Promise.all([fetchMatches(), fetchPlayers()]);
       
       toast({
         title: "Success",
@@ -335,17 +271,18 @@ export const useSupabaseFootballData = () => {
       console.error('Error creating match:', error);
       toast({
         title: "Error",
-        description: "Failed to create match",
+        description: `Failed to create match: ${error}`,
         variant: "destructive",
       });
       return null;
     }
   };
 
-  // Enhanced complete match function
+  // Complete match function with proper statistics processing
   const completeMatch = async (matchId: string, scoreA: number, scoreB: number, goals: Goal[], saves: Record<string, number>) => {
     try {
-      // Update match completion
+      console.log('Completing match:', matchId, { scoreA, scoreB, goals, saves });
+      
       const { error: matchError } = await supabase
         .from('matches')
         .update({
@@ -357,11 +294,9 @@ export const useSupabaseFootballData = () => {
       
       if (matchError) throw matchError;
 
-      // Store match details
       await storeMatchGoals(matchId, goals);
       await storeMatchSaves(matchId, saves);
       
-      // Find the completed match and process statistics
       const match = matches.find(m => m.id === matchId);
       if (match) {
         const completedMatch = {
@@ -373,11 +308,12 @@ export const useSupabaseFootballData = () => {
           completed: true
         };
         
+        console.log('Processing statistics for completed match...');
         await StatisticsService.processMatchStatistics(completedMatch, players);
+        console.log('Statistics processing completed');
       }
 
-      await fetchMatches();
-      await fetchPlayers();
+      await Promise.all([fetchMatches(), fetchPlayers()]);
       
       toast({
         title: "Success",
@@ -387,7 +323,74 @@ export const useSupabaseFootballData = () => {
       console.error('Error completing match:', error);
       toast({
         title: "Error",
-        description: "Failed to complete match",
+        description: `Failed to complete match: ${error}`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Enhanced delete match function
+  const deleteMatch = async (matchId: string) => {
+    try {
+      console.log('Starting match deletion for:', matchId);
+      
+      const match = matches.find(m => m.id === matchId);
+      if (!match) {
+        console.error('Match not found:', matchId);
+        toast({
+          title: "Error",
+          description: "Match not found",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      console.log('Deleting match goals...');
+      const { error: goalsError } = await supabase
+        .from('match_goals')
+        .delete()
+        .eq('match_id', matchId);
+
+      if (goalsError) {
+        console.error('Error deleting match goals:', goalsError);
+        throw goalsError;
+      }
+
+      console.log('Deleting match saves...');
+      const { error: savesError } = await supabase
+        .from('match_saves')
+        .delete()
+        .eq('match_id', matchId);
+
+      if (savesError) {
+        console.error('Error deleting match saves:', savesError);
+        throw savesError;
+      }
+
+      console.log('Deleting match...');
+      const { error: matchError } = await supabase
+        .from('matches')
+        .delete()
+        .eq('id', matchId);
+
+      if (matchError) {
+        console.error('Error deleting match:', matchError);
+        throw matchError;
+      }
+
+      console.log('Match deletion completed successfully');
+      
+      await Promise.all([fetchMatches(), fetchPlayers()]);
+
+      toast({
+        title: "Success",
+        description: "Match deleted successfully!",
+      });
+    } catch (error) {
+      console.error('Error deleting match:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete match. Please try again.",
         variant: "destructive",
       });
     }

@@ -1,10 +1,10 @@
+
 import React, { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import SquadManagement from '@/components/SquadManagement';
 import MatchCreation from '@/components/MatchCreation';
 import MatchView from '@/components/MatchView';
 import Statistics from '@/components/Statistics';
-import MatchSimulation from '@/components/MatchSimulation';
 import { useSupabaseFootballData } from '@/hooks/useSupabaseFootballData';
 import { useAuth } from '@/hooks/useAuth';
 import AuthPage from '@/components/AuthPage';
@@ -90,15 +90,6 @@ const Index = () => {
         );
       case 'statistics':
         return <Statistics players={players} />;
-      case 'simulation':
-        return (
-          <MatchSimulation
-            matches={matches}
-            players={players}
-            onMatchComplete={handleMatchComplete}
-            onBack={() => setCurrentView('create-match')}
-          />
-        );
       default:
         return <SquadManagement players={players} onAddPlayer={addPlayer} onPlayerClick={handlePlayerClick} />;
     }
