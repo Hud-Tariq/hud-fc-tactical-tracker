@@ -92,7 +92,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
       </div>
 
       {/* Squad Statistics Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8 mb-8 lg:mb-16">
         {[
           { icon: Users, label: 'Total Players', value: squadStats.totalPlayers, color: 'text-blue-400' },
           { icon: Target, label: 'Avg Rating', value: squadStats.averageRating, color: 'text-purple-400' },
