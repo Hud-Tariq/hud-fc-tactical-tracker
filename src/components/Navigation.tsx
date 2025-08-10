@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Calendar, BarChart3, Trophy } from 'lucide-react';
+import { Users, Calendar, BarChart3, Trophy, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import UserMenu from '@/components/UserMenu';
 
@@ -17,45 +17,91 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
   ];
 
   return (
-    <nav className="bg-white shadow-lg border-b border-border sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-2">
-            <div className="bg-[var(--gradient-primary)] p-2 rounded-lg shadow-md">
-              <div className="w-6 h-6 bg-white rounded-sm flex items-center justify-center">
-                <span className="text-primary font-bold text-sm">⚽</span>
+    <nav className="sticky top-0 z-50 p-4">
+      <div className="container mx-auto">
+        <div className="glass-nav rounded-2xl px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo Section */}
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center shadow-lg">
+                  <span className="text-white font-bold text-lg">⚽</span>
+                </div>
+                <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 opacity-30 blur animate-pulse"></div>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-on-dark font-poppins">
+                  Hud FC Manager
+                </h1>
+                <p className="text-xs text-on-dark-subtle">Football Management System</p>
               </div>
             </div>
-            <div>
-              <h1 className="text-xl font-bold bg-[var(--gradient-primary)] bg-clip-text text-transparent">
-                Hud FC Manager
-              </h1>
-              <p className="text-xs text-muted-foreground">Football Management System</p>
+
+            {/* Navigation Items - Center */}
+            <div className="hidden md:flex items-center space-x-2">
+              {navItems.map((item, index) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                
+                return (
+                  <Button
+                    key={item.id}
+                    variant="ghost"
+                    onClick={() => onTabChange(item.id)}
+                    className={`
+                      relative flex items-center space-x-2 px-4 py-3 rounded-xl transition-all duration-300
+                      ${isActive
+                        ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30 shadow-lg'
+                        : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
+                      }
+                    `}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span className="font-medium">{item.label}</span>
+                    
+                    {/* Active indicator */}
+                    {isActive && (
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-pink-500/10 to-purple-600/10 animate-pulse"></div>
+                    )}
+                  </Button>
+                );
+              })}
+            </div>
+
+            {/* Mobile Navigation Menu */}
+            <div className="md:hidden flex items-center space-x-1">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                
+                return (
+                  <Button
+                    key={item.id}
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onTabChange(item.id)}
+                    className={`
+                      relative p-2 rounded-lg transition-all duration-300
+                      ${isActive
+                        ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30'
+                        : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
+                      }
+                    `}
+                  >
+                    <Icon className="w-4 h-4" />
+                    {isActive && (
+                      <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-pink-500/10 to-purple-600/10 animate-pulse"></div>
+                    )}
+                  </Button>
+                );
+              })}
+            </div>
+
+            {/* User Menu */}
+            <div className="flex items-center">
+              <UserMenu />
             </div>
           </div>
-
-          <div className="flex items-center space-x-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Button
-                  key={item.id}
-                  variant="ghost"
-                  onClick={() => onTabChange(item.id)}
-                  className={`flex items-center space-x-2 transition-all duration-200 relative ${
-                    activeTab === item.id
-                      ? 'bg-primary text-primary-foreground shadow-md hover:bg-primary/90'
-                      : 'text-muted-foreground hover:bg-primary/10 hover:text-primary'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{item.label}</span>
-                </Button>
-              );
-            })}
-          </div>
-
-          <UserMenu />
         </div>
       </div>
     </nav>
