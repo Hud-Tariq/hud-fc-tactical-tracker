@@ -366,17 +366,17 @@
   }
 
   .floating-section {
-    @apply space-y-12 px-8 py-16;
+    @apply space-y-12 px-6 py-12;
   }
 }
 
 @media (min-width: 1536px) {
   .floating-section {
-    @apply space-y-16 px-16 py-24;
+    @apply space-y-16 px-8 py-16;
   }
 
   .section-header {
-    @apply mb-28;
+    @apply mb-16;
   }
 
   .section-header h1 {
