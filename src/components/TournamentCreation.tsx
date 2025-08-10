@@ -118,10 +118,12 @@ const TournamentCreation = ({ onCreateTournament, trigger }: TournamentCreationP
         )}
       </DialogTrigger>
       
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto glass-card-strong border-white/20 text-on-dark rounded-2xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-2xl">
-            <Trophy className="w-6 h-6 text-primary" />
+          <DialogTitle className="flex items-center gap-3 text-2xl font-bold text-on-dark font-poppins">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-yellow-400/30 flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-yellow-400" />
+            </div>
             Create New Tournament
           </DialogTitle>
         </DialogHeader>
