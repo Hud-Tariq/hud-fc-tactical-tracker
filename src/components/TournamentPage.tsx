@@ -247,7 +247,7 @@ const TournamentPage = () => {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 lg:gap-8">
                 {filteredTournaments.map((tournament, index) => (
                   <div key={tournament.id} className={`floating-card animate-fade-in animate-stagger-${(index % 5) + 1}`}>
                     <div className="p-6">
