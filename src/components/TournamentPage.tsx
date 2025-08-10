@@ -234,7 +234,7 @@ const TournamentPage = () => {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="browse" className="space-y-8 mt-8">
+        <TabsContent value="browse" className="space-y-8 mt-8 bg-transparent">
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <div className="text-center space-y-4">
