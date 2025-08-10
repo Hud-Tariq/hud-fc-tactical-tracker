@@ -346,12 +346,26 @@
   .floating-card {
     margin: 1rem;
   }
-  
+
   .section-header {
     @apply mb-8;
   }
-  
+
   .floating-section {
     @apply p-4 space-y-6;
+  }
+}
+
+@media (min-width: 1024px) {
+  .floating-card {
+    margin: 0;
+  }
+
+  .section-header h1 {
+    @apply text-6xl;
+  }
+
+  .floating-section {
+    @apply space-y-12 px-12 py-16;
   }
 }
