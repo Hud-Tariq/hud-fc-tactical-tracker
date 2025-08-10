@@ -246,15 +246,68 @@ const TournamentPage = () => {
                     </span>
                   </div>
                   
-                  <div className="pt-2">
-                    <Button 
-                      className="w-full bg-[var(--gradient-primary)] hover:opacity-90" 
-                      disabled={tournament.status !== 'open'}
-                    >
-                      {tournament.status === 'open' ? 'Join Tournament' : 
-                       tournament.status === 'in_progress' ? 'View Matches' : 
-                       'View Results'}
-                    </Button>
+                  <div className="pt-2 space-y-2">
+                    {tournament.status === 'open' && (
+                      <>
+                        {userTeams.length > 0 ? (
+                          <>
+                            <Select value={selectedTeam} onValueChange={setSelectedTeam}>
+                              <SelectTrigger className="w-full h-9">
+                                <SelectValue placeholder="Select your team" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {userTeams.map((team) => (
+                                  <SelectItem key={team.id} value={team.id}>
+                                    <div className="flex items-center gap-2">
+                                      <div
+                                        className="w-4 h-4 rounded-full"
+                                        style={{ backgroundColor: team.home_color || '#6366f1' }}
+                                      />
+                                      {team.name}
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <Button
+                              className="w-full bg-[var(--gradient-primary)] hover:opacity-90"
+                              disabled={!selectedTeam || joiningTournament === tournament.id}
+                              onClick={() => handleJoinTournament(tournament.id)}
+                            >
+                              {joiningTournament === tournament.id ? (
+                                <>
+                                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                  Joining...
+                                </>
+                              ) : (
+                                'Join Tournament'
+                              )}
+                            </Button>
+                          </>
+                        ) : (
+                          <div className="space-y-2">
+                            <p className="text-xs text-muted-foreground text-center">You need a team to join</p>
+                            <TeamCreation
+                              onCreateTeam={handleCreateTeam}
+                              trigger={
+                                <Button className="w-full" variant="outline">
+                                  <Plus className="w-4 h-4 mr-2" />
+                                  Create Team First
+                                </Button>
+                              }
+                            />
+                          </div>
+                        )}
+                      </>
+                    )}
+                    {tournament.status !== 'open' && (
+                      <Button
+                        className="w-full bg-[var(--gradient-primary)] hover:opacity-90"
+                        disabled
+                      >
+                        {tournament.status === 'in_progress' ? 'View Matches' : 'View Results'}
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>
