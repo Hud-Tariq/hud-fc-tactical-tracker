@@ -122,11 +122,11 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
           <Calendar className="w-5 h-5 mr-2 text-purple-400" />
           <span className="text-on-dark-muted font-medium">Match Creation</span>
         </div>
-        <h1 className="text-5xl font-bold text-on-dark font-poppins mb-4">
+        <h1 className="text-4xl lg:text-6xl font-bold text-on-dark font-poppins mb-4 lg:mb-6">
           Create Epic
           <span className="gradient-text-light ml-3">Match</span>
         </h1>
-        <p className="text-xl text-on-dark-muted max-w-2xl mx-auto">
+        <p className="text-lg lg:text-2xl text-on-dark-muted max-w-3xl mx-auto">
           Set up teams, track goals, and create memorable football matches
         </p>
       </div>
