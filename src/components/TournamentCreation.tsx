@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CalendarIcon, Plus, Trophy, Users, Settings, DollarSign } from 'lucide-react';
 import { CreateTournamentRequest, TournamentFormat, TournamentVisibility } from '@/types/tournament';
@@ -129,257 +128,257 @@ const TournamentCreation = ({ onCreateTournament, trigger }: TournamentCreationP
         </DialogHeader>
 
         <Tabs value={currentStep} onValueChange={setCurrentStep} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 h-14 p-1 glass-card border border-white/20 rounded-2xl">
-            <TabsTrigger
-              value="basic"
-              className="flex items-center gap-2 rounded-xl font-medium text-on-dark-muted data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white"
+          <TabsList className="grid w-full grid-cols-4 h-14 p-1 bg-gradient-to-br from-white/5 to-white/10 border border-white/20 rounded-2xl">
+            <TabsTrigger 
+              value="basic" 
+              className="flex items-center gap-2 rounded-xl font-medium text-on-dark hover:text-on-dark hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
             >
               <Trophy className="w-4 h-4" />
               <span className="hidden sm:inline">Basic Info</span>
             </TabsTrigger>
-            <TabsTrigger
-              value="teams"
-              className="flex items-center gap-2 rounded-xl font-medium text-on-dark-muted data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white"
+            <TabsTrigger 
+              value="teams" 
+              className="flex items-center gap-2 rounded-xl font-medium text-on-dark hover:text-on-dark hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
             >
               <Users className="w-4 h-4" />
               <span className="hidden sm:inline">Teams</span>
             </TabsTrigger>
-            <TabsTrigger
-              value="prizes"
-              className="flex items-center gap-2 rounded-xl font-medium text-on-dark-muted data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white"
+            <TabsTrigger 
+              value="prizes" 
+              className="flex items-center gap-2 rounded-xl font-medium text-on-dark hover:text-on-dark hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
             >
               <DollarSign className="w-4 h-4" />
               <span className="hidden sm:inline">Prizes</span>
             </TabsTrigger>
-            <TabsTrigger
-              value="settings"
-              className="flex items-center gap-2 rounded-xl font-medium text-on-dark-muted data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white"
+            <TabsTrigger 
+              value="settings" 
+              className="flex items-center gap-2 rounded-xl font-medium text-on-dark hover:text-on-dark hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
             >
               <Settings className="w-4 h-4" />
               <span className="hidden sm:inline">Settings</span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="basic" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Tournament Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Tournament Name *</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      placeholder="e.g., Summer Champions League"
-                      className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark placeholder:text-on-dark-subtle focus:border-yellow-400"
-                    />
+          <TabsContent value="basic" className="space-y-6 mt-6">
+            <div className="floating-card border border-white/10">
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-on-dark font-poppins mb-6">Tournament Details</h3>
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-on-dark-muted">Tournament Name *</Label>
+                      <Input
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        placeholder="e.g., Summer Champions League"
+                        className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark placeholder:text-on-dark-subtle focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="visibility" className="text-on-dark-muted">Visibility</Label>
+                      <Select value={formData.visibility} onValueChange={(value: TournamentVisibility) => handleInputChange('visibility', value)}>
+                        <SelectTrigger className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark focus:border-yellow-400">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="glass-card-strong border-white/20 rounded-xl">
+                          <SelectItem value="public" className="text-on-dark hover:bg-white/10">Public - Anyone can join</SelectItem>
+                          <SelectItem value="private" className="text-on-dark hover:bg-white/10">Private - Invitation only</SelectItem>
+                          <SelectItem value="invite_only" className="text-on-dark hover:bg-white/10">Invite Only - Admin approval required</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="visibility">Visibility</Label>
-                    <Select value={formData.visibility} onValueChange={(value: TournamentVisibility) => handleInputChange('visibility', value)}>
-                      <SelectTrigger className="h-12">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="public">Public - Anyone can join</SelectItem>
-                        <SelectItem value="private">Private - Invitation only</SelectItem>
-                        <SelectItem value="invite_only">Invite Only - Admin approval required</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
-                    placeholder="Describe your tournament..."
-                    rows={3}
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="description" className="text-on-dark-muted">Description</Label>
+                    <Textarea
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) => handleInputChange('description', e.target.value)}
+                      placeholder="Describe your tournament..."
+                      rows={3}
+                      className="bg-white/10 border border-white/20 rounded-xl text-on-dark placeholder:text-on-dark-subtle focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                    />
+                  </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="start_date">Start Date</Label>
-                    <Input
-                      id="start_date"
-                      type="datetime-local"
-                      value={formData.start_date}
-                      onChange={(e) => handleInputChange('start_date', e.target.value)}
-                      className="h-12"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="end_date">End Date</Label>
-                    <Input
-                      id="end_date"
-                      type="datetime-local"
-                      value={formData.end_date}
-                      onChange={(e) => handleInputChange('end_date', e.target.value)}
-                      className="h-12"
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="start_date" className="text-on-dark-muted">Start Date</Label>
+                      <Input
+                        id="start_date"
+                        type="datetime-local"
+                        value={formData.start_date}
+                        onChange={(e) => handleInputChange('start_date', e.target.value)}
+                        className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="end_date" className="text-on-dark-muted">End Date</Label>
+                      <Input
+                        id="end_date"
+                        type="datetime-local"
+                        value={formData.end_date}
+                        onChange={(e) => handleInputChange('end_date', e.target.value)}
+                        className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      />
+                    </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </TabsContent>
 
-          <TabsContent value="teams" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Tournament Format</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {formatOptions.map((format) => (
-                    <Card 
-                      key={format.value}
-                      className={`cursor-pointer transition-all duration-200 ${
-                        formData.format === format.value 
-                          ? 'ring-2 ring-primary bg-primary/5' 
-                          : 'hover:bg-muted/50'
-                      }`}
-                      onClick={() => handleInputChange('format', format.value as TournamentFormat)}
-                    >
-                      <CardContent className="p-4">
-                        <h3 className="font-semibold mb-2">{format.label}</h3>
-                        <p className="text-sm text-muted-foreground">{format.description}</p>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+          <TabsContent value="teams" className="space-y-6 mt-6">
+            <div className="floating-card border border-white/10">
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-on-dark font-poppins mb-6">Tournament Format</h3>
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {formatOptions.map((format) => (
+                      <div 
+                        key={format.value}
+                        className={`cursor-pointer transition-all duration-200 p-4 rounded-xl border ${
+                          formData.format === format.value 
+                            ? 'border-yellow-400/50 bg-yellow-500/10 shadow-lg' 
+                            : 'border-white/20 bg-white/5 hover:bg-white/10'
+                        }`}
+                        onClick={() => handleInputChange('format', format.value as TournamentFormat)}
+                      >
+                        <h4 className="font-semibold mb-2 text-on-dark">{format.label}</h4>
+                        <p className="text-sm text-on-dark-muted">{format.description}</p>
+                      </div>
+                    ))}
+                  </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="min_teams">Minimum Teams</Label>
-                    <Input
-                      id="min_teams"
-                      type="number"
-                      min="2"
-                      max="64"
-                      value={formData.min_teams}
-                      onChange={(e) => handleInputChange('min_teams', parseInt(e.target.value))}
-                      className="h-12"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="max_teams">Maximum Teams</Label>
-                    <Input
-                      id="max_teams"
-                      type="number"
-                      min="2"
-                      max="64"
-                      value={formData.max_teams}
-                      onChange={(e) => handleInputChange('max_teams', parseInt(e.target.value))}
-                      className="h-12"
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="min_teams" className="text-on-dark-muted">Minimum Teams</Label>
+                      <Input
+                        id="min_teams"
+                        type="number"
+                        min="2"
+                        max="64"
+                        value={formData.min_teams}
+                        onChange={(e) => handleInputChange('min_teams', parseInt(e.target.value))}
+                        className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark focus:border-yellow-400"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="max_teams" className="text-on-dark-muted">Maximum Teams</Label>
+                      <Input
+                        id="max_teams"
+                        type="number"
+                        min="2"
+                        max="64"
+                        value={formData.max_teams}
+                        onChange={(e) => handleInputChange('max_teams', parseInt(e.target.value))}
+                        className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark focus:border-yellow-400"
+                      />
+                    </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </TabsContent>
 
-          <TabsContent value="prizes" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Financial Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="entry_fee">Entry Fee ($)</Label>
-                    <Input
-                      id="entry_fee"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={formData.entry_fee}
-                      onChange={(e) => handleInputChange('entry_fee', parseFloat(e.target.value) || 0)}
-                      className="h-12"
-                    />
-                    <p className="text-xs text-muted-foreground">Set to 0 for free tournaments</p>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="prize_pool">Prize Pool ($)</Label>
-                    <Input
-                      id="prize_pool"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={formData.prize_pool}
-                      onChange={(e) => handleInputChange('prize_pool', parseFloat(e.target.value) || 0)}
-                      className="h-12"
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="settings" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Match Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="match_duration">Match Duration (minutes)</Label>
-                  <Input
-                    id="match_duration"
-                    type="number"
-                    min="30"
-                    max="120"
-                    value={formData.match_duration}
-                    onChange={(e) => handleInputChange('match_duration', parseInt(e.target.value))}
-                    className="h-12"
-                  />
-                </div>
-
+          <TabsContent value="prizes" className="space-y-6 mt-6">
+            <div className="floating-card border border-white/10">
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-on-dark font-poppins mb-6">Financial Settings</h3>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <Label>Extra Time</Label>
-                      <p className="text-sm text-muted-foreground">Allow extra time for knockout matches</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="entry_fee" className="text-on-dark-muted">Entry Fee ($)</Label>
+                      <Input
+                        id="entry_fee"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={formData.entry_fee}
+                        onChange={(e) => handleInputChange('entry_fee', parseFloat(e.target.value) || 0)}
+                        className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark focus:border-yellow-400"
+                      />
+                      <p className="text-xs text-on-dark-subtle">Set to 0 for free tournaments</p>
                     </div>
-                    <Switch
-                      checked={formData.extra_time_enabled}
-                      onCheckedChange={(checked) => handleInputChange('extra_time_enabled', checked)}
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="prize_pool" className="text-on-dark-muted">Prize Pool ($)</Label>
+                      <Input
+                        id="prize_pool"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={formData.prize_pool}
+                        onChange={(e) => handleInputChange('prize_pool', parseFloat(e.target.value) || 0)}
+                        className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark focus:border-yellow-400"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="settings" className="space-y-6 mt-6">
+            <div className="floating-card border border-white/10">
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-on-dark font-poppins mb-6">Match Settings</h3>
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="match_duration" className="text-on-dark-muted">Match Duration (minutes)</Label>
+                    <Input
+                      id="match_duration"
+                      type="number"
+                      min="30"
+                      max="120"
+                      value={formData.match_duration}
+                      onChange={(e) => handleInputChange('match_duration', parseInt(e.target.value))}
+                      className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark focus:border-yellow-400"
                     />
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <Label>Penalty Shootouts</Label>
-                      <p className="text-sm text-muted-foreground">Enable penalty shootouts for tied matches</p>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
+                      <div className="space-y-1">
+                        <Label className="text-on-dark">Extra Time</Label>
+                        <p className="text-sm text-on-dark-muted">Allow extra time for knockout matches</p>
+                      </div>
+                      <Switch
+                        checked={formData.extra_time_enabled}
+                        onCheckedChange={(checked) => handleInputChange('extra_time_enabled', checked)}
+                      />
                     </div>
-                    <Switch
-                      checked={formData.penalty_shootouts_enabled}
-                      onCheckedChange={(checked) => handleInputChange('penalty_shootouts_enabled', checked)}
+
+                    <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
+                      <div className="space-y-1">
+                        <Label className="text-on-dark">Penalty Shootouts</Label>
+                        <p className="text-sm text-on-dark-muted">Enable penalty shootouts for tied matches</p>
+                      </div>
+                      <Switch
+                        checked={formData.penalty_shootouts_enabled}
+                        onCheckedChange={(checked) => handleInputChange('penalty_shootouts_enabled', checked)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="rules_text" className="text-on-dark-muted">Custom Rules</Label>
+                    <Textarea
+                      id="rules_text"
+                      value={formData.rules_text || ''}
+                      onChange={(e) => handleInputChange('rules_text', e.target.value)}
+                      placeholder="Add any special rules or regulations..."
+                      rows={4}
+                      className="bg-white/10 border border-white/20 rounded-xl text-on-dark placeholder:text-on-dark-subtle focus:border-yellow-400"
                     />
                   </div>
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="rules_text">Custom Rules</Label>
-                  <Textarea
-                    id="rules_text"
-                    value={formData.rules_text || ''}
-                    onChange={(e) => handleInputChange('rules_text', e.target.value)}
-                    placeholder="Add any special rules or regulations..."
-                    rows={4}
-                  />
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
 
@@ -395,6 +394,7 @@ const TournamentCreation = ({ onCreateTournament, trigger }: TournamentCreationP
                     setCurrentStep(steps[currentIndex - 1]);
                   }
                 }}
+                className="bg-white/10 border-white/20 text-on-dark hover:bg-white/20 hover:text-on-dark"
               >
                 Previous
               </Button>
@@ -411,6 +411,7 @@ const TournamentCreation = ({ onCreateTournament, trigger }: TournamentCreationP
                     setCurrentStep(steps[currentIndex + 1]);
                   }
                 }}
+                className="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white"
               >
                 Next
               </Button>
@@ -418,7 +419,7 @@ const TournamentCreation = ({ onCreateTournament, trigger }: TournamentCreationP
               <Button 
                 onClick={handleSubmit} 
                 disabled={loading}
-                className="bg-[var(--gradient-primary)]"
+                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
               >
                 {loading ? 'Creating...' : 'Create Tournament'}
               </Button>
