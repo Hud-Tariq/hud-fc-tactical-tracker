@@ -509,7 +509,7 @@ const TournamentPage = () => {
           )}
         </TabsContent>
 
-        <TabsContent value="leaderboard" className="space-y-8 mt-8">
+        <TabsContent value="leaderboard" className="space-y-8 mt-8 bg-transparent">
           <div className="floating-card text-center py-20">
             <div className="space-y-6">
               <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center border border-yellow-400/30">
