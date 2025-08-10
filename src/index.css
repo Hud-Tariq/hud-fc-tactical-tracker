@@ -236,7 +236,7 @@
   }
 
   .section-header {
-    @apply text-center space-y-4 mb-8 lg:mb-16;
+    @apply text-center space-y-4 mb-8 lg:mb-20 xl:mb-24;
   }
 
   .floating-section {
