@@ -41,24 +41,21 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
                 <Button
                   key={item.id}
                   variant="ghost"
-                  size="sm"
                   onClick={() => onTabChange(item.id)}
-                  className={`flex items-center space-x-1 sm:space-x-2 transition-all duration-200 relative px-2 sm:px-3 py-1.5 sm:py-2 ${
+                  className={`flex items-center space-x-2 transition-all duration-200 relative ${
                     activeTab === item.id
                       ? 'bg-primary text-primary-foreground shadow-md hover:bg-primary/90'
                       : 'text-muted-foreground hover:bg-primary/10 hover:text-primary'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  <span className="hidden sm:inline text-xs sm:text-sm">{item.label}</span>
+                  <span className="hidden sm:inline">{item.label}</span>
                 </Button>
               );
             })}
           </div>
 
-          <div className="ml-2">
-            <UserMenu />
-          </div>
+          <UserMenu />
         </div>
       </div>
     </nav>
