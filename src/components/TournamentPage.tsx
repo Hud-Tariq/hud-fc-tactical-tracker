@@ -163,18 +163,7 @@ const TournamentPage = () => {
               </Button>
             }
           />
-          <TournamentCreation 
-            onCreateTournament={handleCreateTournament}
-            trigger={
-              <Button
-                size="lg"
-                className="px-8 py-4 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-semibold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg shadow-yellow-500/25"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Create Tournament
-              </Button>
-            } 
-          />
+          <TournamentCreation onCreateTournament={handleCreateTournament} />
         </div>
       </div>
 
