@@ -124,7 +124,7 @@ const TournamentPage = () => {
   });
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="space-y-6">
       {/* Header */}
       <div className="relative overflow-hidden rounded-2xl bg-[var(--gradient-hero)] p-8 text-white">
         <div className="relative z-10">
