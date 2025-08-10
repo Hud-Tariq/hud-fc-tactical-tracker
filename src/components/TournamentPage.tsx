@@ -217,7 +217,7 @@ const TournamentPage = () => {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {filteredTournaments.map((tournament) => (
               <Card key={tournament.id} className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
                 <CardHeader>
@@ -347,7 +347,7 @@ const TournamentPage = () => {
               <span className="ml-2">Loading your tournaments...</span>
             </div>
           ) : filteredMyTournaments.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {filteredMyTournaments.map((tournament) => (
                 <Card key={tournament.id} className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
                   <CardHeader>
@@ -364,7 +364,7 @@ const TournamentPage = () => {
                   </CardHeader>
 
                   <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm">
                       <div className="flex items-center gap-2">
                         <Users className="w-4 h-4 text-muted-foreground" />
                         <span>{tournament.tournament_teams?.length || 0}/{tournament.max_teams} teams</span>
