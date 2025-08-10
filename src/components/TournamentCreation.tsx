@@ -128,31 +128,31 @@ const TournamentCreation = ({ onCreateTournament, trigger }: TournamentCreationP
         </DialogHeader>
 
         <Tabs value={currentStep} onValueChange={setCurrentStep} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 h-14 p-1 bg-gradient-to-br from-white/5 to-white/10 border border-white/20 rounded-2xl">
-            <TabsTrigger 
-              value="basic" 
-              className="flex items-center gap-2 rounded-xl font-medium text-on-dark hover:text-on-dark hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+          <TabsList className="grid w-full grid-cols-4 h-14 p-1 bg-gradient-to-br from-black/30 to-black/20 border border-white/20 rounded-2xl">
+            <TabsTrigger
+              value="basic"
+              className="flex items-center gap-2 rounded-xl font-medium text-white/80 hover:text-white hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
             >
               <Trophy className="w-4 h-4" />
               <span className="hidden sm:inline">Basic Info</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="teams" 
-              className="flex items-center gap-2 rounded-xl font-medium text-on-dark hover:text-on-dark hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+            <TabsTrigger
+              value="teams"
+              className="flex items-center gap-2 rounded-xl font-medium text-white/80 hover:text-white hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
             >
               <Users className="w-4 h-4" />
               <span className="hidden sm:inline">Teams</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="prizes" 
-              className="flex items-center gap-2 rounded-xl font-medium text-on-dark hover:text-on-dark hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+            <TabsTrigger
+              value="prizes"
+              className="flex items-center gap-2 rounded-xl font-medium text-white/80 hover:text-white hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
             >
               <DollarSign className="w-4 h-4" />
               <span className="hidden sm:inline">Prizes</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="settings" 
-              className="flex items-center gap-2 rounded-xl font-medium text-on-dark hover:text-on-dark hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+            <TabsTrigger
+              value="settings"
+              className="flex items-center gap-2 rounded-xl font-medium text-white/80 hover:text-white hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
             >
               <Settings className="w-4 h-4" />
               <span className="hidden sm:inline">Settings</span>
