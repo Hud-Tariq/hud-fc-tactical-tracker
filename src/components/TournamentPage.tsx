@@ -157,9 +157,15 @@ const TournamentPage = () => {
         </TabsList>
 
         <TabsContent value="browse" className="space-y-6">
-          {/* Tournament Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTournaments.map((tournament) => (
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              <span className="ml-2">Loading tournaments...</span>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredTournaments.map((tournament) => (
               <Card key={tournament.id} className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
                 <CardHeader>
                   <div className="flex items-start justify-between">
@@ -214,32 +220,87 @@ const TournamentPage = () => {
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
+                ))}
+              </div>
 
-          {filteredTournaments.length === 0 && (
+              {filteredTournaments.length === 0 && !loading && (
             <div className="text-center py-12">
               <Trophy className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">No tournaments found</h3>
               <p className="text-muted-foreground">Try adjusting your search or create a new tournament.</p>
-            </div>
+              </div>
+              )}
+            </>
           )}
         </TabsContent>
 
         <TabsContent value="my-tournaments" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>My Tournaments</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <Trophy className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No tournaments yet</h3>
-                <p className="text-muted-foreground mb-4">Join your first tournament to get started!</p>
-                <Button>Browse Tournaments</Button>
-              </div>
-            </CardContent>
-          </Card>
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              <span className="ml-2">Loading your tournaments...</span>
+            </div>
+          ) : filteredMyTournaments.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredMyTournaments.map((tournament) => (
+                <Card key={tournament.id} className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-2">
+                        {getFormatIcon(tournament.format)}
+                        <CardTitle className="text-lg">{tournament.name}</CardTitle>
+                      </div>
+                      <Badge className={`${getStatusColor(tournament.status)} text-white`}>
+                        {tournament.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{tournament.description}</p>
+                  </CardHeader>
+
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-muted-foreground" />
+                        <span>{tournament.tournament_teams?.length || 0}/{tournament.max_teams} teams</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-muted-foreground" />
+                        <span>{tournament.match_duration}min</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="w-4 h-4 text-muted-foreground" />
+                        <span>${tournament.entry_fee}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Trophy className="w-4 h-4 text-muted-foreground" />
+                        <span>${tournament.prize_pool}</span>
+                      </div>
+                    </div>
+
+                    <div className="pt-2">
+                      <Button className="w-full bg-[var(--gradient-primary)] hover:opacity-90">
+                        Manage Tournament
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle>My Tournaments</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8">
+                  <Trophy className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No tournaments yet</h3>
+                  <p className="text-muted-foreground mb-4">Create your first tournament to get started!</p>
+                  <TournamentCreation onCreateTournament={handleCreateTournament} />
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
 
         <TabsContent value="leaderboard" className="space-y-6">
