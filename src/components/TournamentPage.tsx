@@ -4,20 +4,21 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { 
-  Trophy, 
-  Users, 
-  Calendar, 
-  MapPin, 
-  Plus, 
-  Search, 
+import TournamentCreation from '@/components/TournamentCreation';
+import {
+  Trophy,
+  Users,
+  Calendar,
+  MapPin,
+  Plus,
+  Search,
   Filter,
   Medal,
   Target,
   Clock,
   DollarSign
 } from 'lucide-react';
-import { Tournament, TournamentStatus, TournamentFormat } from '@/types/tournament';
+import { Tournament, TournamentStatus, TournamentFormat, CreateTournamentRequest } from '@/types/tournament';
 
 const TournamentPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
