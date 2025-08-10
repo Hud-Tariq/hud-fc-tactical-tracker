@@ -1,70 +1,68 @@
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Modern Football App Design System - Professional Grade */
+/* FUTBALMANIA Design System - Purple/Pink Gaming Theme */
 
 @layer base {
   :root {
     /* Core Neutral Palette */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
-    
+
     /* Surface Colors */
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
-    
+
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    
-    /* Brand Colors - Modern Football Theme */
-    --primary: 142 76% 36%;     /* Forest Green - Professional */
+
+    /* Brand Colors - Purple/Pink Gaming Theme */
+    --primary: 268 83% 58%;      /* Electric Purple */
     --primary-foreground: 0 0% 100%;
-    
-    --secondary: 210 40% 16%;   /* Deep Navy */
+
+    --secondary: 316 73% 52%;    /* Hot Pink */
     --secondary-foreground: 0 0% 100%;
-    
+
     /* Accent & Interactive */
-    --accent: 47 96% 53%;       /* Electric Yellow - Highlights */
-    --accent-foreground: 240 10% 3.9%;
-    
-    --muted: 210 40% 98%;
-    --muted-foreground: 215 16% 47%;
-    
+    --accent: 292 84% 61%;       /* Bright Magenta */
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 270 20% 98%;
+    --muted-foreground: 270 8% 47%;
+
     /* Status Colors */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    
-    --success: 142 76% 36%;
+
+    --success: 142 76% 56%;
     --success-foreground: 0 0% 100%;
-    
+
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
-    
+
     /* Border & Input */
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 142 76% 36%;
-    
+    --border: 270 20% 91%;
+    --input: 270 20% 91%;
+    --ring: 268 83% 58%;
+
     /* Component Radius */
-    --radius: 0.5rem;
-    
+    --radius: 0.75rem;
+
     /* Sidebar specific */
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 10% 3.9%;
-    --sidebar-primary: 142 76% 36%;
+    --sidebar-primary: 268 83% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 98%;
+    --sidebar-accent: 270 20% 98%;
     --sidebar-accent-foreground: 240 10% 3.9%;
-    --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 142 76% 36%;
-    
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(120 75% 45%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(210 40% 16%) 0%, hsl(142 76% 36%) 50%, hsl(47 96% 53%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
+    --sidebar-border: 270 20% 91%;
+    --sidebar-ring: 268 83% 58%;
+
+    /* Gradients - FUTBALMANIA Style */
+    --gradient-primary: linear-gradient(135deg, hsl(268 83% 58%) 0%, hsl(316 73% 52%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(251 91% 17%) 0%, hsl(268 83% 58%) 30%, hsl(316 73% 52%) 70%, hsl(292 84% 61%) 100%);
+    --gradient-card: linear-gradient(145deg, hsla(268 83% 58% / 0.1) 0%, hsla(316 73% 52% / 0.05) 100%);
     
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
@@ -229,4 +227,3 @@
     backdrop-filter: blur(12px);
   }
 }
-
