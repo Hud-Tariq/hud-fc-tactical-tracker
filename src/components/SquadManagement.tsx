@@ -249,8 +249,8 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
                       </div>
                     </div>
                   </div>
-                  <div className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  <div className="p-4 lg:p-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-6">
                       {groupedPlayers[position].map((player, playerIndex) => (
                         <div key={player.id} className={`animate-fade-in animate-stagger-${playerIndex + 1}`}>
                           <PlayerCard player={player} onClick={() => onPlayerClick(player)} />
