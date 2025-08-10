@@ -76,42 +76,42 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 251 91% 17%;
     --foreground: 0 0% 98%;
-    
-    --card: 240 10% 3.9%;
+
+    --card: 263 70% 25%;
     --card-foreground: 0 0% 98%;
-    
-    --popover: 240 10% 3.9%;
+
+    --popover: 263 70% 25%;
     --popover-foreground: 0 0% 98%;
-    
-    --primary: 142 76% 45%;
-    --primary-foreground: 240 10% 3.9%;
-    
-    --secondary: 240 3.7% 15.9%;
+
+    --primary: 268 83% 68%;
+    --primary-foreground: 251 91% 17%;
+
+    --secondary: 316 73% 62%;
     --secondary-foreground: 0 0% 98%;
-    
-    --accent: 47 96% 53%;
-    --accent-foreground: 240 10% 3.9%;
-    
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    
+
+    --accent: 292 84% 71%;
+    --accent-foreground: 251 91% 17%;
+
+    --muted: 263 70% 25%;
+    --muted-foreground: 270 15% 64.9%;
+
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 142 76% 45%;
-    
-    --sidebar-background: 240 10% 3.9%;
+
+    --border: 263 70% 25%;
+    --input: 263 70% 25%;
+    --ring: 268 83% 68%;
+
+    --sidebar-background: 251 91% 17%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 142 76% 45%;
-    --sidebar-primary-foreground: 240 10% 3.9%;
-    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-primary: 268 83% 68%;
+    --sidebar-primary-foreground: 251 91% 17%;
+    --sidebar-accent: 263 70% 25%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 142 76% 45%;
+    --sidebar-border: 263 70% 25%;
+    --sidebar-ring: 268 83% 68%;
   }
 }
 
