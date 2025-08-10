@@ -17,7 +17,7 @@ interface TournamentCreationProps {
   trigger?: React.ReactNode;
 }
 
-const TournamentCreation = ({ onCreateTournament }: TournamentCreationProps) => {
+const TournamentCreation = ({ onCreateTournament, trigger }: TournamentCreationProps) => {
   const [open, setOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState('basic');
   const [loading, setLoading] = useState(false);
