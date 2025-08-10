@@ -40,12 +40,12 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
               return (
                 <Button
                   key={item.id}
-                  variant={activeTab === item.id ? "default" : "ghost"}
+                  variant="ghost"
                   onClick={() => onTabChange(item.id)}
-                  className={`flex items-center space-x-2 transition-all duration-200 ${
+                  className={`flex items-center space-x-2 transition-all duration-200 relative ${
                     activeTab === item.id
-                      ? 'bg-[var(--gradient-primary)] text-white shadow-md'
-                      : 'hover:bg-primary/10 hover:text-primary'
+                      ? 'bg-primary text-primary-foreground shadow-md hover:bg-primary/90'
+                      : 'text-muted-foreground hover:bg-primary/10 hover:text-primary'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
