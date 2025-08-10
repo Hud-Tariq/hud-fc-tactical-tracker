@@ -150,15 +150,15 @@ const TournamentPage = () => {
         </p>
         
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 justify-center">
           <TeamCreation
             onCreateTeam={handleCreateTeam}
             trigger={
               <Button
                 size="lg"
-                className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg shadow-cyan-500/25"
+                className="px-6 lg:px-10 py-3 lg:py-5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg shadow-cyan-500/25 text-sm lg:text-lg"
               >
-                <Users className="w-5 h-5 mr-2" />
+                <Users className="w-4 h-4 lg:w-6 lg:h-6 mr-2" />
                 Create Team
               </Button>
             }
