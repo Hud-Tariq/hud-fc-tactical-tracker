@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-// import TournamentCreation from '@/components/TournamentCreation';
+import TournamentCreation from '@/components/TournamentCreation';
+import { useTournaments } from '@/hooks/useTournaments';
 import {
   Trophy,
   Users,
@@ -16,36 +17,10 @@ import {
   Medal,
   Target,
   Clock,
-  DollarSign
+  DollarSign,
+  Loader2
 } from 'lucide-react';
-// import { Tournament, TournamentStatus, TournamentFormat, CreateTournamentRequest } from '@/types/tournament';
-
-// Temporary types to avoid import issues
-type TournamentStatus = 'draft' | 'open' | 'in_progress' | 'completed' | 'cancelled';
-type TournamentFormat = 'single_elimination' | 'double_elimination' | 'league' | 'group_stage';
-
-interface Tournament {
-  id: string;
-  name: string;
-  description?: string;
-  format: TournamentFormat;
-  status: TournamentStatus;
-  visibility: string;
-  max_teams?: number;
-  min_teams?: number;
-  entry_fee?: number;
-  prize_pool?: number;
-  start_date?: string;
-  end_date?: string;
-  created_by: string;
-  created_at: string;
-  updated_at: string;
-  is_active: boolean;
-  match_duration?: number;
-  extra_time_enabled?: boolean;
-  penalty_shootouts_enabled?: boolean;
-  rules_text?: string;
-}
+import { Tournament, TournamentStatus, TournamentFormat, CreateTournamentRequest } from '@/types/tournament';
 
 const TournamentPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
