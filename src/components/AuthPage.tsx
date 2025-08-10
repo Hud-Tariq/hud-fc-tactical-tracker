@@ -92,14 +92,14 @@ const AuthPage = () => {
       <div className="relative z-10 min-h-screen flex items-center justify-start p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl">
           {/* FUTBALMANIA Branding */}
-          <div className="mb-8">
-            <h1 className="text-5xl lg:text-6xl font-bold text-white mb-2 tracking-tight">
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-2 tracking-tight">
               HUD FC MANAGER
             </h1>
-            <h2 className="text-xl lg:text-2xl text-white/90 font-medium mb-4">
+            <h2 className="text-lg sm:text-xl lg:text-2xl text-white/90 font-medium mb-3 sm:mb-4">
               ONLINE MEMBER LOGIN
             </h2>
-            <h3 className="text-lg text-white/80 font-medium">
+            <h3 className="text-base sm:text-lg text-white/80 font-medium">
               FOR PLAYERS
             </h3>
           </div>
