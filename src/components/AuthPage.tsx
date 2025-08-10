@@ -94,7 +94,7 @@ const AuthPage = () => {
           {/* FUTBALMANIA Branding */}
           <div className="mb-8">
             <h1 className="text-5xl lg:text-6xl font-bold text-white mb-2 tracking-tight">
-              FUTBALMANIA
+              HUD FC MANAGER
             </h1>
             <h2 className="text-xl lg:text-2xl text-white/90 font-medium mb-4">
               ONLINE MEMBER LOGIN
