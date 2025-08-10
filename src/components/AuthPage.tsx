@@ -70,156 +70,87 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Background with FUTBALMANIA gradient */}
-      <div className="absolute inset-0 bg-[var(--gradient-hero)]"></div>
+      {/* Muse gradient background - deep purple to muted pink */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1a0b2e] via-[#2d1b69] to-[#7a4f8a]"></div>
 
-      {/* Geometric shapes background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-32 h-32 bg-primary/20 rotate-45 rounded-xl"></div>
-        <div className="absolute bottom-20 right-20 w-24 h-24 bg-secondary/20 rotate-12 rounded-lg"></div>
-        <div className="absolute top-1/2 left-10 w-16 h-16 bg-accent/30 -rotate-12 rounded-lg"></div>
-      </div>
+      {/* Centered login container */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
+        <div className="w-full max-w-md animate-fade-in">
+          {/* Form container with translucent dark panel */}
+          <div className="bg-black/30 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/10">
 
-      {/* Player silhouette */}
-      <div className="absolute right-0 top-0 h-full w-1/2 hidden lg:block">
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets%2Fe00e12e7935d4ce5a38c8aa2b83fb3d6%2Ff3cc9f4cf28148f0acdcfa9943565c8e?format=webp&width=800"
-          alt="Football Player"
-          className="h-full w-full object-cover object-left opacity-90"
-        />
-      </div>
+            {/* Welcome Back heading */}
+            <div className="text-center mb-8">
+              <h1 className="text-[32px] font-bold text-white/95 font-poppins tracking-tight">
+                Welcome Back
+              </h1>
+            </div>
 
-      <div className="relative z-10 min-h-screen flex items-center justify-start p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl">
-          {/* FUTBALMANIA Branding */}
-          <div className="mb-6 sm:mb-8">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-2 tracking-tight">
-              HUD FC MANAGER
-            </h1>
-            <h2 className="text-lg sm:text-xl lg:text-2xl text-white/90 font-medium mb-3 sm:mb-4">
-              ONLINE MEMBER LOGIN
-            </h2>
-            <h3 className="text-base sm:text-lg text-white/80 font-medium">
-              FOR PLAYERS
-            </h3>
-          </div>
+            {/* Login Form */}
+            <form onSubmit={handleSignIn} className="space-y-6">
+              {/* Email Input */}
+              <div className="space-y-2">
+                <Input
+                  id="signin-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="w-full h-12 bg-transparent border border-pink-300/40 rounded-lg px-4 text-white placeholder:text-white/60 focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20 transition-all duration-200 font-poppins"
+                  required
+                />
+              </div>
 
-          {/* Login Form */}
-          <div className="space-y-6">
-            <Tabs defaultValue="signin" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-white/10 backdrop-blur-md border border-white/20">
-                <TabsTrigger value="signin" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white">Sign In</TabsTrigger>
-                <TabsTrigger value="signup" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white">Sign Up</TabsTrigger>
-              </TabsList>
+              {/* Password Input */}
+              <div className="space-y-2">
+                <Input
+                  id="signin-password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="w-full h-12 bg-transparent border border-pink-300/40 rounded-lg px-4 text-white placeholder:text-white/60 focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20 transition-all duration-200 font-poppins"
+                  required
+                />
+              </div>
 
-              <TabsContent value="signin" className="space-y-6 mt-6">
-                <form onSubmit={handleSignIn} className="space-y-6">
-                  <div>
-                    <Label htmlFor="signin-email" className="text-white/90 text-sm uppercase tracking-wide">
-                      NAME
-                    </Label>
-                    <Input
-                      id="signin-email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      className="bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder:text-white/60 h-12"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="signin-password" className="text-white/90 text-sm uppercase tracking-wide">
-                      PASSWORD
-                    </Label>
-                    <Input
-                      id="signin-password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter your password"
-                      className="bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder:text-white/60 h-12"
-                      required
-                    />
-                  </div>
-                  <Button
-                    type="submit"
-                    className="w-full h-12 bg-white/20 hover:bg-white/30 text-white font-semibold uppercase tracking-wide backdrop-blur-md border border-white/30 transition-all duration-200"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        SUBMITTING...
-                      </>
-                    ) : (
-                      'SUBMIT'
-                    )}
-                  </Button>
-                </form>
+              {/* Login Button */}
+              <Button
+                type="submit"
+                className="w-full h-12 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold rounded-lg transition-all duration-200 hover:scale-[1.02] transform shadow-lg font-poppins"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing In...
+                  </>
+                ) : (
+                  'Sign In'
+                )}
+              </Button>
+            </form>
 
-                <div className="text-center">
-                  <p className="text-white/60 text-sm">Forgot password?</p>
-                  <p className="text-white/80 text-sm mt-4">
-                    Play and win exciting prizes and incredible fight!
-                  </p>
-                  <p className="text-accent text-sm font-semibold">Register here!</p>
-                </div>
-              </TabsContent>
+            {/* Forgot Password Link */}
+            <div className="text-center mt-6">
+              <button className="text-pink-300/80 hover:text-pink-200 text-sm font-poppins transition-colors duration-200">
+                Forgot Password?
+              </button>
+            </div>
 
-              <TabsContent value="signup" className="space-y-6 mt-6">
-                <form onSubmit={handleSignUp} className="space-y-6">
-                  <div>
-                    <Label htmlFor="signup-email" className="text-white/90 text-sm uppercase tracking-wide">
-                      EMAIL
-                    </Label>
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      className="bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder:text-white/60 h-12"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="signup-password" className="text-white/90 text-sm uppercase tracking-wide">
-                      PASSWORD
-                    </Label>
-                    <Input
-                      id="signup-password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Create a password"
-                      className="bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder:text-white/60 h-12"
-                      required
-                    />
-                  </div>
-                  <Button
-                    type="submit"
-                    className="w-full h-12 bg-white/20 hover:bg-white/30 text-white font-semibold uppercase tracking-wide backdrop-blur-md border border-white/30 transition-all duration-200"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        CREATING ACCOUNT...
-                      </>
-                    ) : (
-                      'CREATE ACCOUNT'
-                    )}
-                  </Button>
-                </form>
-
-                <div className="text-center">
-                  <p className="text-white/80 text-sm">
-                    Join FUTBALMANIA and compete with players worldwide!
-                  </p>
-                </div>
-              </TabsContent>
-            </Tabs>
+            {/* Sign Up Option */}
+            <div className="text-center mt-8 pt-6 border-t border-white/10">
+              <p className="text-white/60 text-sm font-poppins mb-2">
+                Don't have an account?
+              </p>
+              <Button
+                onClick={() => setEmail('')}
+                variant="ghost"
+                className="text-pink-300 hover:text-pink-200 hover:bg-pink-500/10 font-poppins transition-all duration-200"
+              >
+                Create Account
+              </Button>
+            </div>
           </div>
         </div>
       </div>
