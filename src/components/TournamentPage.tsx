@@ -27,6 +27,9 @@ import { Tournament, TournamentStatus, TournamentFormat, CreateTournamentRequest
 const TournamentPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<TournamentStatus | 'all'>('all');
+  const [userTeams, setUserTeams] = useState<Team[]>([]);
+  const [selectedTeam, setSelectedTeam] = useState<string>('');
+  const [joiningTournament, setJoiningTournament] = useState<string | null>(null);
 
   const {
     tournaments,
@@ -41,6 +44,39 @@ const TournamentPage = () => {
   const handleCreateTournament = async (tournament: CreateTournamentRequest) => {
     await createTournament(tournament);
   };
+
+  const handleCreateTeam = async (teamData: { name: string; short_name?: string; home_color?: string; away_color?: string }) => {
+    const newTeam = await createTeam(teamData);
+    if (newTeam) {
+      await loadUserTeams();
+    }
+    return newTeam;
+  };
+
+  const handleJoinTournament = async (tournamentId: string) => {
+    if (!selectedTeam) {
+      return;
+    }
+
+    setJoiningTournament(tournamentId);
+    try {
+      await joinTournament(tournamentId, selectedTeam);
+    } finally {
+      setJoiningTournament(null);
+    }
+  };
+
+  const loadUserTeams = async () => {
+    const teams = await fetchUserTeams();
+    setUserTeams(teams);
+    if (teams.length > 0 && !selectedTeam) {
+      setSelectedTeam(teams[0].id);
+    }
+  };
+
+  useEffect(() => {
+    loadUserTeams();
+  }, []);
 
   const getStatusColor = (status: TournamentStatus) => {
     switch (status) {
