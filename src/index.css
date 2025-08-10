@@ -230,17 +230,17 @@
   .main-background {
     background: var(--gradient-background-main);
   }
-  
+
   .content-container {
     @apply relative z-10 min-h-screen;
   }
-  
+
   .section-header {
-    @apply text-center space-y-4 mb-12;
+    @apply text-center space-y-4 mb-8 lg:mb-16;
   }
-  
+
   .floating-section {
-    @apply space-y-8 p-8;
+    @apply space-y-6 p-4 lg:space-y-12 lg:p-12;
   }
 }
 
