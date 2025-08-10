@@ -174,7 +174,7 @@ const TournamentCreation = ({ onCreateTournament, trigger }: TournamentCreationP
                       value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
                       placeholder="e.g., Summer Champions League"
-                      className="h-12"
+                      className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark placeholder:text-on-dark-subtle focus:border-yellow-400"
                     />
                   </div>
                   
