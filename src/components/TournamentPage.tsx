@@ -130,7 +130,7 @@ const TournamentPage = () => {
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold mb-2">FUTBALMANIA</h1>
+              <h1 className="text-4xl font-bold mb-2">HUD FC MANAGER</h1>
               <h2 className="text-2xl font-semibold mb-4">TOURNAMENTS</h2>
               <p className="text-lg opacity-90">Compete in epic football tournaments</p>
             </div>
