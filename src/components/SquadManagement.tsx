@@ -112,14 +112,14 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
       </div>
 
       {/* Add Player Button */}
-      <div className="flex justify-center mb-12">
+      <div className="flex justify-center mb-8 lg:mb-16">
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button 
-              size="lg" 
-              className="px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg shadow-pink-500/25"
+            <Button
+              size="lg"
+              className="px-6 lg:px-12 py-3 lg:py-5 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg shadow-pink-500/25 text-sm lg:text-lg"
             >
-              <Plus className="w-5 h-5 mr-2" />
+              <Plus className="w-4 h-4 lg:w-6 lg:h-6 mr-2" />
               Add New Player
             </Button>
           </DialogTrigger>
