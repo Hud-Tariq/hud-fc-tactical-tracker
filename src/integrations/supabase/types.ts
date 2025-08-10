@@ -119,7 +119,7 @@ export type Database = {
           team_a_players: string[]
           team_b_players: string[]
           updated_at: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           completed?: boolean
@@ -131,7 +131,7 @@ export type Database = {
           team_a_players: string[]
           team_b_players: string[]
           updated_at?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           completed?: boolean
@@ -143,7 +143,7 @@ export type Database = {
           team_a_players?: string[]
           team_b_players?: string[]
           updated_at?: string | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -161,7 +161,7 @@ export type Database = {
           total_goals: number
           total_saves: number
           updated_at: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           age: number
@@ -176,7 +176,7 @@ export type Database = {
           total_goals?: number
           total_saves?: number
           updated_at?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           age?: number
@@ -191,7 +191,7 @@ export type Database = {
           total_goals?: number
           total_saves?: number
           updated_at?: string | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
