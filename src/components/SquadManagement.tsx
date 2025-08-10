@@ -100,7 +100,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
           { icon: TrendingUp, label: 'Matches Played', value: squadStats.totalMatches, color: 'text-pink-400' }
         ].map((stat, index) => (
           <div key={stat.label} className={`floating-card animate-fade-in animate-stagger-${index + 1}`}>
-            <div className="p-6 text-center">
+            <div className="p-4 lg:p-8 text-center">
               <div className="flex items-center justify-center w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20">
                 <stat.icon className={`w-7 h-7 ${stat.color}`} />
               </div>
