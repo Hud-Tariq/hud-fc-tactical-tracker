@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import SquadManagement from '@/components/SquadManagement';
 import MatchCreation from '@/components/MatchCreation';
 import MatchView from '@/components/MatchView';
 import Statistics from '@/components/Statistics';
+import TournamentPage from '@/components/TournamentPage';
 import { useSupabaseFootballData } from '@/hooks/useSupabaseFootballData';
 import { useAuth } from '@/hooks/useAuth';
 import AuthPage from '@/components/AuthPage';
