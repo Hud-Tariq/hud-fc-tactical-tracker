@@ -24,6 +24,12 @@ const TournamentPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<TournamentStatus | 'all'>('all');
 
+  const handleCreateTournament = async (tournament: CreateTournamentRequest) => {
+    // TODO: Implement actual tournament creation with Supabase
+    console.log('Creating tournament:', tournament);
+    // This would integrate with your tournament service
+  };
+
   // Mock data for demonstration
   const mockTournaments: Tournament[] = [
     {
