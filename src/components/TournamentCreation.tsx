@@ -129,22 +129,34 @@ const TournamentCreation = ({ onCreateTournament, trigger }: TournamentCreationP
         </DialogHeader>
 
         <Tabs value={currentStep} onValueChange={setCurrentStep} className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="basic" className="flex items-center gap-2">
+          <TabsList className="grid w-full grid-cols-4 h-14 p-1 glass-card border border-white/20 rounded-2xl">
+            <TabsTrigger
+              value="basic"
+              className="flex items-center gap-2 rounded-xl font-medium text-on-dark-muted data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white"
+            >
               <Trophy className="w-4 h-4" />
-              Basic Info
+              <span className="hidden sm:inline">Basic Info</span>
             </TabsTrigger>
-            <TabsTrigger value="teams" className="flex items-center gap-2">
+            <TabsTrigger
+              value="teams"
+              className="flex items-center gap-2 rounded-xl font-medium text-on-dark-muted data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white"
+            >
               <Users className="w-4 h-4" />
-              Teams & Format
+              <span className="hidden sm:inline">Teams</span>
             </TabsTrigger>
-            <TabsTrigger value="prizes" className="flex items-center gap-2">
+            <TabsTrigger
+              value="prizes"
+              className="flex items-center gap-2 rounded-xl font-medium text-on-dark-muted data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white"
+            >
               <DollarSign className="w-4 h-4" />
-              Prizes & Fees
+              <span className="hidden sm:inline">Prizes</span>
             </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-2">
+            <TabsTrigger
+              value="settings"
+              className="flex items-center gap-2 rounded-xl font-medium text-on-dark-muted data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-orange-600 data-[state=active]:text-white"
+            >
               <Settings className="w-4 h-4" />
-              Settings
+              <span className="hidden sm:inline">Settings</span>
             </TabsTrigger>
           </TabsList>
 
