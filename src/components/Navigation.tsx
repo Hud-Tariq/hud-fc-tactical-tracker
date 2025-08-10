@@ -18,8 +18,8 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
 
   return (
     <nav className="bg-white shadow-lg border-b border-border sticky top-0 z-50">
-      <div className="container mx-auto px-3 sm:px-4">
-        <div className="flex items-center justify-between h-14 sm:h-16">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-2">
             <div className="bg-[var(--gradient-primary)] p-1.5 sm:p-2 rounded-lg shadow-md">
               <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-sm flex items-center justify-center">
