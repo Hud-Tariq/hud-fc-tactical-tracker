@@ -74,20 +74,22 @@ const Index = () => {
         return <SquadManagement players={players} onAddPlayer={addPlayer} onPlayerClick={handlePlayerClick} />;
       case 'create-match':
         return (
-          <MatchCreation 
-            players={players} 
+          <MatchCreation
+            players={players}
             onCreateMatch={createMatch}
           />
         );
       case 'view-matches':
         return (
-          <MatchView 
-            matches={matches} 
-            players={players} 
+          <MatchView
+            matches={matches}
+            players={players}
             onBack={() => setCurrentView('create-match')}
             onDeleteMatch={deleteMatch}
           />
         );
+      case 'tournaments':
+        return <TournamentPage />;
       case 'statistics':
         return <Statistics players={players} />;
       default:
