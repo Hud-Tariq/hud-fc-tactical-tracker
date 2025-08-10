@@ -21,16 +21,16 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-2">
-            <div className="bg-[var(--gradient-primary)] p-1.5 sm:p-2 rounded-lg shadow-md">
-              <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-sm flex items-center justify-center">
-                <span className="text-primary font-bold text-xs sm:text-sm">⚽</span>
+            <div className="bg-[var(--gradient-primary)] p-2 rounded-lg shadow-md">
+              <div className="w-6 h-6 bg-white rounded-sm flex items-center justify-center">
+                <span className="text-primary font-bold text-sm">⚽</span>
               </div>
             </div>
-            <div className="hidden xs:block">
-              <h1 className="text-lg sm:text-xl font-bold bg-[var(--gradient-primary)] bg-clip-text text-transparent">
+            <div>
+              <h1 className="text-xl font-bold bg-[var(--gradient-primary)] bg-clip-text text-transparent">
                 Hud FC Manager
               </h1>
-              <p className="text-xs text-muted-foreground hidden sm:block">Football Management System</p>
+              <p className="text-xs text-muted-foreground">Football Management System</p>
             </div>
           </div>
 
