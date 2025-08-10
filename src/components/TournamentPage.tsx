@@ -26,59 +26,19 @@ const TournamentPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<TournamentStatus | 'all'>('all');
 
-  // const handleCreateTournament = async (tournament: CreateTournamentRequest) => {
-  //   // TODO: Implement actual tournament creation with Supabase
-  //   console.log('Creating tournament:', tournament);
-  //   // This would integrate with your tournament service
-  // };
+  const {
+    tournaments,
+    myTournaments,
+    loading,
+    createTournament,
+    joinTournament,
+    createTeam,
+    fetchUserTeams
+  } = useTournaments();
 
-  // Mock data for demonstration
-  const mockTournaments: Tournament[] = [
-    {
-      id: '1',
-      name: 'Summer Champions League',
-      description: 'Elite tournament for the best teams in the region',
-      format: 'single_elimination',
-      status: 'open',
-      visibility: 'public',
-      max_teams: 16,
-      min_teams: 8,
-      entry_fee: 50,
-      prize_pool: 1000,
-      start_date: '2024-02-01T10:00:00Z',
-      end_date: '2024-02-15T20:00:00Z',
-      created_by: 'user1',
-      created_at: '2024-01-15T10:00:00Z',
-      updated_at: '2024-01-15T10:00:00Z',
-      is_active: true,
-      match_duration: 90,
-      extra_time_enabled: true,
-      penalty_shootouts_enabled: true,
-      rules_text: null
-    },
-    {
-      id: '2',
-      name: 'Local Grassroots Cup',
-      description: 'Community tournament for local teams',
-      format: 'league',
-      status: 'in_progress',
-      visibility: 'public',
-      max_teams: 8,
-      min_teams: 4,
-      entry_fee: 0,
-      prize_pool: 500,
-      start_date: '2024-01-20T09:00:00Z',
-      end_date: '2024-02-20T18:00:00Z',
-      created_by: 'user2',
-      created_at: '2024-01-10T10:00:00Z',
-      updated_at: '2024-01-20T10:00:00Z',
-      is_active: true,
-      match_duration: 90,
-      extra_time_enabled: false,
-      penalty_shootouts_enabled: true,
-      rules_text: null
-    }
-  ];
+  const handleCreateTournament = async (tournament: CreateTournamentRequest) => {
+    await createTournament(tournament);
+  };
 
   const getStatusColor = (status: TournamentStatus) => {
     switch (status) {
