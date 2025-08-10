@@ -89,8 +89,8 @@ const AuthPage = () => {
         />
       </div>
 
-      <div className="relative z-10 min-h-screen flex items-center justify-start p-8">
-        <div className="w-full max-w-md lg:max-w-lg xl:max-w-xl">
+      <div className="relative z-10 min-h-screen flex items-center justify-start p-4 sm:p-6 lg:p-8">
+        <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl">
           {/* FUTBALMANIA Branding */}
           <div className="mb-8">
             <h1 className="text-5xl lg:text-6xl font-bold text-white mb-2 tracking-tight">
