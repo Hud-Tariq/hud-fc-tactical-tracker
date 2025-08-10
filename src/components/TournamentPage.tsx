@@ -134,7 +134,22 @@ const TournamentPage = () => {
               <h2 className="text-2xl font-semibold mb-4">TOURNAMENTS</h2>
               <p className="text-lg opacity-90">Compete in epic football tournaments</p>
             </div>
-            <TournamentCreation onCreateTournament={handleCreateTournament} />
+            <div className="flex gap-3">
+              <TeamCreation
+                onCreateTeam={handleCreateTeam}
+                trigger={
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="bg-white/10 hover:bg-white/20 text-white border-white/30"
+                  >
+                    <Users className="w-5 h-5 mr-2" />
+                    Create Team
+                  </Button>
+                }
+              />
+              <TournamentCreation onCreateTournament={handleCreateTournament} />
+            </div>
           </div>
         </div>
         
