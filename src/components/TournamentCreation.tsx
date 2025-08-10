@@ -106,12 +106,12 @@ const TournamentCreation = ({ onCreateTournament }: TournamentCreationProps) => 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button 
-          size="lg" 
-          className="bg-white/20 hover:bg-white/30 text-white backdrop-blur-md border border-white/30"
+        <Button
+          size="lg"
+          className="bg-white/20 hover:bg-white/30 text-white backdrop-blur-md border border-white/30 px-4 sm:px-6 py-2 sm:py-3"
         >
-          <Plus className="w-5 h-5 mr-2" />
-          Create Tournament
+          <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+          <span className="text-sm sm:text-base">Create Tournament</span>
         </Button>
       </DialogTrigger>
       
