@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { Player, Match, Goal } from '@/types/football';
 
@@ -98,7 +97,48 @@ export class StatisticsService {
     };
   }
 
-  // Update player statistics in database with better error handling
+  // Improved rating calculation with more gradual changes
+  static calculateRatingAdjustment(
+    currentRating: number, 
+    matchRating: number, 
+    matchesPlayed: number
+  ): number {
+    const ratingDifference = matchRating - 6.0;
+    
+    // Base multiplier that decreases as player gets more experienced
+    const experienceFactor = Math.max(0.3, 1 - (matchesPlayed * 0.05));
+    
+    // Rating adjustment based on current rating level
+    let baseMultiplier: number;
+    if (currentRating < 50) {
+      // Low rated players improve faster
+      baseMultiplier = 0.8;
+    } else if (currentRating < 70) {
+      // Average players have moderate change
+      baseMultiplier = 0.6;
+    } else if (currentRating < 85) {
+      // Good players change slower
+      baseMultiplier = 0.4;
+    } else {
+      // Elite players change very slowly
+      baseMultiplier = 0.25;
+    }
+    
+    // Apply diminishing returns for extreme ratings
+    const extremeRatingFactor = Math.max(0.2, 1 - Math.abs(ratingDifference) * 0.1);
+    
+    // Final multiplier combines all factors
+    const finalMultiplier = baseMultiplier * experienceFactor * extremeRatingFactor;
+    
+    // Only apply significant changes for substantial performance differences
+    if (Math.abs(ratingDifference) > 0.5) {
+      return ratingDifference * finalMultiplier;
+    }
+    
+    return 0;
+  }
+
+  // Update player statistics in database with improved rating system
   static async updatePlayerStatistics(
     playerId: string,
     performance: PlayerMatchPerformance
@@ -123,13 +163,20 @@ export class StatisticsService {
 
       const newMatchesPlayed = currentPlayer.matches_played + 1;
       
-      // Simple rating adjustment based on performance
+      // Improved rating adjustment with more realistic progression
       let newRating = currentPlayer.rating;
-      const ratingDifference = performance.matchRating - 6.0;
+      const ratingAdjustment = this.calculateRatingAdjustment(
+        currentPlayer.rating,
+        performance.matchRating,
+        currentPlayer.matches_played
+      );
       
-      if (Math.abs(ratingDifference) > 1) {
-        const ratingAdjustment = ratingDifference * 1.5;
-        newRating = Math.max(1, Math.min(100, currentPlayer.rating + ratingAdjustment));
+      // Apply the rating change
+      newRating = Math.max(1, Math.min(100, currentPlayer.rating + ratingAdjustment));
+      
+      // Log rating changes for debugging
+      if (Math.abs(ratingAdjustment) > 0) {
+        console.log(`Rating change for ${playerId}: ${currentPlayer.rating} → ${Math.round(newRating)} (${ratingAdjustment > 0 ? '+' : ''}${ratingAdjustment.toFixed(1)})`);
       }
 
       const updates = {
