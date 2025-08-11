@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Player, Match, Goal } from '@/types/football';
@@ -400,17 +399,36 @@ export const useSupabaseFootballData = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        setLoading(true);
-        await Promise.all([fetchPlayers(), fetchMatches()]);
+      try {
+        console.log('Loading football data...');
+        const { data: { user }, error } = await supabase.auth.getUser();
+
+        if (error) {
+          console.error('Error getting user:', error);
+          setLoading(false);
+          return;
+        }
+
+        if (user) {
+          console.log('User authenticated, fetching data...');
+          setLoading(true);
+          await Promise.all([fetchPlayers(), fetchMatches()]);
+          setLoading(false);
+        } else {
+          console.log('No authenticated user');
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Network error in loadData:', error);
         setLoading(false);
-      } else {
-        setLoading(false);
+        toast({
+          title: "Network Error",
+          description: "Failed to connect to the server. Please check your internet connection.",
+          variant: "destructive",
+        });
       }
     };
-    
+
     loadData();
   }, []);
 

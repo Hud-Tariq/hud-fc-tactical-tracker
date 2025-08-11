@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -70,103 +69,91 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex items-center justify-center space-x-3 mb-4">
-            <img 
-              src="https://pps.whatsapp.net/v/t61.24694-24/473409892_1299041094506728_9189987459084226587_n.jpg?ccb=11-4&oh=01_Q5Aa1wFGe45tsx-rSrXCp9k21OuheDPRRdErSPAx3hEKsONRLw&oe=68725DEA&_nc_sid=5e03e0&_nc_cat=107"
-              alt="Hud FC Logo"
-              className="w-12 h-12 rounded-full object-cover border-2 border-primary/20"
-            />
-            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Hud FC Manager
-            </CardTitle>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Muse gradient background - deep purple to muted pink */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1a0b2e] via-[#2d1b69] to-[#7a4f8a]"></div>
+
+      {/* Centered login container */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
+        <div className="w-full max-w-md animate-fade-in">
+          {/* Form container with translucent dark panel */}
+          <div className="bg-black/30 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/10">
+
+            {/* Welcome Back heading */}
+            <div className="text-center mb-8">
+              <h1 className="text-[32px] font-bold text-white/95 font-poppins tracking-tight">
+                Welcome Back
+              </h1>
+            </div>
+
+            {/* Login Form */}
+            <form onSubmit={handleSignIn} className="space-y-6">
+              {/* Email Input */}
+              <div className="space-y-2">
+                <Input
+                  id="signin-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="w-full h-12 bg-transparent border border-pink-300/40 rounded-lg px-4 text-white placeholder:text-white/60 focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20 transition-all duration-200 font-poppins"
+                  required
+                />
+              </div>
+
+              {/* Password Input */}
+              <div className="space-y-2">
+                <Input
+                  id="signin-password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="w-full h-12 bg-transparent border border-pink-300/40 rounded-lg px-4 text-white placeholder:text-white/60 focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20 transition-all duration-200 font-poppins"
+                  required
+                />
+              </div>
+
+              {/* Login Button */}
+              <Button
+                type="submit"
+                className="w-full h-12 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold rounded-lg transition-all duration-200 hover:scale-[1.02] transform shadow-lg font-poppins"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing In...
+                  </>
+                ) : (
+                  'Sign In'
+                )}
+              </Button>
+            </form>
+
+            {/* Forgot Password Link */}
+            <div className="text-center mt-6">
+              <button className="text-pink-300/80 hover:text-pink-200 text-sm font-poppins transition-colors duration-200">
+                Forgot Password?
+              </button>
+            </div>
+
+            {/* Sign Up Option */}
+            <div className="text-center mt-8 pt-6 border-t border-white/10">
+              <p className="text-white/60 text-sm font-poppins mb-2">
+                Don't have an account?
+              </p>
+              <Button
+                onClick={() => setEmail('')}
+                variant="ghost"
+                className="text-pink-300 hover:text-pink-200 hover:bg-pink-500/10 font-poppins transition-all duration-200"
+              >
+                Create Account
+              </Button>
+            </div>
           </div>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="signin">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="signin" className="space-y-4">
-              <form onSubmit={handleSignIn} className="space-y-4">
-                <div>
-                  <Label htmlFor="signin-email">Email</Label>
-                  <Input
-                    id="signin-email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="signin-password">Password</Label>
-                  <Input
-                    id="signin-password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Signing In...
-                    </>
-                  ) : (
-                    'Sign In'
-                  )}
-                </Button>
-              </form>
-            </TabsContent>
-            
-            <TabsContent value="signup" className="space-y-4">
-              <form onSubmit={handleSignUp} className="space-y-4">
-                <div>
-                  <Label htmlFor="signup-email">Email</Label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="signup-password">Password</Label>
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Create a password"
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Creating Account...
-                    </>
-                  ) : (
-                    'Create Account'
-                  )}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };

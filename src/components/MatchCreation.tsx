@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import PlayerCard from './PlayerCard';
 import { Player, Match, Goal } from '@/types/football';
+import { Calendar, Users, Target, Trophy, Plus, Minus, Save, Clock } from 'lucide-react';
 
 interface MatchCreationProps {
   players: Player[];
@@ -77,7 +77,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
   const calculateScore = (team: 'A' | 'B') => {
     return goals.filter(g => {
       if (g.isOwnGoal) {
-        return g.team !== team; // Own goals count for the opposing team
+        return g.team !== team;
       }
       return g.team === team && g.scorer;
     }).length;
@@ -115,90 +115,176 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
   const teamBGoals = calculateScore('B');
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Create Match</h2>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Match Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="date">Match Date</Label>
+    <div className="floating-section">
+      {/* Hero Header */}
+      <div className="section-header">
+        <div className="inline-flex items-center px-4 py-2 rounded-full glass-card border border-purple-400/30 mb-4">
+          <Calendar className="w-5 h-5 mr-2 text-purple-400" />
+          <span className="text-on-dark-muted font-medium">Match Creation</span>
+        </div>
+        <h1 className="text-4xl lg:text-6xl font-bold text-on-dark font-poppins mb-4 lg:mb-6">
+          Create Epic
+          <span className="gradient-text-light ml-3">Match</span>
+        </h1>
+        <p className="text-lg lg:text-2xl text-on-dark-muted max-w-3xl mx-auto">
+          Set up teams, track goals, and create memorable football matches
+        </p>
+      </div>
+
+      {/* Match Details Card */}
+      <div className="floating-card mb-8">
+        <div className="p-6">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-400/30 flex items-center justify-center">
+              <Clock className="w-5 h-5 text-blue-400" />
+            </div>
+            <h3 className="text-2xl font-bold text-on-dark font-poppins">Match Details</h3>
+          </div>
+          
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="date" className="text-on-dark-muted">Match Date</Label>
               <Input
                 id="date"
                 type="date"
                 value={matchDate}
                 onChange={(e) => setMatchDate(e.target.value)}
+                className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Team A Score</Label>
-                <div className="text-2xl font-bold text-blue-600">{teamAGoals}</div>
+            
+            {(teamA.length === 5 && teamB.length === 5) && (
+              <div className="grid grid-cols-2 gap-6">
+                <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-400/30">
+                  <h4 className="text-blue-300 font-medium mb-2">Team A Score</h4>
+                  <div className="text-4xl font-bold text-on-dark">{teamAGoals}</div>
+                </div>
+                <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-red-500/10 to-pink-500/10 border border-red-400/30">
+                  <h4 className="text-red-300 font-medium mb-2">Team B Score</h4>
+                  <div className="text-4xl font-bold text-on-dark">{teamBGoals}</div>
+                </div>
               </div>
-              <div>
-                <Label>Team B Score</Label>
-                <div className="text-2xl font-bold text-red-600">{teamBGoals}</div>
-              </div>
-            </div>
+            )}
           </div>
-        </CardContent>
-      </Card>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-blue-600">Team A ({teamA.length}/5)</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {teamA.map((player) => (
-              <div key={player.id} className="relative">
-                <PlayerCard 
-                  player={player} 
-                  onClick={() => handlePlayerRemove(player, 'A')}
-                />
-              </div>
-            ))}
-            {teamA.length < 5 && (
-              <p className="text-sm text-muted-foreground">
-                Select {5 - teamA.length} more player{5 - teamA.length !== 1 ? 's' : ''}
-              </p>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-red-600">Team B ({teamB.length}/5)</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {teamB.map((player) => (
-              <div key={player.id} className="relative">
-                <PlayerCard 
-                  player={player} 
-                  onClick={() => handlePlayerRemove(player, 'B')}
-                />
-              </div>
-            ))}
-            {teamB.length < 5 && (
-              <p className="text-sm text-muted-foreground">
-                Select {5 - teamB.length} more player{5 - teamB.length !== 1 ? 's' : ''}
-              </p>
-            )}
-          </CardContent>
-        </Card>
+        </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Available Players</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Team Selection */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        {/* Team A */}
+        <div className="floating-card">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-400/30 flex items-center justify-center">
+                  <Users className="w-5 h-5 text-blue-400" />
+                </div>
+                <h3 className="text-2xl font-bold text-blue-300 font-poppins">Team A</h3>
+              </div>
+              <div className="text-on-dark-muted">
+                {teamA.length}/5 players
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              {teamA.map((player) => (
+                <div key={player.id} className="relative group">
+                  <PlayerCard 
+                    player={player} 
+                    onClick={() => handlePlayerRemove(player, 'A')}
+                  />
+                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      className="h-8 w-8 p-0 rounded-full"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePlayerRemove(player, 'A');
+                      }}
+                    >
+                      <Minus className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+              
+              {teamA.length < 5 && (
+                <div className="text-center py-8 border-2 border-dashed border-blue-400/30 rounded-2xl">
+                  <Users className="w-12 h-12 text-blue-400/50 mx-auto mb-2" />
+                  <p className="text-on-dark-muted">
+                    Select {5 - teamA.length} more player{5 - teamA.length !== 1 ? 's' : ''}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Team B */}
+        <div className="floating-card">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/20 to-pink-500/20 border border-red-400/30 flex items-center justify-center">
+                  <Users className="w-5 h-5 text-red-400" />
+                </div>
+                <h3 className="text-2xl font-bold text-red-300 font-poppins">Team B</h3>
+              </div>
+              <div className="text-on-dark-muted">
+                {teamB.length}/5 players
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              {teamB.map((player) => (
+                <div key={player.id} className="relative group">
+                  <PlayerCard 
+                    player={player} 
+                    onClick={() => handlePlayerRemove(player, 'B')}
+                  />
+                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      className="h-8 w-8 p-0 rounded-full"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePlayerRemove(player, 'B');
+                      }}
+                    >
+                      <Minus className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+              
+              {teamB.length < 5 && (
+                <div className="text-center py-8 border-2 border-dashed border-red-400/30 rounded-2xl">
+                  <Users className="w-12 h-12 text-red-400/50 mx-auto mb-2" />
+                  <p className="text-on-dark-muted">
+                    Select {5 - teamB.length} more player{5 - teamB.length !== 1 ? 's' : ''}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Available Players */}
+      <div className="floating-card mb-8">
+        <div className="p-6">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-400/30 flex items-center justify-center">
+              <Target className="w-5 h-5 text-green-400" />
+            </div>
+            <h3 className="text-2xl font-bold text-on-dark font-poppins">Available Players</h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-6">
             {availablePlayers.map((player) => (
-              <div key={player.id} className="space-y-2">
+              <div key={player.id} className="space-y-3">
                 <PlayerCard player={player} selectable />
                 <div className="flex space-x-2">
                   <Button
@@ -206,7 +292,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                     variant="outline"
                     onClick={() => handlePlayerSelect(player, 'A')}
                     disabled={teamA.length >= 5}
-                    className="flex-1 text-blue-600 hover:bg-blue-50"
+                    className="flex-1 bg-blue-500/10 border-blue-400/30 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400/50"
                   >
                     Team A
                   </Button>
@@ -215,7 +301,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                     variant="outline"
                     onClick={() => handlePlayerSelect(player, 'B')}
                     disabled={teamB.length >= 5}
-                    className="flex-1 text-red-600 hover:bg-red-50"
+                    className="flex-1 bg-red-500/10 border-red-400/30 text-red-300 hover:bg-red-500/20 hover:border-red-400/50"
                   >
                     Team B
                   </Button>
@@ -223,128 +309,153 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
               </div>
             ))}
           </div>
+          
           {availablePlayers.length === 0 && (
-            <p className="text-center text-muted-foreground">All players have been assigned to teams</p>
+            <div className="text-center py-12">
+              <Users className="w-16 h-16 text-on-dark-subtle mx-auto mb-4" />
+              <p className="text-on-dark-muted text-lg">All players have been assigned to teams</p>
+            </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
+      {/* Goals & Assists Section */}
       {(teamA.length === 5 && teamB.length === 5) && (
         <>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                Goals & Assists
-                <div className="text-sm text-muted-foreground">
+          <div className="floating-card mb-8">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-yellow-400/30 flex items-center justify-center">
+                    <Trophy className="w-5 h-5 text-yellow-400" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-on-dark font-poppins">Goals & Assists</h3>
+                </div>
+                <div className="text-on-dark-muted text-sm">
                   Team A: {teamAGoals} | Team B: {teamBGoals}
                 </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex space-x-4">
+              </div>
+              
+              <div className="flex flex-wrap gap-4 mb-6">
                 <Button
                   onClick={() => addGoal('A')}
+                  className="bg-blue-500/20 border border-blue-400/30 text-blue-300 hover:bg-blue-500/30 hover:border-blue-400/50"
                   variant="outline"
-                  className="text-blue-600 hover:bg-blue-50"
                 >
+                  <Plus className="w-4 h-4 mr-2" />
                   Add Team A Goal
                 </Button>
                 <Button
                   onClick={() => addGoal('B')}
+                  className="bg-red-500/20 border border-red-400/30 text-red-300 hover:bg-red-500/30 hover:border-red-400/50"
                   variant="outline"
-                  className="text-red-600 hover:bg-red-50"
                 >
+                  <Plus className="w-4 h-4 mr-2" />
                   Add Team B Goal
                 </Button>
               </div>
 
-              {goals.map((goal, index) => (
-                <Card key={index} className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className={`font-medium ${goal.team === 'A' ? 'text-blue-600' : 'text-red-600'}`}>
-                      Goal {index + 1} - Team {goal.team}
-                    </h4>
-                    <Button
-                      onClick={() => removeGoal(index)}
-                      variant="destructive"
-                      size="sm"
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`own-goal-${index}`}
-                        checked={goal.isOwnGoal || false}
-                        onCheckedChange={(checked) => updateGoal(index, 'isOwnGoal', checked as boolean)}
-                      />
-                      <Label htmlFor={`own-goal-${index}`} className="text-sm text-orange-600">
-                        Own Goal
-                      </Label>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>Scorer *</Label>
-                        <Select
-                          value={goal.scorer}
-                          onValueChange={(value) => updateGoal(index, 'scorer', value)}
+              <div className="space-y-4">
+                {goals.map((goal, index) => (
+                  <div key={index} className="floating-card border border-white/10">
+                    <div className="p-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className={`font-medium ${goal.team === 'A' ? 'text-blue-300' : 'text-red-300'}`}>
+                          Goal {index + 1} - Team {goal.team}
+                        </h4>
+                        <Button
+                          onClick={() => removeGoal(index)}
+                          variant="destructive"
+                          size="sm"
+                          className="rounded-full"
                         >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select scorer" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {(goal.isOwnGoal ? getOpposingTeamPlayers(goal.team) : getTeamPlayers(goal.team)).map((player) => (
-                              <SelectItem key={player.id} value={player.id}>
-                                {player.name} {goal.isOwnGoal && '(Own Goal)'}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                          <Minus className="w-4 h-4" />
+                        </Button>
                       </div>
-                      <div>
-                        <Label>Assister (Optional)</Label>
-                        <Select
-                          value={goal.assister || 'no-assist'}
-                          onValueChange={(value) => updateGoal(index, 'assister', value)}
-                          disabled={goal.isOwnGoal}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select assister" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="no-assist">No assist</SelectItem>
-                            {getTeamPlayers(goal.team)
-                              .filter(p => p.id !== goal.scorer)
-                              .map((player) => (
-                                <SelectItem key={player.id} value={player.id}>
-                                  {player.name}
-                                </SelectItem>
-                              ))}
-                          </SelectContent>
-                        </Select>
+                      
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`own-goal-${index}`}
+                            checked={goal.isOwnGoal || false}
+                            onCheckedChange={(checked) => updateGoal(index, 'isOwnGoal', checked as boolean)}
+                            className="border-orange-400/50 data-[state=checked]:bg-orange-500"
+                          />
+                          <Label htmlFor={`own-goal-${index}`} className="text-orange-300 text-sm">
+                            Own Goal
+                          </Label>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label className="text-on-dark-muted">Scorer *</Label>
+                            <Select
+                              value={goal.scorer}
+                              onValueChange={(value) => updateGoal(index, 'scorer', value)}
+                            >
+                              <SelectTrigger className="bg-white/10 border border-white/20 rounded-xl text-on-dark focus:border-purple-400">
+                                <SelectValue placeholder="Select scorer" />
+                              </SelectTrigger>
+                              <SelectContent className="glass-card-strong border-white/20 rounded-xl">
+                                {(goal.isOwnGoal ? getOpposingTeamPlayers(goal.team) : getTeamPlayers(goal.team)).map((player) => (
+                                  <SelectItem key={player.id} value={player.id} className="text-on-dark hover:bg-white/10">
+                                    {player.name} {goal.isOwnGoal && '(Own Goal)'}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <Label className="text-on-dark-muted">Assister (Optional)</Label>
+                            <Select
+                              value={goal.assister || 'no-assist'}
+                              onValueChange={(value) => updateGoal(index, 'assister', value)}
+                              disabled={goal.isOwnGoal}
+                            >
+                              <SelectTrigger className="bg-white/10 border border-white/20 rounded-xl text-on-dark focus:border-purple-400">
+                                <SelectValue placeholder="Select assister" />
+                              </SelectTrigger>
+                              <SelectContent className="glass-card-strong border-white/20 rounded-xl">
+                                <SelectItem value="no-assist" className="text-on-dark hover:bg-white/10">No assist</SelectItem>
+                                {getTeamPlayers(goal.team)
+                                  .filter(p => p.id !== goal.scorer)
+                                  .map((player) => (
+                                    <SelectItem key={player.id} value={player.id} className="text-on-dark hover:bg-white/10">
+                                      {player.name}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </Card>
-              ))}
-            </CardContent>
-          </Card>
+                ))}
+              </div>
+            </div>
+          </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Saves</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Saves Section */}
+          <div className="floating-card mb-8">
+            <div className="p-6">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border border-purple-400/30 flex items-center justify-center">
+                  <Target className="w-5 h-5 text-purple-400" />
+                </div>
+                <h3 className="text-2xl font-bold text-on-dark font-poppins">Saves</h3>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h4 className="font-medium text-blue-600 mb-3">Team A Players</h4>
-                  <div className="space-y-3">
+                  <h4 className="font-medium text-blue-300 mb-4 text-lg">Team A Players</h4>
+                  <div className="space-y-4">
                     {teamA.map((player) => (
-                      <div key={player.id} className="flex items-center justify-between">
+                      <div key={player.id} className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10">
                         <div>
-                          <div className="font-medium">{player.name}</div>
-                          <div className="text-sm text-muted-foreground">{player.position}</div>
+                          <div className="font-medium text-on-dark">{player.name}</div>
+                          <div className="text-sm text-on-dark-muted">{player.position}</div>
                         </div>
                         <div className="w-20">
                           <Input
@@ -353,20 +464,22 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                             value={saves[player.id] || 0}
                             onChange={(e) => updateSaves(player.id, parseInt(e.target.value) || 0)}
                             placeholder="0"
+                            className="h-10 bg-white/10 border border-white/20 rounded-lg text-on-dark text-center focus:border-purple-400"
                           />
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
+                
                 <div>
-                  <h4 className="font-medium text-red-600 mb-3">Team B Players</h4>
-                  <div className="space-y-3">
+                  <h4 className="font-medium text-red-300 mb-4 text-lg">Team B Players</h4>
+                  <div className="space-y-4">
                     {teamB.map((player) => (
-                      <div key={player.id} className="flex items-center justify-between">
+                      <div key={player.id} className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10">
                         <div>
-                          <div className="font-medium">{player.name}</div>
-                          <div className="text-sm text-muted-foreground">{player.position}</div>
+                          <div className="font-medium text-on-dark">{player.name}</div>
+                          <div className="text-sm text-on-dark-muted">{player.position}</div>
                         </div>
                         <div className="w-20">
                           <Input
@@ -375,6 +488,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                             value={saves[player.id] || 0}
                             onChange={(e) => updateSaves(player.id, parseInt(e.target.value) || 0)}
                             placeholder="0"
+                            className="h-10 bg-white/10 border border-white/20 rounded-lg text-on-dark text-center focus:border-purple-400"
                           />
                         </div>
                       </div>
@@ -382,18 +496,20 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </>
       )}
 
+      {/* Create Match Button */}
       <div className="flex justify-center">
         <Button
           onClick={handleCreateMatch}
           disabled={!matchDate || teamA.length !== 5 || teamB.length !== 5}
           size="lg"
-          className="bg-emerald-600 hover:bg-emerald-700"
+          className="px-12 py-4 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold text-lg rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg shadow-emerald-500/25"
         >
+          <Save className="w-6 h-6 mr-3" />
           Create Match
         </Button>
       </div>

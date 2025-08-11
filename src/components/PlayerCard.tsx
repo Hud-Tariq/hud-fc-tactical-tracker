@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Player } from '@/types/football';
-import { Target, Users, TrendingUp, Award } from 'lucide-react';
+import { Target, Users, TrendingUp, Award, Star } from 'lucide-react';
 
 interface PlayerCardProps {
   player: Player;
@@ -14,11 +13,11 @@ interface PlayerCardProps {
 
 const PlayerCard = ({ player, onClick, selectable = false, selected = false }: PlayerCardProps) => {
   const getRatingColor = (rating: number) => {
-    if (rating >= 85) return 'bg-emerald-500 text-white';
-    if (rating >= 75) return 'bg-blue-500 text-white';
-    if (rating >= 65) return 'bg-yellow-500 text-black';
-    if (rating >= 55) return 'bg-orange-500 text-white';
-    return 'bg-red-500 text-white';
+    if (rating >= 85) return 'from-emerald-400 to-green-500';
+    if (rating >= 75) return 'from-blue-400 to-cyan-500';
+    if (rating >= 65) return 'from-yellow-400 to-orange-400';
+    if (rating >= 55) return 'from-orange-400 to-red-400';
+    return 'from-red-500 to-pink-500';
   };
 
   const getRatingLabel = (rating: number) => {
@@ -41,11 +40,11 @@ const PlayerCard = ({ player, onClick, selectable = false, selected = false }: P
 
   const getPositionColor = (position: string) => {
     switch (position) {
-      case 'Goalkeeper': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'Defender': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'Midfielder': return 'bg-green-100 text-green-800 border-green-200';
-      case 'Forward': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'Goalkeeper': return 'from-yellow-400/20 to-orange-400/20 border-yellow-400/30 text-yellow-300';
+      case 'Defender': return 'from-blue-400/20 to-cyan-400/20 border-blue-400/30 text-blue-300';
+      case 'Midfielder': return 'from-green-400/20 to-emerald-400/20 border-green-400/30 text-green-300';
+      case 'Forward': return 'from-red-400/20 to-pink-400/20 border-red-400/30 text-red-300';
+      default: return 'from-gray-400/20 to-gray-500/20 border-gray-400/30 text-gray-300';
     }
   };
 
@@ -53,62 +52,98 @@ const PlayerCard = ({ player, onClick, selectable = false, selected = false }: P
 
   return (
     <Card 
-      className={`cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border hover:border-primary/20 group ${
-        selected ? 'ring-2 ring-primary shadow-lg' : ''
-      } ${selectable ? 'hover:ring-1 hover:ring-primary/50' : ''}`}
+      className={`
+        cursor-pointer transition-all duration-300 hover:scale-105 border border-white/10 group
+        bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm hover:from-white/10 hover:to-white/15
+        ${selected ? 'ring-2 ring-pink-400/50 shadow-lg shadow-pink-500/25' : ''}
+        ${selectable ? 'hover:ring-1 hover:ring-purple-400/50' : ''}
+      `}
       onClick={() => onClick?.(player)}
     >
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${getPositionColor(player.position).replace('text-', 'text-').replace('bg-', 'bg-')}`}>
-              <PositionIcon className="w-4 h-4" />
+      <CardContent className="p-5">
+        {/* Header with Position and Rating */}
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br ${getPositionColor(player.position)} border backdrop-blur`}>
+              <PositionIcon className="w-5 h-5" />
             </div>
             <Badge 
               variant="outline" 
-              className={`text-xs font-medium ${getPositionColor(player.position)}`}
+              className={`text-xs font-medium bg-gradient-to-r ${getPositionColor(player.position)} border backdrop-blur px-3 py-1 rounded-full`}
             >
               {player.position}
             </Badge>
           </div>
-          <Badge className={`${getRatingColor(player.rating)} text-xs font-bold px-2`}>
-            {player.rating}
-          </Badge>
+          
+          <div className="flex items-center space-x-2">
+            <Star className="w-4 h-4 text-yellow-400" />
+            <Badge className={`bg-gradient-to-r ${getRatingColor(player.rating)} text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg`}>
+              {player.rating}
+            </Badge>
+          </div>
         </div>
 
-        <div className="space-y-2">
-          <h3 className="font-semibold text-base group-hover:text-primary transition-colors truncate">
+        {/* Player Info */}
+        <div className="space-y-3">
+          <h3 className="font-bold text-lg text-on-dark group-hover:gradient-text-light transition-all duration-300 font-poppins">
             {player.name}
           </h3>
-          <p className="text-sm text-muted-foreground">
-            Age {player.age} • {getRatingLabel(player.rating)}
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-on-dark-muted">
+              Age {player.age}
+            </p>
+            <p className="text-sm text-on-dark-muted">
+              {getRatingLabel(player.rating)}
+            </p>
+          </div>
         </div>
 
-        <div className="mt-4 pt-3 border-t border-border/50">
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            <div className="text-center">
-              <p className="font-semibold text-foreground">{player.matchesPlayed}</p>
-              <p className="text-muted-foreground">Matches</p>
+        {/* Stats Grid */}
+        <div className="mt-6 pt-4 border-t border-white/10">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-center p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10">
+              <p className="font-bold text-lg text-on-dark">{player.matchesPlayed}</p>
+              <p className="text-xs text-on-dark-muted">Matches</p>
             </div>
-            <div className="text-center">
-              <p className="font-semibold text-foreground">{player.totalGoals}</p>
-              <p className="text-muted-foreground">Goals</p>
+            <div className="text-center p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10">
+              <p className="font-bold text-lg text-on-dark">{player.totalGoals}</p>
+              <p className="text-xs text-on-dark-muted">Goals</p>
             </div>
           </div>
         </div>
 
+        {/* Performance Rating */}
         {player.averageMatchRating > 0 && (
-          <div className="mt-3 pt-2 border-t border-border/50">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">Avg Performance</span>
-              <span className="font-semibold">{player.averageMatchRating.toFixed(1)}/10</span>
+          <div className="mt-4 pt-4 border-t border-white/10">
+            <div className="flex items-center justify-between text-sm mb-2">
+              <span className="text-on-dark-muted">Performance</span>
+              <span className="font-bold text-on-dark">{player.averageMatchRating.toFixed(1)}/10</span>
             </div>
-            <div className="mt-1 w-full bg-muted rounded-full h-1.5">
+            <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
               <div 
-                className="bg-primary h-1.5 rounded-full transition-all duration-300"
+                className="bg-gradient-to-r from-pink-400 to-purple-500 h-2 rounded-full transition-all duration-500 shadow-sm"
                 style={{ width: `${(player.averageMatchRating / 10) * 100}%` }}
               />
+            </div>
+          </div>
+        )}
+
+        {/* Additional stats for key positions */}
+        {(player.totalAssists > 0 || player.totalSaves > 0) && (
+          <div className="mt-4 pt-4 border-t border-white/10">
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              {player.totalAssists > 0 && (
+                <div className="text-center">
+                  <p className="font-semibold text-on-dark">{player.totalAssists}</p>
+                  <p className="text-on-dark-muted">Assists</p>
+                </div>
+              )}
+              {player.totalSaves > 0 && (
+                <div className="text-center">
+                  <p className="font-semibold text-on-dark">{player.totalSaves}</p>
+                  <p className="text-on-dark-muted">Saves</p>
+                </div>
+              )}
             </div>
           </div>
         )}
