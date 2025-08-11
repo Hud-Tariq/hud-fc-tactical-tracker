@@ -90,7 +90,7 @@ const Index = () => {
       case 'tournaments':
         return <TournamentPage />;
       case 'statistics':
-        return <Statistics players={players} />;
+        return <Statistics players={players} matches={matches} />;
       default:
         return <SquadManagement players={players} onAddPlayer={addPlayer} onPlayerClick={handlePlayerClick} />;
     }
