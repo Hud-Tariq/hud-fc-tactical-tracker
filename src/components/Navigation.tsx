@@ -24,8 +24,12 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             {/* Logo Section - Responsive */}
             <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4 flex-shrink-0">
               <div className="relative">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center shadow-lg">
-                  <span className="text-white font-bold text-sm sm:text-lg lg:text-xl">⚽</span>
+                <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl overflow-hidden shadow-lg">
+                  <img
+                    src="https://cdn.builder.io/api/v1/image/assets%2Fe00e12e7935d4ce5a38c8aa2b83fb3d6%2Fe8e24f94866b4cee85f63edbc421f8aa?format=webp&width=800"
+                    alt="Hud FC Manager Logo"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 opacity-30 blur animate-pulse"></div>
               </div>
