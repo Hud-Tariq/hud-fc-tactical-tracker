@@ -1,15 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Player } from '@/types/football';
-import { Trophy, Target, Zap, Shield, TrendingUp, Users } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Player, Match } from '@/types/football';
+import { Trophy, Target, Zap, Shield, TrendingUp, Users, BarChart3, Calendar } from 'lucide-react';
+import MatchesPlayedView from './MatchesPlayedView';
 
 interface StatisticsProps {
   players: Player[];
+  matches?: Match[];
 }
 
-const Statistics = ({ players }: StatisticsProps) => {
-  // Early return if no players
+const Statistics = ({ players, matches = [] }: StatisticsProps) => {
+  const [activeTab, setActiveTab] = useState<'team-stats' | 'matches'>('team-stats');
+
+  const tabs = [
+    {
+      id: 'team-stats' as const,
+      label: 'Team Statistics',
+      icon: BarChart3,
+      description: 'Player performance and team analytics'
+    },
+    {
+      id: 'matches' as const,
+      label: 'Matches Played',
+      icon: Calendar,
+      description: 'Detailed match history and results'
+    }
+  ];
+
+  // Early return if no players for team stats
   if (!players || players.length === 0) {
     return (
       <div className="floating-section">
@@ -94,23 +114,8 @@ const Statistics = ({ players }: StatisticsProps) => {
     averageRating: players.length > 0 ? Math.round(players.reduce((sum, p) => sum + p.rating, 0) / players.length) : 0
   };
 
-  return (
-    <div className="floating-section">
-      {/* Header */}
-      <div className="section-header">
-        <div className="inline-flex items-center px-4 py-2 rounded-full glass-card border border-pink-400/30 mb-4">
-          <TrendingUp className="w-5 h-5 mr-2 text-pink-400" />
-          <span className="text-on-dark-muted font-medium">Team Analytics</span>
-        </div>
-        <h1 className="text-4xl lg:text-6xl font-bold text-on-dark font-poppins mb-4 lg:mb-6">
-          Squad
-          <span className="gradient-text-light ml-3">Statistics</span>
-        </h1>
-        <p className="text-lg lg:text-2xl text-on-dark-muted max-w-3xl mx-auto">
-          Comprehensive performance analytics and insights for your squad
-        </p>
-      </div>
-
+  const renderTeamStatistics = () => (
+    <div className="space-y-6 lg:space-y-8">
       {/* Quick Stats Bar */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 xl:gap-8 mb-8 lg:mb-16">
         {[
@@ -408,6 +413,64 @@ const Statistics = ({ players }: StatisticsProps) => {
           </div>
         </CardContent>
       </Card>
+    </div>
+  );
+
+  return (
+    <div className="floating-section">
+      {/* Header */}
+      <div className="section-header">
+        <div className="inline-flex items-center px-4 py-2 rounded-full glass-card border border-pink-400/30 mb-4">
+          <TrendingUp className="w-5 h-5 mr-2 text-pink-400" />
+          <span className="text-on-dark-muted font-medium">Team Analytics</span>
+        </div>
+        <h1 className="text-4xl lg:text-6xl font-bold text-on-dark font-poppins mb-4 lg:mb-6">
+          Squad
+          <span className="gradient-text-light ml-3">Statistics</span>
+        </h1>
+        <p className="text-lg lg:text-2xl text-on-dark-muted max-w-3xl mx-auto">
+          Comprehensive performance analytics and insights for your squad
+        </p>
+      </div>
+
+      {/* Tab Navigation */}
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-8 lg:mb-16">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          
+          return (
+            <Button
+              key={tab.id}
+              variant="ghost"
+              size="lg"
+              onClick={() => setActiveTab(tab.id)}
+              className={`
+                relative flex items-center space-x-3 px-6 py-4 rounded-xl transition-all duration-300 h-auto flex-1 justify-start
+                ${isActive
+                  ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30 shadow-lg'
+                  : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
+                }
+              `}
+            >
+              <Icon className="w-5 h-5" />
+              <div className="text-left">
+                <div className="font-medium text-base">{tab.label}</div>
+                <div className="text-xs text-on-dark-subtle hidden sm:block">{tab.description}</div>
+              </div>
+
+              {/* Active indicator */}
+              {isActive && (
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-pink-500/10 to-purple-600/10 animate-pulse"></div>
+              )}
+            </Button>
+          );
+        })}
+      </div>
+
+      {/* Tab Content */}
+      {activeTab === 'team-stats' && renderTeamStatistics()}
+      {activeTab === 'matches' && <MatchesPlayedView matches={matches} players={players} />}
     </div>
   );
 };
