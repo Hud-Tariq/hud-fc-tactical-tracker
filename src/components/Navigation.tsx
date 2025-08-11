@@ -1,4 +1,5 @@
 import React from 'react';
+import React from 'react';
 import { Users, Calendar, BarChart3, Trophy, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import UserMenu from '@/components/UserMenu';
