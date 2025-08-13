@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSupabaseFootballData } from '@/hooks/useSupabaseFootballData';
 import { useTournaments } from '@/hooks/useTournaments';
@@ -15,7 +16,7 @@ type ViewType = 'squad' | 'create-match' | 'view-matches' | 'matches-played' | '
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<ViewType>('squad');
-  const { user, isLoading: isAuthLoading } = useAuth();
+  const { user, loading: isAuthLoading } = useAuth();
   const {
     players,
     matches,
@@ -29,17 +30,14 @@ const Index = () => {
   } = useSupabaseFootballData();
   const {
     tournaments,
-    fetchTournaments,
+    loading: tournamentsLoading,
     createTournament,
-    updateTournament,
-    deleteTournament,
-    addMatchToTournament,
-    removeMatchFromTournament,
+    refreshTournaments,
   } = useTournaments();
 
   useEffect(() => {
-    fetchTournaments();
-  }, [fetchTournaments]);
+    refreshTournaments();
+  }, [refreshTournaments]);
 
   const handleMatchComplete = async (
     matchId: string,
@@ -52,6 +50,11 @@ const Index = () => {
       await completeMatch(matchId, teamAScore, teamBScore, goals, saves);
       setCurrentView('matches-played');
     }
+  };
+
+  const handlePlayerClick = (player: any) => {
+    // Add player click handling logic here if needed
+    console.log('Player clicked:', player);
   };
 
   if (isAuthLoading || loading) {
@@ -82,6 +85,7 @@ const Index = () => {
           <SquadManagement
             players={players}
             onAddPlayer={addPlayer}
+            onPlayerClick={handlePlayerClick}
           />
         );
       case 'create-match':
@@ -89,7 +93,6 @@ const Index = () => {
           <MatchCreation
             players={players}
             onCreateMatch={createMatch}
-            onMatchComplete={handleMatchComplete}
             onViewMatches={() => setCurrentView('view-matches')}
           />
         );
@@ -119,23 +122,14 @@ const Index = () => {
         );
       case 'tournaments':
         return (
-          <TournamentPage
-            tournaments={tournaments}
-            matches={matches}
-            players={players}
-            onCreateTournament={createTournament}
-            onUpdateTournament={updateTournament}
-            onDeleteTournament={deleteTournament}
-            onAddMatchToTournament={addMatchToTournament}
-            onRemoveMatchFromTournament={removeMatchFromTournament}
-            refreshData={refreshData}
-          />
+          <TournamentPage />
         );
       default:
         return (
           <SquadManagement
             players={players}
             onAddPlayer={addPlayer}
+            onPlayerClick={handlePlayerClick}
           />
         );
     }
@@ -143,7 +137,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-dark">
-      <Navigation onChangeView={setCurrentView} />
+      <Navigation activeTab={currentView} onTabChange={setCurrentView} />
       <main className="container mx-auto px-4 py-8">
         {renderView()}
       </main>
