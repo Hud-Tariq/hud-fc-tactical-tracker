@@ -201,10 +201,27 @@ const MatchesPlayedView = ({ matches, players, onRemoveMatch }: MatchesPlayedVie
                       </div>
                     </div>
 
-                    {/* Expand Button */}
-                    <Button variant="ghost" size="sm" className="text-on-dark-muted hover:text-on-dark">
-                      {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                    </Button>
+                    <div className="flex items-center space-x-2">
+                      {/* Remove Match Button */}
+                      {onRemoveMatch && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onRemoveMatch(match.id);
+                          }}
+                          className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
+
+                      {/* Expand Button */}
+                      <Button variant="ghost" size="sm" className="text-on-dark-muted hover:text-on-dark">
+                        {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardHeader>
