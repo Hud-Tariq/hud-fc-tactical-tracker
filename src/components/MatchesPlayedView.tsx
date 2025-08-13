@@ -12,16 +12,18 @@ import {
   Filter,
   ChevronDown,
   ChevronUp,
-  TrendingUp
+  TrendingUp,
+  Trash2
 } from 'lucide-react';
 import { Icon } from '@/components/ui/icon';
 
 interface MatchesPlayedViewProps {
   matches: Match[];
   players: Player[];
+  onRemoveMatch?: (matchId: string) => void;
 }
 
-const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
+const MatchesPlayedView = ({ matches, players, onRemoveMatch }: MatchesPlayedViewProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedMatch, setExpandedMatch] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'date' | 'score'>('date');
