@@ -443,7 +443,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
             <div className="p-6">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border border-purple-400/30 flex items-center justify-center">
-                  <Icon name="goalkeeper" size={20} className="w-5 h-5 text-purple-400" />
+                  <Icon name="wall-goalkeeper" size={20} className="w-5 h-5 text-purple-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-on-dark font-poppins">Saves</h3>
               </div>
