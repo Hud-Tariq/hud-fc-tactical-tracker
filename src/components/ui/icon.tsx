@@ -9,7 +9,7 @@ export type IconName =
   | 'goal'
   | 'goalkeeper'
   | 'lightning-forward'
-  | 'midfielder-brain'
+  | 'midfielder'
   | 'shield-defender'
   | 'squad'
   | 'statistics'
@@ -26,7 +26,9 @@ const iconPaths: Record<IconName, string> = {
   'goal': '/src/assets/icons/goal.svg',
   'goalkeeper': '/src/assets/icons/goalkeeper.svg',
   'lightning-forward': '/src/assets/icons/lightning_forward.svg',
-  'midfielder-brain': '/src/assets/icons/midfielder_brain.svg',
+  'midfielder': '/src/assets/icons/midfielder_brain.svg',
+  'statistics': '/src/assets/icons/statistics.svg',
+  'wall-goalkeeper': '/src/assets/icons/wall_goalie.svg',
   'shield-defender': '/src/assets/icons/shield_defender.svg',
   'squad': '/src/assets/icons/squad_topnavbar.svg',
   'statistics': '/src/assets/icons/statistics.svg',
@@ -61,15 +63,21 @@ export const IconMap = {
     <Icon name="trophy" size={size} className={className} />
   ),
   Shield: ({ size, className }: { size?: number; className?: string }) => (
-    <Icon name="shield-defender" size={size} className={className} />
+    <Icon name="defender" size={size} className={className} />
   ),
   Zap: ({ size, className }: { size?: number; className?: string }) => (
-    <Icon name="lightning-forward" size={size} className={className} />
+    <Icon name="midfielder" size={size} className={className} />
   ),
   Goal: ({ size, className }: { size?: number; className?: string }) => (
     <Icon name="goal" size={size} className={className} />
   ),
   Target: ({ size, className }: { size?: number; className?: string }) => (
     <Icon name="goal" size={size} className={className} />
+  ),
+  BarChart3: ({ size, className }: { size?: number; className?: string }) => (
+    <Icon name="statistics" size={size} className={className} />
+  ),
+  Award: ({ size, className }: { size?: number; className?: string }) => (
+    <Icon name="trophy" size={size} className={className} />
   ),
 } as const;
