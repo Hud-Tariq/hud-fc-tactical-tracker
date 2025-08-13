@@ -10,9 +10,10 @@ import MatchesPlayedView from './MatchesPlayedView';
 interface StatisticsProps {
   players: Player[];
   matches?: Match[];
+  onRemoveMatch?: (matchId: string) => void;
 }
 
-const Statistics = ({ players, matches = [] }: StatisticsProps) => {
+const Statistics = ({ players, matches = [], onRemoveMatch }: StatisticsProps) => {
   const [activeTab, setActiveTab] = useState<'team-stats' | 'matches'>('team-stats');
 
   const tabs = [
@@ -471,7 +472,7 @@ const Statistics = ({ players, matches = [] }: StatisticsProps) => {
 
       {/* Tab Content */}
       {activeTab === 'team-stats' && renderTeamStatistics()}
-      {activeTab === 'matches' && <MatchesPlayedView matches={matches} players={players} />}
+      {activeTab === 'matches' && <MatchesPlayedView matches={matches} players={players} onRemoveMatch={onRemoveMatch} />}
     </div>
   );
 };
