@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Player } from '@/types/football';
-import { Goal, Shield, Zap, Trophy, Star } from 'lucide-react';
+import { Icon } from '@/components/ui/icon';
+import { Star } from 'lucide-react';
 
 interface PlayerCardProps {
   player: Player;
@@ -31,11 +31,11 @@ const PlayerCard = ({ player, onClick, selectable = false, selected = false }: P
 
   const getPositionIcon = (position: string) => {
     switch (position) {
-      case 'Goalkeeper': return Goal;
-      case 'Defender': return Shield;
-      case 'Midfielder': return Zap;
-      case 'Forward': return Trophy;
-      default: return Shield;
+      case 'Goalkeeper': return 'goalkeeper';
+      case 'Defender': return 'defender';
+      case 'Midfielder': return 'midfielder';
+      case 'Forward': return 'forwards';
+      default: return 'defender';
     }
   };
 
@@ -49,7 +49,7 @@ const PlayerCard = ({ player, onClick, selectable = false, selected = false }: P
     }
   };
 
-  const PositionIcon = getPositionIcon(player.position);
+  const positionIconName = getPositionIcon(player.position);
 
   return (
     <Card 
@@ -66,7 +66,7 @@ const PlayerCard = ({ player, onClick, selectable = false, selected = false }: P
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br ${getPositionColor(player.position)} border backdrop-blur`}>
-              <PositionIcon className="w-5 h-5" />
+              <Icon name={positionIconName} size={20} className="w-5 h-5" />
             </div>
             <Badge 
               variant="outline" 

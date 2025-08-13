@@ -1,6 +1,6 @@
-
 import React from 'react';
-import { Users, Calendar, BarChart3, Trophy, Zap } from 'lucide-react';
+import { Users, Calendar, BarChart3 } from 'lucide-react';
+import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import UserMenu from '@/components/UserMenu';
 
@@ -11,10 +11,10 @@ interface NavigationProps {
 
 const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
   const navItems = [
-    { id: 'squad', label: 'Squad', icon: Users },
-    { id: 'create-match', label: 'Matches', icon: Zap },
-    { id: 'tournaments', label: 'Tournaments', icon: Trophy },
-    { id: 'statistics', label: 'Statistics', icon: BarChart3 },
+    { id: 'squad', label: 'Squad', icon: 'squad', isCustom: true },
+    { id: 'create-match', label: 'Matches', icon: 'lightning-forward', isCustom: true },
+    { id: 'tournaments', label: 'Tournaments', icon: 'trophy', isCustom: true },
+    { id: 'statistics', label: 'Statistics', icon: 'statistics', isCustom: true },
   ];
 
   return (
@@ -27,7 +27,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
               <div className="relative">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl overflow-hidden shadow-lg">
                   <img
-                    src="https://ibb.co/zHfV2CJk"
+                    src="/src/assets/images/logo.png"
                     alt="Hud FC Manager Logo"
                     className="w-full h-full object-cover"
                   />
@@ -45,7 +45,6 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             {/* Navigation Items - Desktop */}
             <div className="hidden lg:flex items-center space-x-4">
               {navItems.map((item, index) => {
-                const Icon = item.icon;
                 const isActive = activeTab === item.id;
 
                 return (
@@ -62,7 +61,11 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
                       }
                     `}
                   >
-                    <Icon className="w-5 h-5" />
+                    {item.isCustom ? (
+                      <Icon name={item.icon as any} size={20} className="w-5 h-5" />
+                    ) : (
+                      React.createElement(item.icon as any, { className: "w-5 h-5" })
+                    )}
                     <span className="font-medium text-base">{item.label}</span>
 
                     {/* Active indicator */}
@@ -77,7 +80,6 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             {/* Navigation Items - Tablet & Small Desktop */}
             <div className="hidden sm:flex lg:hidden items-center space-x-1 md:space-x-2">
               {navItems.map((item, index) => {
-                const Icon = item.icon;
                 const isActive = activeTab === item.id;
 
                 return (
@@ -93,7 +95,11 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
                       }
                     `}
                   >
-                    <Icon className="w-4 h-4" />
+                    {item.isCustom ? (
+                      <Icon name={item.icon as any} size={16} className="w-4 h-4" />
+                    ) : (
+                      React.createElement(item.icon as any, { className: "w-4 h-4" })
+                    )}
                     <span className="font-medium hidden md:inline">{item.label}</span>
 
                     {/* Active indicator */}
@@ -108,7 +114,6 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             {/* Mobile Navigation Menu - Very Small Screens */}
             <div className="sm:hidden flex items-center space-x-1 flex-grow justify-center max-w-xs">
               {navItems.map((item) => {
-                const Icon = item.icon;
                 const isActive = activeTab === item.id;
 
                 return (
@@ -125,7 +130,11 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
                       }
                     `}
                   >
-                    <Icon className="w-4 h-4 mx-auto" />
+                    {item.isCustom ? (
+                      <Icon name={item.icon as any} size={16} className="w-4 h-4 mx-auto" />
+                    ) : (
+                      React.createElement(item.icon as any, { className: "w-4 h-4 mx-auto" })
+                    )}
                     {isActive && (
                       <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-pink-500/10 to-purple-600/10 animate-pulse"></div>
                     )}

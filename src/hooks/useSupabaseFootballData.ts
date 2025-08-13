@@ -14,12 +14,32 @@ export const useSupabaseFootballData = () => {
   const fetchPlayers = async () => {
     try {
       console.log('Fetching players...');
+
+      // Check authentication first
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError) {
+        console.error('Authentication error:', authError);
+        throw new Error(`Authentication failed: ${authError.message}`);
+      }
+
+      if (!user) {
+        console.log('No authenticated user found');
+        setPlayers([]);
+        return;
+      }
+
+      console.log('User authenticated, fetching players for user:', user.id);
+
       const { data, error } = await supabase
         .from('players')
         .select('*')
+        .eq('user_id', user.id)
         .order('name');
-      
-      if (error) throw error;
+
+      if (error) {
+        console.error('Supabase query error:', error);
+        throw error;
+      }
       
       const mappedPlayers = data?.map(player => ({
         id: player.id,
@@ -40,9 +60,10 @@ export const useSupabaseFootballData = () => {
       setPlayers(mappedPlayers);
     } catch (error) {
       console.error('Error fetching players:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
         title: "Error",
-        description: "Failed to fetch players",
+        description: `Failed to fetch players: ${errorMessage}`,
         variant: "destructive",
       });
     }
@@ -52,6 +73,22 @@ export const useSupabaseFootballData = () => {
   const fetchMatches = async () => {
     try {
       console.log('Fetching matches...');
+
+      // Check authentication first
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError) {
+        console.error('Authentication error:', authError);
+        throw new Error(`Authentication failed: ${authError.message}`);
+      }
+
+      if (!user) {
+        console.log('No authenticated user found');
+        setMatches([]);
+        return;
+      }
+
+      console.log('User authenticated, fetching matches for user:', user.id);
+
       const { data, error } = await supabase
         .from('matches')
         .select(`
@@ -70,9 +107,13 @@ export const useSupabaseFootballData = () => {
             saves_count
           )
         `)
+        .eq('user_id', user.id)
         .order('date', { ascending: false });
-      
-      if (error) throw error;
+
+      if (error) {
+        console.error('Supabase query error:', error);
+        throw error;
+      }
       
       const formattedMatches = data?.map(match => ({
         id: match.id,
@@ -101,9 +142,10 @@ export const useSupabaseFootballData = () => {
       setMatches(formattedMatches);
     } catch (error) {
       console.error('Error fetching matches:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
         title: "Error",
-        description: "Failed to fetch matches",
+        description: `Failed to fetch matches: ${errorMessage}`,
         variant: "destructive",
       });
     }
@@ -138,7 +180,8 @@ export const useSupabaseFootballData = () => {
       console.log('Successfully stored match goals');
     } catch (error) {
       console.error('Error storing match goals:', error);
-      throw error;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Failed to store match goals: ${errorMessage}`);
     }
   };
 
@@ -171,7 +214,8 @@ export const useSupabaseFootballData = () => {
       console.log('Successfully stored match saves');
     } catch (error) {
       console.error('Error storing match saves:', error);
-      throw error;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Failed to store match saves: ${errorMessage}`);
     }
   };
 
@@ -206,9 +250,10 @@ export const useSupabaseFootballData = () => {
       });
     } catch (error) {
       console.error('Error adding player:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
-        title: "Error", 
-        description: "Failed to add player",
+        title: "Error",
+        description: `Failed to add player: ${errorMessage}`,
         variant: "destructive",
       });
     }
@@ -268,9 +313,10 @@ export const useSupabaseFootballData = () => {
       return data.id;
     } catch (error) {
       console.error('Error creating match:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
         title: "Error",
-        description: `Failed to create match: ${error}`,
+        description: `Failed to create match: ${errorMessage}`,
         variant: "destructive",
       });
       return null;
@@ -320,9 +366,10 @@ export const useSupabaseFootballData = () => {
       });
     } catch (error) {
       console.error('Error completing match:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
         title: "Error",
-        description: `Failed to complete match: ${error}`,
+        description: `Failed to complete match: ${errorMessage}`,
         variant: "destructive",
       });
     }
@@ -332,7 +379,7 @@ export const useSupabaseFootballData = () => {
   const deleteMatch = async (matchId: string) => {
     try {
       console.log('Starting match deletion for:', matchId);
-      
+
       const match = matches.find(m => m.id === matchId);
       if (!match) {
         console.error('Match not found:', matchId);
@@ -342,6 +389,23 @@ export const useSupabaseFootballData = () => {
           variant: "destructive",
         });
         return;
+      }
+
+      // If match was completed, reverse the statistics first
+      if (match.completed) {
+        console.log('Match was completed, reversing statistics...');
+        try {
+          await StatisticsService.reverseMatchStatistics(match, players);
+          console.log('Statistics reversal completed');
+        } catch (statError) {
+          console.error('Error reversing statistics:', statError);
+          // Continue with deletion even if stats reversal fails
+          toast({
+            title: "Warning",
+            description: "Match deleted but statistics may need manual correction",
+            variant: "destructive",
+          });
+        }
       }
 
       console.log('Deleting match goals...');
@@ -378,18 +442,19 @@ export const useSupabaseFootballData = () => {
       }
 
       console.log('Match deletion completed successfully');
-      
+
       await Promise.all([fetchMatches(), fetchPlayers()]);
 
       toast({
         title: "Success",
-        description: "Match deleted successfully!",
+        description: "Match deleted successfully and statistics updated!",
       });
     } catch (error) {
       console.error('Error deleting match:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
         title: "Error",
-        description: "Failed to delete match. Please try again.",
+        description: `Failed to delete match: ${errorMessage}`,
         variant: "destructive",
       });
     }
@@ -421,9 +486,10 @@ export const useSupabaseFootballData = () => {
       } catch (error) {
         console.error('Network error in loadData:', error);
         setLoading(false);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         toast({
           title: "Network Error",
-          description: "Failed to connect to the server. Please check your internet connection.",
+          description: `Failed to connect to the server: ${errorMessage}`,
           variant: "destructive",
         });
       }

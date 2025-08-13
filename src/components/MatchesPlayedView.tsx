@@ -4,28 +4,26 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Player, Match } from '@/types/football';
-import { 
-  Calendar, 
-  Users, 
-  Trophy, 
-  Target, 
-  Shield, 
-  Clock, 
+import {
+  Calendar,
+  Users,
+  Clock,
   Search,
   Filter,
   ChevronDown,
   ChevronUp,
   TrendingUp,
-  Award,
-  Zap
+  Trash2
 } from 'lucide-react';
+import { Icon } from '@/components/ui/icon';
 
 interface MatchesPlayedViewProps {
   matches: Match[];
   players: Player[];
+  onRemoveMatch?: (matchId: string) => void;
 }
 
-const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
+const MatchesPlayedView = ({ matches, players, onRemoveMatch }: MatchesPlayedViewProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedMatch, setExpandedMatch] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'date' | 'score'>('date');
@@ -108,7 +106,7 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
         <div className="text-center space-y-4">
           <div className="flex justify-center">
             <div className="bg-gradient-to-br from-white/10 to-white/20 backdrop-blur p-8 rounded-full border border-white/20">
-              <Trophy className="w-16 h-16 text-on-dark-subtle" />
+              <Icon name="trophy" size={64} className="w-16 h-16 text-on-dark-subtle" />
             </div>
           </div>
           <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-on-dark font-poppins">
@@ -173,7 +171,7 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 flex items-center justify-center">
-                        <Trophy className="w-5 h-5 text-pink-400" />
+                        <Icon name="trophy" size={20} className="w-5 h-5 text-pink-400" />
                       </div>
                       <div>
                         <div className="flex items-center space-x-3">
@@ -203,10 +201,27 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                       </div>
                     </div>
 
-                    {/* Expand Button */}
-                    <Button variant="ghost" size="sm" className="text-on-dark-muted hover:text-on-dark">
-                      {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                    </Button>
+                    <div className="flex items-center space-x-2">
+                      {/* Remove Match Button */}
+                      {onRemoveMatch && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onRemoveMatch(match.id);
+                          }}
+                          className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
+
+                      {/* Expand Button */}
+                      <Button variant="ghost" size="sm" className="text-on-dark-muted hover:text-on-dark">
+                        {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardHeader>
@@ -227,7 +242,7 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                         </h4>
                         {match.scoreA > match.scoreB && (
                           <Badge className="bg-green-400/20 text-green-300 border-green-400/30">
-                            <Trophy className="w-3 h-3 mr-1" />
+                            <Icon name="trophy" size={12} className="w-3 h-3 mr-1" />
                             Winner
                           </Badge>
                         )}
@@ -257,25 +272,25 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                               <div className="flex items-center space-x-3 text-xs">
                                 {stats.goals > 0 && (
                                   <div className="flex items-center space-x-1 text-green-400">
-                                    <Target className="w-3 h-3" />
+                                    <Icon name="goal" size={12} className="w-3 h-3" />
                                     <span>{stats.goals}</span>
                                   </div>
                                 )}
                                 {stats.assists > 0 && (
                                   <div className="flex items-center space-x-1 text-blue-400">
-                                    <Zap className="w-3 h-3" />
+                                    <Icon name="midfielder" size={12} className="w-3 h-3" />
                                     <span>{stats.assists}</span>
                                   </div>
                                 )}
                                 {stats.saves > 0 && (
                                   <div className="flex items-center space-x-1 text-amber-400">
-                                    <Shield className="w-3 h-3" />
+                                    <Icon name="wall-goalkeeper" size={12} className="w-3 h-3" />
                                     <span>{stats.saves}</span>
                                   </div>
                                 )}
                                 {stats.rating > 0 && (
                                   <div className="flex items-center space-x-1 text-purple-400">
-                                    <Award className="w-3 h-3" />
+                                    <Icon name="trophy" size={12} className="w-3 h-3" />
                                     <span>{stats.rating.toFixed(1)}</span>
                                   </div>
                                 )}
@@ -295,7 +310,7 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                         </h4>
                         {match.scoreB > match.scoreA && (
                           <Badge className="bg-blue-400/20 text-blue-300 border-blue-400/30">
-                            <Trophy className="w-3 h-3 mr-1" />
+                            <Icon name="trophy" size={12} className="w-3 h-3 mr-1" />
                             Winner
                           </Badge>
                         )}
@@ -325,25 +340,25 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                               <div className="flex items-center space-x-3 text-xs">
                                 {stats.goals > 0 && (
                                   <div className="flex items-center space-x-1 text-green-400">
-                                    <Target className="w-3 h-3" />
+                                    <Icon name="goal" size={12} className="w-3 h-3" />
                                     <span>{stats.goals}</span>
                                   </div>
                                 )}
                                 {stats.assists > 0 && (
                                   <div className="flex items-center space-x-1 text-blue-400">
-                                    <Zap className="w-3 h-3" />
+                                    <Icon name="midfielder" size={12} className="w-3 h-3" />
                                     <span>{stats.assists}</span>
                                   </div>
                                 )}
                                 {stats.saves > 0 && (
                                   <div className="flex items-center space-x-1 text-amber-400">
-                                    <Shield className="w-3 h-3" />
+                                    <Icon name="wall-goalkeeper" size={12} className="w-3 h-3" />
                                     <span>{stats.saves}</span>
                                   </div>
                                 )}
                                 {stats.rating > 0 && (
                                   <div className="flex items-center space-x-1 text-purple-400">
-                                    <Award className="w-3 h-3" />
+                                    <Icon name="trophy" size={12} className="w-3 h-3" />
                                     <span>{stats.rating.toFixed(1)}</span>
                                   </div>
                                 )}
@@ -370,7 +385,7 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                         {match.goals?.length > 0 && (
                           <div className="space-y-3">
                             <h5 className="font-medium text-green-400 flex items-center">
-                              <Target className="w-4 h-4 mr-2" />
+                              <Icon name="goal" size={16} className="w-4 h-4 mr-2" />
                               Goals ({match.goals.length})
                             </h5>
                             <div className="space-y-2">
@@ -411,7 +426,7 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                         {Object.keys(match.saves || {}).length > 0 && (
                           <div className="space-y-3">
                             <h5 className="font-medium text-amber-400 flex items-center">
-                              <Shield className="w-4 h-4 mr-2" />
+                              <Icon name="wall-goalkeeper" size={16} className="w-4 h-4 mr-2" />
                               Saves
                             </h5>
                             <div className="space-y-2">
