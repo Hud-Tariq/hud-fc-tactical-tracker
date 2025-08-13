@@ -12,8 +12,10 @@ interface StatisticsProps {
   onDeleteMatch?: (matchId: string) => Promise<void>;
 }
 
+type TabType = 'overview' | 'matches';
+
 const Statistics = ({ players, matches, onDeleteMatch }: StatisticsProps) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'matches'>('overview');
+  const [activeTab, setActiveTab] = useState<TabType>('overview');
 
   const completedMatches = useMemo(() => matches.filter(match => match.completed), [matches]);
 
