@@ -253,25 +253,25 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                               <div className="flex items-center space-x-3 text-xs">
                                 {stats.goals > 0 && (
                                   <div className="flex items-center space-x-1 text-green-400">
-                                    <Target className="w-3 h-3" />
+                                    <Icon name="goal" size={12} className="w-3 h-3" />
                                     <span>{stats.goals}</span>
                                   </div>
                                 )}
                                 {stats.assists > 0 && (
                                   <div className="flex items-center space-x-1 text-blue-400">
-                                    <Zap className="w-3 h-3" />
+                                    <Icon name="midfielder" size={12} className="w-3 h-3" />
                                     <span>{stats.assists}</span>
                                   </div>
                                 )}
                                 {stats.saves > 0 && (
                                   <div className="flex items-center space-x-1 text-amber-400">
-                                    <Shield className="w-3 h-3" />
+                                    <Icon name="wall-goalkeeper" size={12} className="w-3 h-3" />
                                     <span>{stats.saves}</span>
                                   </div>
                                 )}
                                 {stats.rating > 0 && (
                                   <div className="flex items-center space-x-1 text-purple-400">
-                                    <Award className="w-3 h-3" />
+                                    <Icon name="trophy" size={12} className="w-3 h-3" />
                                     <span>{stats.rating.toFixed(1)}</span>
                                   </div>
                                 )}
@@ -321,25 +321,25 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                               <div className="flex items-center space-x-3 text-xs">
                                 {stats.goals > 0 && (
                                   <div className="flex items-center space-x-1 text-green-400">
-                                    <Target className="w-3 h-3" />
+                                    <Icon name="goal" size={12} className="w-3 h-3" />
                                     <span>{stats.goals}</span>
                                   </div>
                                 )}
                                 {stats.assists > 0 && (
                                   <div className="flex items-center space-x-1 text-blue-400">
-                                    <Zap className="w-3 h-3" />
+                                    <Icon name="midfielder" size={12} className="w-3 h-3" />
                                     <span>{stats.assists}</span>
                                   </div>
                                 )}
                                 {stats.saves > 0 && (
                                   <div className="flex items-center space-x-1 text-amber-400">
-                                    <Shield className="w-3 h-3" />
+                                    <Icon name="wall-goalkeeper" size={12} className="w-3 h-3" />
                                     <span>{stats.saves}</span>
                                   </div>
                                 )}
                                 {stats.rating > 0 && (
                                   <div className="flex items-center space-x-1 text-purple-400">
-                                    <Award className="w-3 h-3" />
+                                    <Icon name="trophy" size={12} className="w-3 h-3" />
                                     <span>{stats.rating.toFixed(1)}</span>
                                   </div>
                                 )}
@@ -366,7 +366,7 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                         {match.goals?.length > 0 && (
                           <div className="space-y-3">
                             <h5 className="font-medium text-green-400 flex items-center">
-                              <Target className="w-4 h-4 mr-2" />
+                              <Icon name="goal" size={16} className="w-4 h-4 mr-2" />
                               Goals ({match.goals.length})
                             </h5>
                             <div className="space-y-2">
@@ -407,7 +407,7 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                         {Object.keys(match.saves || {}).length > 0 && (
                           <div className="space-y-3">
                             <h5 className="font-medium text-amber-400 flex items-center">
-                              <Shield className="w-4 h-4 mr-2" />
+                              <Icon name="wall-goalkeeper" size={16} className="w-4 h-4 mr-2" />
                               Saves
                             </h5>
                             <div className="space-y-2">
