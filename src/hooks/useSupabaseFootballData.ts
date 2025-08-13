@@ -140,7 +140,8 @@ export const useSupabaseFootballData = () => {
       console.log('Successfully stored match goals');
     } catch (error) {
       console.error('Error storing match goals:', error);
-      throw error;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Failed to store match goals: ${errorMessage}`);
     }
   };
 
@@ -173,7 +174,8 @@ export const useSupabaseFootballData = () => {
       console.log('Successfully stored match saves');
     } catch (error) {
       console.error('Error storing match saves:', error);
-      throw error;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Failed to store match saves: ${errorMessage}`);
     }
   };
 
