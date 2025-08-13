@@ -14,7 +14,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
     { id: 'squad', label: 'Squad', icon: 'squad', isCustom: true },
     { id: 'create-match', label: 'Matches', icon: 'lightning-forward', isCustom: true },
     { id: 'tournaments', label: 'Tournaments', icon: 'trophy', isCustom: true },
-    { id: 'statistics', label: 'Statistics', icon: BarChart3, isCustom: false },
+    { id: 'statistics', label: 'Statistics', icon: 'statistics', isCustom: true },
   ];
 
   return (
