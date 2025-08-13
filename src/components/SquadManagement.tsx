@@ -71,7 +71,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
   const positionIcons = {
     'Goalkeeper': 'wall-goalkeeper',
     'Defender': 'shield-defender',
-    'Midfielder': 'midfielder-brain',
+    'Midfielder': 'trophy',
     'Forward': 'attacker'
   };
 
