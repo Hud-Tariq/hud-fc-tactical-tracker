@@ -40,9 +40,10 @@ export const useSupabaseFootballData = () => {
       setPlayers(mappedPlayers);
     } catch (error) {
       console.error('Error fetching players:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
         title: "Error",
-        description: "Failed to fetch players",
+        description: `Failed to fetch players: ${errorMessage}`,
         variant: "destructive",
       });
     }
@@ -101,9 +102,10 @@ export const useSupabaseFootballData = () => {
       setMatches(formattedMatches);
     } catch (error) {
       console.error('Error fetching matches:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
         title: "Error",
-        description: "Failed to fetch matches",
+        description: `Failed to fetch matches: ${errorMessage}`,
         variant: "destructive",
       });
     }
@@ -206,9 +208,10 @@ export const useSupabaseFootballData = () => {
       });
     } catch (error) {
       console.error('Error adding player:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
-        title: "Error", 
-        description: "Failed to add player",
+        title: "Error",
+        description: `Failed to add player: ${errorMessage}`,
         variant: "destructive",
       });
     }
@@ -268,9 +271,10 @@ export const useSupabaseFootballData = () => {
       return data.id;
     } catch (error) {
       console.error('Error creating match:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
         title: "Error",
-        description: `Failed to create match: ${error}`,
+        description: `Failed to create match: ${errorMessage}`,
         variant: "destructive",
       });
       return null;
@@ -320,9 +324,10 @@ export const useSupabaseFootballData = () => {
       });
     } catch (error) {
       console.error('Error completing match:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
         title: "Error",
-        description: `Failed to complete match: ${error}`,
+        description: `Failed to complete match: ${errorMessage}`,
         variant: "destructive",
       });
     }
@@ -387,9 +392,10 @@ export const useSupabaseFootballData = () => {
       });
     } catch (error) {
       console.error('Error deleting match:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
         title: "Error",
-        description: "Failed to delete match. Please try again.",
+        description: `Failed to delete match: ${errorMessage}`,
         variant: "destructive",
       });
     }
@@ -421,9 +427,10 @@ export const useSupabaseFootballData = () => {
       } catch (error) {
         console.error('Network error in loadData:', error);
         setLoading(false);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         toast({
           title: "Network Error",
-          description: "Failed to connect to the server. Please check your internet connection.",
+          description: `Failed to connect to the server: ${errorMessage}`,
           variant: "destructive",
         });
       }
