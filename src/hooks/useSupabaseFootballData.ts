@@ -14,12 +14,32 @@ export const useSupabaseFootballData = () => {
   const fetchPlayers = async () => {
     try {
       console.log('Fetching players...');
+
+      // Check authentication first
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError) {
+        console.error('Authentication error:', authError);
+        throw new Error(`Authentication failed: ${authError.message}`);
+      }
+
+      if (!user) {
+        console.log('No authenticated user found');
+        setPlayers([]);
+        return;
+      }
+
+      console.log('User authenticated, fetching players for user:', user.id);
+
       const { data, error } = await supabase
         .from('players')
         .select('*')
+        .eq('user_id', user.id)
         .order('name');
-      
-      if (error) throw error;
+
+      if (error) {
+        console.error('Supabase query error:', error);
+        throw error;
+      }
       
       const mappedPlayers = data?.map(player => ({
         id: player.id,
