@@ -207,75 +207,6 @@ export class StatisticsService {
     }
   }
 
-  // New method to reverse player statistics when a match is deleted
-  static async reversePlayerStatistics(
-    playerId: string,
-    performance: PlayerMatchPerformance
-  ): Promise<void> {
-    try {
-      console.log(`Reversing statistics for player ${playerId}:`, performance);
-      
-      const { data: currentPlayer, error: fetchError } = await supabase
-        .from('players')
-        .select('*')
-        .eq('id', playerId)
-        .single();
-      
-      if (fetchError) {
-        console.error('Error fetching player:', fetchError);
-        throw new Error(`Failed to fetch player ${playerId}: ${fetchError.message}`);
-      }
-
-      if (!currentPlayer) {
-        throw new Error(`Player ${playerId} not found`);
-      }
-
-      const newMatchesPlayed = Math.max(0, currentPlayer.matches_played - 1);
-      
-      // Reverse the rating adjustment
-      let newRating = currentPlayer.rating;
-      const ratingAdjustment = this.calculateRatingAdjustment(
-        currentPlayer.rating,
-        performance.matchRating,
-        currentPlayer.matches_played - 1 // Use the count before this match
-      );
-      
-      // Reverse the rating change by subtracting the adjustment
-      newRating = Math.max(1, Math.min(100, currentPlayer.rating - ratingAdjustment));
-      
-      // Log rating changes for debugging
-      if (Math.abs(ratingAdjustment) > 0) {
-        console.log(`Reversing rating change for ${playerId}: ${currentPlayer.rating} → ${Math.round(newRating)} (${ratingAdjustment > 0 ? '-' : '+'}${Math.abs(ratingAdjustment).toFixed(1)})`);
-      }
-
-      const updates = {
-        matches_played: newMatchesPlayed,
-        total_goals: Math.max(0, currentPlayer.total_goals - performance.goals),
-        total_assists: Math.max(0, currentPlayer.total_assists - performance.assists),
-        total_saves: Math.max(0, currentPlayer.total_saves - performance.saves),
-        clean_sheets: Math.max(0, currentPlayer.clean_sheets - (performance.cleanSheet ? 1 : 0)),
-        rating: Math.round(newRating)
-      };
-
-      console.log(`Applying reverse updates to player ${playerId}:`, updates);
-
-      const { error: updateError } = await supabase
-        .from('players')
-        .update(updates)
-        .eq('id', playerId);
-      
-      if (updateError) {
-        console.error('Error reversing player stats:', updateError);
-        throw new Error(`Failed to reverse player stats ${playerId}: ${updateError.message}`);
-      }
-
-      console.log(`Successfully reversed statistics for player ${playerId}`);
-    } catch (error) {
-      console.error('Error in reversePlayerStatistics:', error);
-      throw error;
-    }
-  }
-
   // Process all players in a completed match
   static async processMatchStatistics(
     match: Match,
@@ -313,44 +244,5 @@ export class StatisticsService {
     }
     
     console.log('Match statistics processing completed successfully');
-  }
-
-  // New method to reverse all players' statistics when a match is deleted
-  static async reverseMatchStatistics(
-    match: Match,
-    players: Player[]
-  ): Promise<void> {
-    console.log('Reversing match statistics for match:', match.id);
-    console.log('Match data:', { 
-      teamA: match.teamA, 
-      teamB: match.teamB, 
-      goals: match.goals, 
-      saves: match.saves 
-    });
-    
-    const allPlayers = [...match.teamA, ...match.teamB];
-    const errors: string[] = [];
-    
-    for (const playerId of allPlayers) {
-      try {
-        console.log(`Reversing statistics for player: ${playerId}`);
-        const performance = this.calculatePlayerPerformance(playerId, match, players);
-        console.log(`Calculated performance to reverse for ${playerId}:`, performance);
-        
-        await this.reversePlayerStatistics(playerId, performance);
-        console.log(`Successfully reversed stats for player: ${playerId}`);
-      } catch (error) {
-        const errorMsg = `Error reversing stats for player ${playerId}: ${error}`;
-        console.error(errorMsg);
-        errors.push(errorMsg);
-      }
-    }
-    
-    if (errors.length > 0) {
-      console.error('Errors during statistics reversal:', errors);
-      throw new Error(`Statistics reversal completed with errors: ${errors.join(', ')}`);
-    }
-    
-    console.log('Match statistics reversal completed successfully');
   }
 }
