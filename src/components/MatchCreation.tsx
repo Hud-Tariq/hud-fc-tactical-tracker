@@ -8,8 +8,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import PlayerCard from './PlayerCard';
 import { Player, Match, Goal } from '@/types/football';
 import { Calendar, Users, Target, Trophy, Plus, Minus, Save, Clock } from 'lucide-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFutbol, faShirt, faWhistle } from '@fortawesome/free-solid-svg-icons';
 
 interface MatchCreationProps {
   players: Player[];
