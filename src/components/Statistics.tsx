@@ -1,476 +1,331 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Player, Match } from '@/types/football';
-import { Trophy, Target, Zap, Shield, TrendingUp, Users, BarChart3, Calendar } from 'lucide-react';
+import { Trophy, Users, Target, TrendingUp, Calendar, Award, Star, Shield, Zap } from 'lucide-react';
 import MatchesPlayedView from './MatchesPlayedView';
 
 interface StatisticsProps {
   players: Player[];
-  matches?: Match[];
+  matches: Match[];
+  onDeleteMatch?: (matchId: string) => Promise<void>;
 }
 
-const Statistics = ({ players, matches = [] }: StatisticsProps) => {
-  const [activeTab, setActiveTab] = useState<'team-stats' | 'matches'>('team-stats');
+const Statistics = ({ players, matches, onDeleteMatch }: StatisticsProps) => {
+  const [activeTab, setActiveTab] = useState<'overview' | 'matches'>('overview');
 
-  const tabs = [
-    {
-      id: 'team-stats' as const,
-      label: 'Team Statistics',
-      icon: BarChart3,
-      description: 'Player performance and team analytics'
-    },
-    {
-      id: 'matches' as const,
-      label: 'Matches Played',
-      icon: Calendar,
-      description: 'Detailed match history and results'
-    }
-  ];
+  const completedMatches = useMemo(() => matches.filter(match => match.completed), [matches]);
 
-  // Early return if no players for team stats
-  if (!players || players.length === 0) {
+  const topScorers = useMemo(() => {
+    const playerGoals: { [playerId: string]: number } = {};
+    completedMatches.forEach(match => {
+      match.goals.forEach(goal => {
+        playerGoals[goal.scorer] = (playerGoals[goal.scorer] || 0) + 1;
+      });
+    });
+
+    return Object.entries(playerGoals)
+      .sort(([, goalsA], [, goalsB]) => goalsB - goalsA)
+      .slice(0, 5)
+      .map(([playerId, goals]) => {
+        const player = players.find(p => p.id === playerId);
+        return { player, goals };
+      })
+      .filter(item => item.player)
+      .map(item => ({
+        ...item,
+        player: {
+          ...item.player!,
+          averageMatchRating: item.player!.matchesPlayed > 0 ? item.player!.rating / item.player!.matchesPlayed : 0
+        }
+      }))
+  }, [completedMatches, players]);
+
+  const topAssists = useMemo(() => {
+    const playerAssists: { [playerId: string]: number } = {};
+    completedMatches.forEach(match => {
+      match.goals.forEach(goal => {
+        if (goal.assister) {
+          playerAssists[goal.assister] = (playerAssists[goal.assister] || 0) + 1;
+        }
+      });
+    });
+
+    return Object.entries(playerAssists)
+      .sort(([, assistsA], [, assistsB]) => assistsB - assistsA)
+      .slice(0, 5)
+      .map(([playerId, assists]) => {
+        const player = players.find(p => p.id === playerId);
+        return { player, assists };
+      })
+      .filter(item => item.player)
+      .map(item => ({
+        ...item,
+        player: {
+          ...item.player!,
+          averageMatchRating: item.player!.matchesPlayed > 0 ? item.player!.rating / item.player!.matchesPlayed : 0
+        }
+      }))
+  }, [completedMatches, players]);
+
+  const topSaves = useMemo(() => {
+    const playerSaves: { [playerId: string]: number } = {};
+    completedMatches.forEach(match => {
+      if (match.saves) {
+        Object.entries(match.saves).forEach(([playerId, saves]) => {
+          playerSaves[playerId] = (playerSaves[playerId] || 0) + saves;
+        });
+      }
+    });
+
+    return Object.entries(playerSaves)
+      .sort(([, savesA], [, savesB]) => savesB - savesA)
+      .slice(0, 5)
+      .map(([playerId, saves]) => {
+        const player = players.find(p => p.id === playerId);
+        return { player, saves };
+      })
+      .filter(item => item.player)
+      .map(item => ({
+        ...item,
+        player: {
+          ...item.player!,
+          averageMatchRating: item.player!.matchesPlayed > 0 ? item.player!.rating / item.player!.matchesPlayed : 0
+        }
+      }))
+  }, [completedMatches, players]);
+
+  const mostExperienced = useMemo(() => {
+    return [...players]
+      .sort((a, b) => b.matchesPlayed - a.matchesPlayed)
+      .slice(0, 5)
+      .map(player => ({
+        ...player,
+        averageMatchRating: player.matchesPlayed > 0 ? player.rating / player.matchesPlayed : 0
+      }));
+  }, [players]);
+
+  const teamStats = useMemo(() => {
+    const teamAverages = completedMatches.reduce((acc, match) => {
+      const teamARating = match.teamA.reduce((sum, playerId) => {
+        const player = players.find(p => p.id === playerId);
+        return sum + (player ? player.rating : 0);
+      }, 0) / match.teamA.length;
+
+      const teamBRating = match.teamB.reduce((sum, playerId) => {
+        const player = players.find(p => p.id === playerId);
+        return sum + (player ? player.rating : 0);
+      }, 0) / match.teamB.length;
+
+      return {
+        teamA: acc.teamA + teamARating,
+        teamB: acc.teamB + teamBRating,
+        count: acc.count + 1
+      };
+    }, { teamA: 0, teamB: 0, count: 0 });
+
+    const overallAverageTeamA = teamAverages.teamA / teamAverages.count;
+    const overallAverageTeamB = teamAverages.teamB / teamAverages.count;
+
+    return {
+      averageTeamA: overallAverageTeamA || 0,
+      averageTeamB: overallAverageTeamB || 0
+    };
+  }, [completedMatches, players]);
+
+  if (activeTab === 'matches') {
     return (
-      <div className="floating-section">
-        <div className="text-center space-y-4">
-          <div className="flex justify-center">
-            <div className="bg-gradient-to-br from-white/10 to-white/20 backdrop-blur p-8 rounded-full border border-white/20">
-              <Users className="w-16 h-16 text-on-dark-subtle" />
-            </div>
-          </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-on-dark font-poppins">
-            No Statistics Available
-          </h2>
-          <p className="text-on-dark-muted text-lg max-w-md mx-auto">
-            Add some players to your squad to start tracking performance statistics and analytics.
-          </p>
-        </div>
-      </div>
+      <MatchesPlayedView 
+        matches={matches} 
+        players={players} 
+        onDeleteMatch={onDeleteMatch}
+      />
     );
   }
 
-  const sortedPlayers = [...players].sort((a, b) => b.rating - a.rating);
-
-  const getPositionColor = (position: string) => {
-    switch (position) {
-      case 'Goalkeeper':
-        return 'bg-gradient-to-r from-yellow-400/20 to-orange-400/20 text-yellow-300 border-yellow-400/30';
-      case 'Defender':
-        return 'bg-gradient-to-r from-blue-400/20 to-cyan-400/20 text-blue-300 border-blue-400/30';
-      case 'Midfielder':
-        return 'bg-gradient-to-r from-green-400/20 to-emerald-400/20 text-green-300 border-green-400/30';
-      case 'Forward':
-        return 'bg-gradient-to-r from-red-400/20 to-pink-400/20 text-red-300 border-red-400/30';
-      default:
-        return 'bg-gradient-to-r from-gray-400/20 to-gray-500/20 text-gray-300 border-gray-400/30';
-    }
-  };
-
-  const getRatingColor = (rating: number) => {
-    if (rating >= 85) return 'text-emerald-400';
-    if (rating >= 75) return 'text-blue-400';
-    if (rating >= 65) return 'text-amber-400';
-    if (rating >= 55) return 'text-orange-400';
-    return 'text-red-400';
-  };
-
-  const getPerformanceGrade = (rating: number) => {
-    if (rating >= 90) return 'S+';
-    if (rating >= 85) return 'S';
-    if (rating >= 80) return 'A';
-    if (rating >= 70) return 'B';
-    if (rating >= 60) return 'C';
-    if (rating >= 50) return 'D';
-    return 'F';
-  };
-
-  // Safe reduce operations with fallbacks
-  const topScorer = players.reduce((prev, current) => 
-    (prev.totalGoals > current.totalGoals) ? prev : current, players[0]
-  );
-
-  const topAssister = players.reduce((prev, current) => 
-    (prev.totalAssists > current.totalAssists) ? prev : current, players[0]
-  );
-
-  const mostExperienced = players.reduce((prev, current) => 
-    (prev.matchesPlayed > current.matchesPlayed) ? prev : current, players[0]
-  );
-
-  const goalkeepers = players.filter(p => p.position === 'Goalkeeper');
-  const bestKeeper = goalkeepers.length > 0 
-    ? goalkeepers.reduce((prev, current) => {
-        const prevCleanSheetRatio = prev.matchesPlayed > 0 ? prev.cleanSheets / prev.matchesPlayed : 0;
-        const currentCleanSheetRatio = current.matchesPlayed > 0 ? current.cleanSheets / current.matchesPlayed : 0;
-        return prevCleanSheetRatio > currentCleanSheetRatio ? prev : current;
-      }, goalkeepers[0])
-    : null;
-
-  const totalStats = {
-    totalGoals: players.reduce((sum, p) => sum + p.totalGoals, 0),
-    totalMatches: Math.max(...players.map(p => p.matchesPlayed), 0),
-    totalAssists: players.reduce((sum, p) => sum + p.totalAssists, 0),
-    averageRating: players.length > 0 ? Math.round(players.reduce((sum, p) => sum + p.rating, 0) / players.length) : 0
-  };
-
-  const renderTeamStatistics = () => (
-    <div className="space-y-6 lg:space-y-8">
-      {/* Quick Stats Bar */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 xl:gap-8 mb-8 lg:mb-16">
-        {[
-          { value: players.length, label: 'Players', color: 'text-blue-400' },
-          { value: totalStats.totalGoals, label: 'Total Goals', color: 'text-green-400' },
-          { value: totalStats.totalMatches, label: 'Matches', color: 'text-purple-400' },
-          { value: totalStats.averageRating, label: 'Avg Rating', color: 'text-pink-400' }
-        ].map((stat, index) => (
-          <div key={stat.label} className={`floating-card animate-fade-in animate-stagger-${index + 1}`}>
-            <div className="p-4 lg:p-8 text-center">
-              <div className="flex items-center justify-center w-12 h-12 lg:w-16 lg:h-16 mx-auto mb-3 lg:mb-6 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20">
-                <TrendingUp className={`w-6 h-6 lg:w-8 lg:h-8 ${stat.color}`} />
-              </div>
-              <p className="text-2xl lg:text-4xl font-bold text-on-dark mb-1 lg:mb-3">{stat.value}</p>
-              <p className="text-on-dark-muted text-xs lg:text-base">{stat.label}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Top Performers Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 lg:mb-16">
-        <Card className="floating-card hover:scale-105 transition-all duration-300 border-l-4 border-l-green-400">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-green-400 flex items-center space-x-2 text-base sm:text-lg font-poppins">
-              <Target className="w-5 h-5" />
-              <span>Top Scorer</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="text-xl sm:text-2xl font-bold text-on-dark">{topScorer.name}</div>
-            <div className="text-sm text-green-400">
-              {topScorer.totalGoals} goals in {topScorer.matchesPlayed} matches
-            </div>
-            <div className="flex items-center justify-between">
-              <Badge className="bg-green-400/20 text-green-300 border-green-400/30">
-                {topScorer.matchesPlayed > 0 ? (topScorer.totalGoals / topScorer.matchesPlayed).toFixed(2) : '0.00'} goals/match
-              </Badge>
-              <div className={`text-lg font-bold ${getRatingColor(topScorer.rating)}`}>
-                {topScorer.rating}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="floating-card hover:scale-105 transition-all duration-300 border-l-4 border-l-blue-400">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-blue-400 flex items-center space-x-2 text-base sm:text-lg font-poppins">
-              <Zap className="w-5 h-5" />
-              <span>Top Assister</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="text-xl sm:text-2xl font-bold text-on-dark">{topAssister.name}</div>
-            <div className="text-sm text-blue-400">
-              {topAssister.totalAssists} assists in {topAssister.matchesPlayed} matches
-            </div>
-            <div className="flex items-center justify-between">
-              <Badge className="bg-blue-400/20 text-blue-300 border-blue-400/30">
-                {topAssister.matchesPlayed > 0 ? (topAssister.totalAssists / topAssister.matchesPlayed).toFixed(2) : '0.00'} assists/match
-              </Badge>
-              <div className={`text-lg font-bold ${getRatingColor(topAssister.rating)}`}>
-                {topAssister.rating}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="floating-card hover:scale-105 transition-all duration-300 border-l-4 border-l-purple-400">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-purple-400 flex items-center space-x-2 text-base sm:text-lg font-poppins">
-              <Trophy className="w-5 h-5" />
-              <span>Most Experienced</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="text-xl sm:text-2xl font-bold text-on-dark">{mostExperienced.name}</div>
-            <div className="text-sm text-purple-400">
-              {mostExperienced.matchesPlayed} matches played
-            </div>
-            <div className="flex items-center justify-between">
-              <Badge className="bg-purple-400/20 text-purple-300 border-purple-400/30">
-                {mostExperienced.position}
-              </Badge>
-              <div className={`text-lg font-bold ${getRatingColor(mostExperienced.rating)}`}>
-                {mostExperienced.rating}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {bestKeeper && (
-          <Card className="floating-card hover:scale-105 transition-all duration-300 border-l-4 border-l-amber-400">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-amber-400 flex items-center space-x-2 text-base sm:text-lg font-poppins">
-                <Shield className="w-5 h-5" />
-                <span>Best Keeper</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="text-xl sm:text-2xl font-bold text-on-dark">{bestKeeper.name}</div>
-              <div className="text-sm text-amber-400">
-                {bestKeeper.cleanSheets} clean sheets
-              </div>
-              <div className="flex items-center justify-between">
-                <Badge className="bg-amber-400/20 text-amber-300 border-amber-400/30">
-                  {bestKeeper.matchesPlayed > 0 ? ((bestKeeper.cleanSheets / bestKeeper.matchesPlayed) * 100).toFixed(1) : '0'}% clean sheet ratio
-                </Badge>
-                <div className={`text-lg font-bold ${getRatingColor(bestKeeper.rating)}`}>
-                  {bestKeeper.rating}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-
-      {/* All Players Table */}
-      <Card className="floating-card">
-        <CardHeader className="bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-t-2xl">
-          <CardTitle className="text-xl sm:text-2xl flex items-center space-x-2 font-poppins">
-            <Users className="w-6 h-6" />
-            <span>Squad Performance Overview</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          {/* Mobile View */}
-          <div className="block lg:hidden">
-            <div className="space-y-4 p-4">
-              {sortedPlayers.map((player, index) => {
-                const goalsAndAssistsPerMatch = player.matchesPlayed > 0 
-                  ? ((player.totalGoals + player.totalAssists) / player.matchesPlayed).toFixed(2)
-                  : '0.00';
-                
-                const cleanSheetRatio = player.matchesPlayed > 0 
-                  ? ((player.cleanSheets / player.matchesPlayed) * 100).toFixed(1)
-                  : '0';
-
-                return (
-                  <Card key={player.id} className="p-4 space-y-3 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur border border-white/10">
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${index < 3 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white' : 'bg-white/20 text-on-dark'}`}>
-                            #{index + 1}
-                          </div>
-                          {index === 0 && <span className="text-xl">👑</span>}
-                          {index === 1 && <span className="text-xl">🥈</span>}
-                          {index === 2 && <span className="text-xl">🥉</span>}
-                        </div>
-                        <div className="font-bold text-lg text-on-dark font-poppins">{player.name}</div>
-                        <div className="text-sm text-on-dark-muted">Age {player.age}</div>
-                        <Badge className={`${getPositionColor(player.position)} text-xs font-medium`}>
-                          {player.position}
-                        </Badge>
-                      </div>
-                      <div className="text-right space-y-2">
-                        <div className={`text-3xl font-bold ${getRatingColor(player.rating)}`}>
-                          {player.rating}
-                        </div>
-                        <Badge variant="outline" className={`${getRatingColor(player.rating)} border-current text-sm font-bold`}>
-                          {getPerformanceGrade(player.rating)}
-                        </Badge>
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4 pt-3 border-t border-white/10">
-                      <div className="space-y-1">
-                        <div className="text-xs text-on-dark-subtle uppercase tracking-wide">Matches</div>
-                        <div className="font-bold text-on-dark">{player.matchesPlayed}</div>
-                      </div>
-                      <div className="space-y-1">
-                        <div className="text-xs text-on-dark-subtle uppercase tracking-wide">G+A/Match</div>
-                        <div className="font-bold text-blue-400">{goalsAndAssistsPerMatch}</div>
-                      </div>
-                      <div className="space-y-1">
-                        <div className="text-xs text-on-dark-subtle uppercase tracking-wide">Goals</div>
-                        <div className="font-bold text-green-400">{player.totalGoals}</div>
-                      </div>
-                      <div className="space-y-1">
-                        <div className="text-xs text-on-dark-subtle uppercase tracking-wide">Assists</div>
-                        <div className="font-bold text-blue-400">{player.totalAssists}</div>
-                      </div>
-                      {player.position === 'Goalkeeper' && (
-                        <>
-                          <div className="space-y-1">
-                            <div className="text-xs text-on-dark-subtle uppercase tracking-wide">Saves</div>
-                            <div className="font-bold text-amber-400">{player.totalSaves}</div>
-                          </div>
-                          <div className="space-y-1">
-                            <div className="text-xs text-on-dark-subtle uppercase tracking-wide">Clean Sheets</div>
-                            <div className="font-bold text-purple-400">{cleanSheetRatio}%</div>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Desktop Table View */}
-          <div className="hidden lg:block overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur">
-                <tr className="border-b border-white/20">
-                  <th className="text-left p-4 font-bold text-on-dark font-poppins">Rank</th>
-                  <th className="text-left p-4 font-bold text-on-dark font-poppins">Player</th>
-                  <th className="text-left p-4 font-bold text-on-dark font-poppins">Position</th>
-                  <th className="text-left p-4 font-bold text-on-dark font-poppins">Rating</th>
-                  <th className="text-left p-4 font-bold text-on-dark font-poppins">Grade</th>
-                  <th className="text-left p-4 font-bold text-on-dark font-poppins">Matches</th>
-                  <th className="text-left p-4 font-bold text-on-dark font-poppins">Goals</th>
-                  <th className="text-left p-4 font-bold text-on-dark font-poppins">Assists</th>
-                  <th className="text-left p-4 font-bold text-on-dark font-poppins">Performance</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedPlayers.map((player, index) => {
-                  const goalsAndAssistsPerMatch = player.matchesPlayed > 0 
-                    ? ((player.totalGoals + player.totalAssists) / player.matchesPlayed).toFixed(2)
-                    : '0.00';
-
-                  return (
-                    <tr 
-                      key={player.id} 
-                      className={`border-b border-white/10 hover:bg-gradient-to-r hover:from-white/5 hover:to-white/10 transition-all duration-200 ${index < 3 ? 'bg-gradient-to-r from-pink-500/10 to-purple-600/10' : ''}`}
-                    >
-                      <td className="p-4">
-                        <div className="flex items-center space-x-2">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${index < 3 ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white' : 'bg-white/20 text-on-dark'}`}>
-                            {index + 1}
-                          </div>
-                          {index === 0 && <span className="text-lg">👑</span>}
-                          {index === 1 && <span className="text-lg">🥈</span>}
-                          {index === 2 && <span className="text-lg">🥉</span>}
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <div className="font-bold text-on-dark font-poppins">{player.name}</div>
-                        <div className="text-sm text-on-dark-muted">Age {player.age}</div>
-                      </td>
-                      <td className="p-4">
-                        <Badge className={`${getPositionColor(player.position)} font-medium`}>
-                          {player.position}
-                        </Badge>
-                      </td>
-                      <td className="p-4">
-                        <div className={`text-2xl font-bold ${getRatingColor(player.rating)}`}>
-                          {player.rating}
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <Badge variant="outline" className={`${getRatingColor(player.rating)} border-current font-bold`}>
-                          {getPerformanceGrade(player.rating)}
-                        </Badge>
-                      </td>
-                      <td className="p-4">
-                        <div className="font-bold text-on-dark">{player.matchesPlayed}</div>
-                        <div className="text-xs text-on-dark-subtle">
-                          {player.matchesPlayed * 90} min
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <div className="text-green-400 font-bold text-lg">{player.totalGoals}</div>
-                        <div className="text-xs text-on-dark-subtle">
-                          {player.matchesPlayed > 0 ? (player.totalGoals / player.matchesPlayed).toFixed(2) : '0.00'}/match
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <div className="text-blue-400 font-bold text-lg">{player.totalAssists}</div>
-                        <div className="text-xs text-on-dark-subtle">
-                          {player.matchesPlayed > 0 ? (player.totalAssists / player.matchesPlayed).toFixed(2) : '0.00'}/match
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <div className="space-y-1">
-                          <div className="text-sm font-medium text-on-dark-muted">
-                            G+A: <span className="text-purple-400 font-bold">{goalsAndAssistsPerMatch}</span>/match
-                          </div>
-                          {player.position === 'Goalkeeper' && (
-                            <div className="text-xs text-on-dark-subtle">
-                              <span className="text-amber-400">Saves:</span> {player.totalSaves} | 
-                              <span className="text-purple-400 ml-1">CS:</span> {player.cleanSheets}
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-
   return (
-    <div className="floating-section">
-      {/* Header */}
-      <div className="section-header">
-        <div className="inline-flex items-center px-4 py-2 rounded-full glass-card border border-pink-400/30 mb-4">
-          <TrendingUp className="w-5 h-5 mr-2 text-pink-400" />
-          <span className="text-on-dark-muted font-medium">Team Analytics</span>
-        </div>
-        <h1 className="text-4xl lg:text-6xl font-bold text-on-dark font-poppins mb-4 lg:mb-6">
-          Squad
-          <span className="gradient-text-light ml-3">Statistics</span>
-        </h1>
-        <p className="text-lg lg:text-2xl text-on-dark-muted max-w-3xl mx-auto">
-          Comprehensive performance analytics and insights for your squad
-        </p>
+    <div className="grid gap-4 lg:gap-6">
+      {/* Tabs */}
+      <div className="flex items-center space-x-2 p-2 lg:p-4 bg-white/5 rounded-xl border border-white/10">
+        <Button
+          variant={activeTab === 'overview' ? 'default' : 'secondary'}
+          className="flex-1"
+          onClick={() => setActiveTab('overview')}
+        >
+          Overview
+        </Button>
+        <Button
+          variant={activeTab === 'matches' ? 'default' : 'secondary'}
+          className="flex-1"
+          onClick={() => setActiveTab('matches')}
+        >
+          Matches Played
+        </Button>
       </div>
 
-      {/* Tab Navigation */}
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-8 lg:mb-16">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          
-          return (
-            <Button
-              key={tab.id}
-              variant="ghost"
-              size="lg"
-              onClick={() => setActiveTab(tab.id)}
-              className={`
-                relative flex items-center space-x-3 px-6 py-4 rounded-xl transition-all duration-300 h-auto flex-1 justify-start
-                ${isActive
-                  ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30 shadow-lg'
-                  : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
-                }
-              `}
-            >
-              <Icon className="w-5 h-5" />
-              <div className="text-left">
-                <div className="font-medium text-base">{tab.label}</div>
-                <div className="text-xs text-on-dark-subtle hidden sm:block">{tab.description}</div>
-              </div>
+      {/* Overview Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+        {/* Top Scorers */}
+        <Card className="floating-card">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold flex items-center space-x-2">
+              <Target className="w-4 h-4 text-green-400" />
+              Top Scorers
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {topScorers.length > 0 ? (
+              topScorers.map(({ player, goals }) => (
+                <div key={player.id} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-400/20 to-emerald-400/20 border border-green-400/30 flex items-center justify-center">
+                      <span className="text-xs font-bold text-green-300">
+                        {player.position.charAt(0)}
+                      </span>
+                    </div>
+                    <div>
+                      <div className="font-medium text-on-dark">{player.name}</div>
+                      <div className="text-xs text-on-dark-muted">{player.position}</div>
+                    </div>
+                  </div>
+                  <Badge variant="secondary" className="text-green-400">
+                    {goals} goals
+                  </Badge>
+                </div>
+              ))
+            ) : (
+              <div className="text-on-dark-muted text-sm text-center">No goals recorded yet.</div>
+            )}
+          </CardContent>
+        </Card>
 
-              {/* Active indicator */}
-              {isActive && (
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-pink-500/10 to-purple-600/10 animate-pulse"></div>
-              )}
-            </Button>
-          );
-        })}
+        {/* Top Assists */}
+        <Card className="floating-card">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold flex items-center space-x-2">
+              <Zap className="w-4 h-4 text-blue-400" />
+              Top Assists
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {topAssists.length > 0 ? (
+              topAssists.map(({ player, assists }) => (
+                <div key={player.id} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400/20 to-cyan-400/20 border border-blue-400/30 flex items-center justify-center">
+                      <span className="text-xs font-bold text-blue-300">
+                        {player.position.charAt(0)}
+                      </span>
+                    </div>
+                    <div>
+                      <div className="font-medium text-on-dark">{player.name}</div>
+                      <div className="text-xs text-on-dark-muted">{player.position}</div>
+                    </div>
+                  </div>
+                  <Badge variant="secondary" className="text-blue-400">
+                    {assists} assists
+                  </Badge>
+                </div>
+              ))
+            ) : (
+              <div className="text-on-dark-muted text-sm text-center">No assists recorded yet.</div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Top Saves */}
+        <Card className="floating-card">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold flex items-center space-x-2">
+              <Shield className="w-4 h-4 text-amber-400" />
+              Top Saves
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {topSaves.length > 0 ? (
+              topSaves.map(({ player, saves }) => (
+                <div key={player.id} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400/20 to-orange-400/20 border border-amber-400/30 flex items-center justify-center">
+                      <span className="text-xs font-bold text-amber-300">
+                        {player.position.charAt(0)}
+                      </span>
+                    </div>
+                    <div>
+                      <div className="font-medium text-on-dark">{player.name}</div>
+                      <div className="text-xs text-on-dark-muted">{player.position}</div>
+                    </div>
+                  </div>
+                  <Badge variant="secondary" className="text-amber-400">
+                    {saves} saves
+                  </Badge>
+                </div>
+              ))
+            ) : (
+              <div className="text-on-dark-muted text-sm text-center">No saves recorded yet.</div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Most Experienced Players */}
+        <Card className="floating-card">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold flex items-center space-x-2">
+              <Calendar className="w-4 h-4 text-purple-400" />
+              Most Experienced
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {mostExperienced.length > 0 ? (
+              mostExperienced.map((player) => (
+                <div key={player.id} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400/20 to-pink-400/20 border border-purple-400/30 flex items-center justify-center">
+                      <span className="text-xs font-bold text-purple-300">
+                        {player.position.charAt(0)}
+                      </span>
+                    </div>
+                    <div>
+                      <div className="font-medium text-on-dark">{player.name}</div>
+                      <div className="text-xs text-on-dark-muted">{player.position}</div>
+                    </div>
+                  </div>
+                  <Badge variant="secondary" className="text-purple-400">
+                    {player.matchesPlayed} matches
+                  </Badge>
+                </div>
+              ))
+            ) : (
+              <div className="text-on-dark-muted text-sm text-center">No players recorded yet.</div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Team Statistics */}
+        <Card className="floating-card">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold flex items-center space-x-2">
+              <Users className="w-4 h-4 text-pink-400" />
+              Team Stats
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="text-on-dark">Average Team A Rating:</div>
+              <Badge variant="secondary" className="text-pink-400">
+                {teamStats.averageTeamA.toFixed(2)}
+              </Badge>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="text-on-dark">Average Team B Rating:</div>
+              <Badge variant="secondary" className="text-pink-400">
+                {teamStats.averageTeamB.toFixed(2)}
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-
-      {/* Tab Content */}
-      {activeTab === 'team-stats' && renderTeamStatistics()}
-      {activeTab === 'matches' && <MatchesPlayedView matches={matches} players={players} />}
     </div>
   );
 };

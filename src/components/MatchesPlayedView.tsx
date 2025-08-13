@@ -17,18 +17,32 @@ import {
   ChevronUp,
   TrendingUp,
   Award,
-  Zap
+  Zap,
+  Trash2
 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 interface MatchesPlayedViewProps {
   matches: Match[];
   players: Player[];
+  onDeleteMatch?: (matchId: string) => Promise<void>;
 }
 
-const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
+const MatchesPlayedView = ({ matches, players, onDeleteMatch }: MatchesPlayedViewProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedMatch, setExpandedMatch] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'date' | 'score'>('date');
+  const [deletingMatch, setDeletingMatch] = useState<string | null>(null);
 
   // Create a player lookup map
   const playerMap = useMemo(() => {
@@ -102,6 +116,17 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
     });
   };
 
+  const handleDeleteMatch = async (matchId: string) => {
+    if (!onDeleteMatch) return;
+    
+    setDeletingMatch(matchId);
+    try {
+      await onDeleteMatch(matchId);
+    } finally {
+      setDeletingMatch(null);
+    }
+  };
+
   if (filteredMatches.length === 0) {
     return (
       <div className="floating-section">
@@ -165,12 +190,12 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
           return (
             <Card key={match.id} className={`floating-card animate-fade-in animate-stagger-${(index % 3) + 1} overflow-hidden`}>
               {/* Match Header */}
-              <CardHeader 
-                className="cursor-pointer hover:bg-white/5 transition-all duration-200 pb-4"
-                onClick={() => setExpandedMatch(isExpanded ? null : match.id)}
-              >
+              <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
+                  <div 
+                    className="flex items-center space-x-4 cursor-pointer hover:bg-white/5 transition-all duration-200 flex-1 -m-4 p-4 rounded"
+                    onClick={() => setExpandedMatch(isExpanded ? null : match.id)}
+                  >
                     <div className="flex items-center space-x-2">
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 flex items-center justify-center">
                         <Trophy className="w-5 h-5 text-pink-400" />
@@ -203,10 +228,56 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                       </div>
                     </div>
 
-                    {/* Expand Button */}
-                    <Button variant="ghost" size="sm" className="text-on-dark-muted hover:text-on-dark">
-                      {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                    </Button>
+                    {/* Action Buttons */}
+                    <div className="flex items-center space-x-2">
+                      {/* Delete Button */}
+                      {onDeleteMatch && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                              disabled={deletingMatch === match.id}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent className="bg-dark-card border-white/20">
+                            <AlertDialogHeader>
+                              <AlertDialogTitle className="text-on-dark">Delete Match</AlertDialogTitle>
+                              <AlertDialogDescription className="text-on-dark-muted">
+                                Are you sure you want to delete this match from {formatDate(match.date)}? 
+                                This action will permanently remove the match and update all player statistics. 
+                                This action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel className="bg-white/10 text-on-dark border-white/20 hover:bg-white/20">
+                                Cancel
+                              </AlertDialogCancel>
+                              <AlertDialogAction 
+                                onClick={() => handleDeleteMatch(match.id)}
+                                className="bg-red-500 hover:bg-red-600 text-white"
+                                disabled={deletingMatch === match.id}
+                              >
+                                {deletingMatch === match.id ? 'Deleting...' : 'Delete Match'}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
+
+                      {/* Expand Button */}
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-on-dark-muted hover:text-on-dark"
+                        onClick={() => setExpandedMatch(isExpanded ? null : match.id)}
+                      >
+                        {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardHeader>
