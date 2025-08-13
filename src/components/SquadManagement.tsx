@@ -5,7 +5,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Users, Target, TrendingUp, Award, Shield, Zap, Star } from 'lucide-react';
+import { Plus, Users, TrendingUp, Star } from 'lucide-react';
+import { Icon } from '@/components/ui/icon';
 import PlayerCard from './PlayerCard';
 import { Player } from '@/types/football';
 
@@ -68,10 +69,10 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
   };
 
   const positionIcons = {
-    'Goalkeeper': Shield,
-    'Defender': Users,
-    'Midfielder': TrendingUp,
-    'Forward': Zap
+    'Goalkeeper': 'wall-goalkeeper',
+    'Defender': 'defender',
+    'Midfielder': 'midfielder',
+    'Forward': 'forwards'
   };
 
   return (
@@ -94,15 +95,19 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
       {/* Squad Statistics Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 xl:gap-8 mb-8 lg:mb-16">
         {[
-          { icon: Users, label: 'Total Players', value: squadStats.totalPlayers, color: 'text-blue-400' },
-          { icon: Target, label: 'Avg Rating', value: squadStats.averageRating, color: 'text-purple-400' },
-          { icon: Award, label: 'Total Goals', value: squadStats.totalGoals, color: 'text-green-400' },
-          { icon: TrendingUp, label: 'Matches Played', value: squadStats.totalMatches, color: 'text-pink-400' }
+          { icon: Users, label: 'Total Players', value: squadStats.totalPlayers, color: 'text-blue-400', isCustom: false },
+          { icon: 'statistics', label: 'Avg Rating', value: squadStats.averageRating, color: 'text-purple-400', isCustom: true },
+          { icon: 'goal', label: 'Total Goals', value: squadStats.totalGoals, color: 'text-green-400', isCustom: true },
+          { icon: TrendingUp, label: 'Matches Played', value: squadStats.totalMatches, color: 'text-pink-400', isCustom: false }
         ].map((stat, index) => (
           <div key={stat.label} className={`floating-card animate-fade-in animate-stagger-${index + 1}`}>
             <div className="p-4 lg:p-8 text-center">
               <div className="flex items-center justify-center w-12 h-12 lg:w-16 lg:h-16 mx-auto mb-3 lg:mb-6 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20">
-                <stat.icon className={`w-6 h-6 lg:w-8 lg:h-8 ${stat.color}`} />
+                {stat.isCustom ? (
+                  <Icon name={stat.icon as any} size={32} className={`w-6 h-6 lg:w-8 lg:h-8 ${stat.color}`} />
+                ) : (
+                  React.createElement(stat.icon as any, { className: `w-6 h-6 lg:w-8 lg:h-8 ${stat.color}` })
+                )}
               </div>
               <p className="text-2xl lg:text-4xl font-bold text-on-dark mb-1 lg:mb-3">{stat.value}</p>
               <p className="text-on-dark-muted text-xs lg:text-base">{stat.label}</p>
@@ -230,7 +235,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
       ) : (
         <div className="space-y-8">
           {orderedPositions.map((position, positionIndex) => {
-            const PositionIcon = positionIcons[position as keyof typeof positionIcons];
+            const positionIconName = positionIcons[position as keyof typeof positionIcons];
             const colorClass = positionColors[position as keyof typeof positionColors];
             
             return (
@@ -239,7 +244,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
                   <div className={`bg-gradient-to-r ${colorClass} p-6`}>
                     <div className="flex items-center space-x-4">
                       <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur">
-                        <PositionIcon className="w-7 h-7 text-white" />
+                        <Icon name={positionIconName} size={28} className="w-7 h-7 text-white" />
                       </div>
                       <div>
                         <h3 className="text-2xl font-bold text-white font-poppins">{position}</h3>
