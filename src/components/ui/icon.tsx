@@ -10,6 +10,7 @@ export type IconName =
   | 'goalkeeper'
   | 'lightning-forward'
   | 'midfielder'
+  | 'midfielder-brain'
   | 'shield-defender'
   | 'squad'
   | 'statistics'
