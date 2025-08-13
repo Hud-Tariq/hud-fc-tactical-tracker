@@ -27,7 +27,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
               <div className="relative">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl overflow-hidden shadow-lg">
                   <img
-                    src="https://ibb.co/zHfV2CJk"
+                    src="/src/assets/images/logo.png"
                     alt="Hud FC Manager Logo"
                     className="w-full h-full object-cover"
                   />
