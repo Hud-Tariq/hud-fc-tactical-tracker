@@ -114,7 +114,6 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             {/* Mobile Navigation Menu - Very Small Screens */}
             <div className="sm:hidden flex items-center space-x-1 flex-grow justify-center max-w-xs">
               {navItems.map((item) => {
-                const Icon = item.icon;
                 const isActive = activeTab === item.id;
 
                 return (
@@ -131,7 +130,11 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
                       }
                     `}
                   >
-                    <Icon className="w-4 h-4 mx-auto" />
+                    {item.isCustom ? (
+                      <Icon name={item.icon as any} size={16} className="w-4 h-4 mx-auto" />
+                    ) : (
+                      React.createElement(item.icon as any, { className: "w-4 h-4 mx-auto" })
+                    )}
                     {isActive && (
                       <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-pink-500/10 to-purple-600/10 animate-pulse"></div>
                     )}
