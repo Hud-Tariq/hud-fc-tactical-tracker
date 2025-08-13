@@ -379,7 +379,7 @@ export const useSupabaseFootballData = () => {
   const deleteMatch = async (matchId: string) => {
     try {
       console.log('Starting match deletion for:', matchId);
-      
+
       const match = matches.find(m => m.id === matchId);
       if (!match) {
         console.error('Match not found:', matchId);
@@ -389,6 +389,23 @@ export const useSupabaseFootballData = () => {
           variant: "destructive",
         });
         return;
+      }
+
+      // If match was completed, reverse the statistics first
+      if (match.completed) {
+        console.log('Match was completed, reversing statistics...');
+        try {
+          await StatisticsService.reverseMatchStatistics(match, players);
+          console.log('Statistics reversal completed');
+        } catch (statError) {
+          console.error('Error reversing statistics:', statError);
+          // Continue with deletion even if stats reversal fails
+          toast({
+            title: "Warning",
+            description: "Match deleted but statistics may need manual correction",
+            variant: "destructive",
+          });
+        }
       }
 
       console.log('Deleting match goals...');
@@ -425,12 +442,12 @@ export const useSupabaseFootballData = () => {
       }
 
       console.log('Match deletion completed successfully');
-      
+
       await Promise.all([fetchMatches(), fetchPlayers()]);
 
       toast({
         title: "Success",
-        description: "Match deleted successfully!",
+        description: "Match deleted successfully and statistics updated!",
       });
     } catch (error) {
       console.error('Error deleting match:', error);
