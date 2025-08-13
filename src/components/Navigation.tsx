@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Users, Calendar, BarChart3, Trophy, LogOut } from 'lucide-react';
+import { Users, Calendar, BarChart3, Trophy, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import UserMenu from '@/components/UserMenu';
 
@@ -11,7 +12,7 @@ interface NavigationProps {
 const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
   const navItems = [
     { id: 'squad', label: 'Squad', icon: Users },
-    { id: 'create-match', label: 'Matches', icon: Calendar },
+    { id: 'create-match', label: 'Matches', icon: Zap },
     { id: 'tournaments', label: 'Tournaments', icon: Trophy },
     { id: 'statistics', label: 'Statistics', icon: BarChart3 },
   ];

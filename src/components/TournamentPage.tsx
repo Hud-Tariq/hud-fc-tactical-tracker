@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,13 +18,14 @@ import {
   Search,
   Filter,
   Medal,
-  Target,
+  Goal,
   Clock,
   DollarSign,
   Loader2,
   Star,
   Zap,
-  Crown
+  Crown,
+  Shield
 } from 'lucide-react';
 import { Tournament, TournamentStatus, TournamentFormat, CreateTournamentRequest, Team } from '@/types/tournament';
 
@@ -101,13 +103,13 @@ const TournamentPage = () => {
   const getFormatIcon = (format: TournamentFormat) => {
     switch (format) {
       case 'single_elimination':
-        return <Target className="w-4 h-4" />;
+        return <Goal className="w-4 h-4" />;
       case 'double_elimination':
         return <Medal className="w-4 h-4" />;
       case 'league':
         return <Trophy className="w-4 h-4" />;
       case 'group_stage':
-        return <Users className="w-4 h-4" />;
+        return <Shield className="w-4 h-4" />;
       default:
         return <Trophy className="w-4 h-4" />;
     }
@@ -158,7 +160,7 @@ const TournamentPage = () => {
                 size="lg"
                 className="px-6 lg:px-10 py-3 lg:py-5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg shadow-cyan-500/25 text-sm lg:text-lg"
               >
-                <Users className="w-4 h-4 lg:w-6 lg:h-6 mr-2" />
+                <Shield className="w-4 h-4 lg:w-6 lg:h-6 mr-2" />
                 Create Team
               </Button>
             }
@@ -192,7 +194,7 @@ const TournamentPage = () => {
                   <Button
                     key={filter.id}
                     variant={isActive ? 'default' : 'outline'}
-                    onClick={() => setStatusFilter(filter.id as any)}
+                    onClick={() => setStatusFilter(filter.id as TournamentStatus | 'all')}
                     className={`
                       px-4 py-2 rounded-xl transition-all duration-300
                       ${isActive 
@@ -255,7 +257,7 @@ const TournamentPage = () => {
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 flex items-center justify-center">
-                            {getFormatIcon(tournament.format)}
+                            {getFormatIcon(tournament.format as TournamentFormat)}
                           </div>
                           <div>
                             <h3 className="text-lg font-bold text-on-dark font-poppins line-clamp-1">
@@ -266,7 +268,7 @@ const TournamentPage = () => {
                             </p>
                           </div>
                         </div>
-                        <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status)} text-white text-xs font-medium px-3 py-1 rounded-full`}>
+                        <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status as TournamentStatus)} text-white text-xs font-medium px-3 py-1 rounded-full`}>
                           {tournament.status}
                         </Badge>
                       </div>
@@ -422,7 +424,7 @@ const TournamentPage = () => {
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 flex items-center justify-center">
-                          {getFormatIcon(tournament.format)}
+                          {getFormatIcon(tournament.format as TournamentFormat)}
                         </div>
                         <div>
                           <h3 className="text-lg font-bold text-on-dark font-poppins">
@@ -433,7 +435,7 @@ const TournamentPage = () => {
                           </p>
                         </div>
                       </div>
-                      <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status)} text-white text-xs font-medium px-3 py-1 rounded-full`}>
+                      <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status as TournamentStatus)} text-white text-xs font-medium px-3 py-1 rounded-full`}>
                         {tournament.status}
                       </Badge>
                     </div>

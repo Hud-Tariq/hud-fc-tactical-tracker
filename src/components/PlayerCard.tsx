@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Player } from '@/types/football';
-import { Target, Users, TrendingUp, Award, Star } from 'lucide-react';
+import { Goal, Shield, Zap, Trophy, Star } from 'lucide-react';
 
 interface PlayerCardProps {
   player: Player;
@@ -30,11 +31,11 @@ const PlayerCard = ({ player, onClick, selectable = false, selected = false }: P
 
   const getPositionIcon = (position: string) => {
     switch (position) {
-      case 'Goalkeeper': return Target;
-      case 'Defender': return Users;
-      case 'Midfielder': return TrendingUp;
-      case 'Forward': return Award;
-      default: return Users;
+      case 'Goalkeeper': return Goal;
+      case 'Defender': return Shield;
+      case 'Midfielder': return Zap;
+      case 'Forward': return Trophy;
+      default: return Shield;
     }
   };
 
