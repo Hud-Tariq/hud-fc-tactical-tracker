@@ -207,28 +207,120 @@ export class StatisticsService {
     }
   }
 
+  // Reverse player statistics for a deleted match
+  static async reversePlayerStatistics(
+    playerId: string,
+    performance: PlayerMatchPerformance
+  ): Promise<void> {
+    try {
+      console.log(`Reversing statistics for player ${playerId}:`, performance);
+
+      const { data: currentPlayer, error: fetchError } = await supabase
+        .from('players')
+        .select('*')
+        .eq('id', playerId)
+        .single();
+
+      if (fetchError) {
+        console.error('Error fetching player:', fetchError);
+        throw new Error(`Failed to fetch player ${playerId}: ${fetchError.message}`);
+      }
+
+      if (!currentPlayer) {
+        throw new Error(`Player ${playerId} not found`);
+      }
+
+      // Reverse the statistics (subtract what was added)
+      const updates = {
+        matches_played: Math.max(0, currentPlayer.matches_played - 1),
+        total_goals: Math.max(0, currentPlayer.total_goals - performance.goals),
+        total_assists: Math.max(0, currentPlayer.total_assists - performance.assists),
+        total_saves: Math.max(0, currentPlayer.total_saves - performance.saves),
+        clean_sheets: Math.max(0, currentPlayer.clean_sheets - (performance.cleanSheet ? 1 : 0)),
+        // For rating, we'll recalculate based on remaining matches rather than trying to reverse
+        // This is more accurate since rating adjustments are complex
+      };
+
+      console.log(`Applying reverse updates to player ${playerId}:`, updates);
+
+      const { error: updateError } = await supabase
+        .from('players')
+        .update(updates)
+        .eq('id', playerId);
+
+      if (updateError) {
+        console.error('Error reversing player stats:', updateError);
+        throw new Error(`Failed to reverse stats for player ${playerId}: ${updateError.message}`);
+      }
+
+      console.log(`Successfully reversed statistics for player ${playerId}`);
+    } catch (error) {
+      console.error('Error in reversePlayerStatistics:', error);
+      throw error;
+    }
+  }
+
+  // Reverse all players' statistics for a deleted match
+  static async reverseMatchStatistics(
+    match: Match,
+    players: Player[]
+  ): Promise<void> {
+    console.log('Reversing match statistics for match:', match.id);
+    console.log('Match data:', {
+      teamA: match.teamA,
+      teamB: match.teamB,
+      goals: match.goals,
+      saves: match.saves
+    });
+
+    const allPlayers = [...match.teamA, ...match.teamB];
+    const errors: string[] = [];
+
+    for (const playerId of allPlayers) {
+      try {
+        console.log(`Reversing statistics for player: ${playerId}`);
+        const performance = this.calculatePlayerPerformance(playerId, match, players);
+        console.log(`Calculated performance to reverse for ${playerId}:`, performance);
+
+        await this.reversePlayerStatistics(playerId, performance);
+        console.log(`Successfully reversed stats for player: ${playerId}`);
+      } catch (error) {
+        const errorMsg = `Error reversing stats for player ${playerId}: ${error}`;
+        console.error(errorMsg);
+        errors.push(errorMsg);
+      }
+    }
+
+    if (errors.length > 0) {
+      console.error('Errors during statistics reversal:', errors);
+      throw new Error(`Statistics reversal completed with errors: ${errors.join(', ')}`);
+    }
+
+    console.log('Match statistics reversal completed successfully');
+  }
+
   // Process all players in a completed match
   static async processMatchStatistics(
     match: Match,
     players: Player[]
   ): Promise<void> {
     console.log('Processing match statistics for match:', match.id);
-    console.log('Match data:', { 
-      teamA: match.teamA, 
-      teamB: match.teamB, 
-      goals: match.goals, 
-      saves: match.saves 
+    console.log('Match data:', {
+      teamA: match.teamA,
+      teamB: match.teamB,
+      goals: match.goals,
+      saves: match.saves
     });
-    
+
     const allPlayers = [...match.teamA, ...match.teamB];
     const errors: string[] = [];
-    
+
     for (const playerId of allPlayers) {
       try {
         console.log(`Processing statistics for player: ${playerId}`);
         const performance = this.calculatePlayerPerformance(playerId, match, players);
         console.log(`Calculated performance for ${playerId}:`, performance);
-        
+
         await this.updatePlayerStatistics(playerId, performance);
         console.log(`Successfully processed player: ${playerId}`);
       } catch (error) {
@@ -237,12 +329,12 @@ export class StatisticsService {
         errors.push(errorMsg);
       }
     }
-    
+
     if (errors.length > 0) {
       console.error('Errors during statistics processing:', errors);
       throw new Error(`Statistics processing completed with errors: ${errors.join(', ')}`);
     }
-    
+
     console.log('Match statistics processing completed successfully');
   }
 }
