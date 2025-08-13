@@ -35,7 +35,7 @@ const iconPaths: Record<IconName, string> = {
   'team-tournament': '/src/assets/icons/team_tournament.svg',
   'tournament-everywhere': '/src/assets/icons/tournament_everywhere.svg',
   'trophy': '/src/assets/icons/trophy.svg',
-  'wall-goalie': '/src/assets/icons/wall_goalie.svg',
+  'wall-goalkeeper': '/src/assets/icons/wall_goalie.svg',
 };
 
 interface IconProps {
