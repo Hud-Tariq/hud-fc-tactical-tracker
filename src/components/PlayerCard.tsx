@@ -31,11 +31,11 @@ const PlayerCard = ({ player, onClick, selectable = false, selected = false }: P
 
   const getPositionIcon = (position: string) => {
     switch (position) {
-      case 'Goalkeeper': return 'goalkeeper';
-      case 'Defender': return 'shield-defender';
-      case 'Midfielder': return 'midfielder-brain';
+      case 'Goalkeeper': return 'wall-goalkeeper';
+      case 'Defender': return 'defender';
+      case 'Midfielder': return 'midfielder';
       case 'Forward': return 'forwards';
-      default: return 'shield-defender';
+      default: return 'defender';
     }
   };
 
