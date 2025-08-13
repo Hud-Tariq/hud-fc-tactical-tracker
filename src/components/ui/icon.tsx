@@ -29,8 +29,6 @@ const iconPaths: Record<IconName, string> = {
   'lightning-forward': '/src/assets/icons/lightning_forward.svg',
   'midfielder': '/src/assets/icons/midfielder_brain.svg',
   'midfielder-brain': '/src/assets/icons/midfielder_brain.svg',
-  'statistics': '/src/assets/icons/statistics.svg',
-  'wall-goalkeeper': '/src/assets/icons/wall_goalie.svg',
   'shield-defender': '/src/assets/icons/shield_defender.svg',
   'squad': '/src/assets/icons/squad_topnavbar.svg',
   'statistics': '/src/assets/icons/statistics.svg',
