@@ -422,7 +422,7 @@ const Statistics = ({ players, matches = [] }: StatisticsProps) => {
       {/* Header */}
       <div className="section-header">
         <div className="inline-flex items-center px-4 py-2 rounded-full glass-card border border-pink-400/30 mb-4">
-          <TrendingUp className="w-5 h-5 mr-2 text-pink-400" />
+          <Icon name="statistics" size={20} className="w-5 h-5 mr-2 text-pink-400" />
           <span className="text-on-dark-muted font-medium">Team Analytics</span>
         </div>
         <h1 className="text-4xl lg:text-6xl font-bold text-on-dark font-poppins mb-4 lg:mb-6">
