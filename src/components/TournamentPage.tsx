@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -144,7 +143,7 @@ const TournamentPage = () => {
           <span className="text-on-dark-muted font-medium">Tournaments</span>
         </div>
         <h1 className="text-4xl lg:text-6xl font-bold text-on-dark font-poppins mb-4 lg:mb-6">
-          Epic Football
+          Football
           <span className="gradient-text-light ml-3">Tournaments</span>
         </h1>
         <p className="text-lg lg:text-2xl text-on-dark-muted max-w-3xl mx-auto mb-8 lg:mb-12">
