@@ -104,7 +104,7 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
         <div className="text-center space-y-4">
           <div className="flex justify-center">
             <div className="bg-gradient-to-br from-white/10 to-white/20 backdrop-blur p-8 rounded-full border border-white/20">
-              <Trophy className="w-16 h-16 text-on-dark-subtle" />
+              <Icon name="trophy" size={64} className="w-16 h-16 text-on-dark-subtle" />
             </div>
           </div>
           <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-on-dark font-poppins">
@@ -169,7 +169,7 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 flex items-center justify-center">
-                        <Trophy className="w-5 h-5 text-pink-400" />
+                        <Icon name="trophy" size={20} className="w-5 h-5 text-pink-400" />
                       </div>
                       <div>
                         <div className="flex items-center space-x-3">
@@ -223,7 +223,7 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                         </h4>
                         {match.scoreA > match.scoreB && (
                           <Badge className="bg-green-400/20 text-green-300 border-green-400/30">
-                            <Trophy className="w-3 h-3 mr-1" />
+                            <Icon name="trophy" size={12} className="w-3 h-3 mr-1" />
                             Winner
                           </Badge>
                         )}
@@ -291,7 +291,7 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                         </h4>
                         {match.scoreB > match.scoreA && (
                           <Badge className="bg-blue-400/20 text-blue-300 border-blue-400/30">
-                            <Trophy className="w-3 h-3 mr-1" />
+                            <Icon name="trophy" size={12} className="w-3 h-3 mr-1" />
                             Winner
                           </Badge>
                         )}
