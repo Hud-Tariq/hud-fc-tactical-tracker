@@ -328,7 +328,7 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  // Enhanced delete match function
+  // Enhanced delete match function with statistics reversal
   const deleteMatch = async (matchId: string) => {
     try {
       console.log('Starting match deletion for:', matchId);
@@ -342,6 +342,22 @@ export const useSupabaseFootballData = () => {
           variant: "destructive",
         });
         return;
+      }
+
+      // If the match was completed, reverse the statistics first
+      if (match.completed) {
+        console.log('Match was completed, reversing statistics...');
+        try {
+          await StatisticsService.reverseMatchStatistics(match, players);
+          console.log('Statistics reversal completed successfully');
+        } catch (statsError) {
+          console.error('Error reversing statistics:', statsError);
+          toast({
+            title: "Warning",
+            description: "Match deleted but statistics reversal failed. Player stats may be inaccurate.",
+            variant: "destructive",
+          });
+        }
       }
 
       console.log('Deleting match goals...');
@@ -383,7 +399,7 @@ export const useSupabaseFootballData = () => {
 
       toast({
         title: "Success",
-        description: "Match deleted successfully!",
+        description: "Match deleted successfully and player statistics updated!",
       });
     } catch (error) {
       console.error('Error deleting match:', error);

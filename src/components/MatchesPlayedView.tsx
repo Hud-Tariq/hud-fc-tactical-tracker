@@ -17,15 +17,17 @@ import {
   ChevronUp,
   TrendingUp,
   Award,
-  Zap
+  Zap,
+  Trash2
 } from 'lucide-react';
 
 interface MatchesPlayedViewProps {
   matches: Match[];
   players: Player[];
+  onDeleteMatch?: (matchId: string) => Promise<void>;
 }
 
-const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
+const MatchesPlayedView = ({ matches, players, onDeleteMatch }: MatchesPlayedViewProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedMatch, setExpandedMatch] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'date' | 'score'>('date');
@@ -102,6 +104,18 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
     });
   };
 
+  const handleDeleteMatch = async (matchId: string) => {
+    if (!onDeleteMatch) return;
+    
+    if (window.confirm('Are you sure you want to delete this match? This will update all player statistics and cannot be undone.')) {
+      try {
+        await onDeleteMatch(matchId);
+      } catch (error) {
+        console.error('Error deleting match:', error);
+      }
+    }
+  };
+
   if (filteredMatches.length === 0) {
     return (
       <div className="floating-section">
@@ -165,12 +179,12 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
           return (
             <Card key={match.id} className={`floating-card animate-fade-in animate-stagger-${(index % 3) + 1} overflow-hidden`}>
               {/* Match Header */}
-              <CardHeader 
-                className="cursor-pointer hover:bg-white/5 transition-all duration-200 pb-4"
-                onClick={() => setExpandedMatch(isExpanded ? null : match.id)}
-              >
+              <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
+                  <div 
+                    className="flex items-center space-x-4 cursor-pointer hover:bg-white/5 transition-all duration-200 flex-1 -m-2 p-2 rounded-lg"
+                    onClick={() => setExpandedMatch(isExpanded ? null : match.id)}
+                  >
                     <div className="flex items-center space-x-2">
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 flex items-center justify-center">
                         <Trophy className="w-5 h-5 text-pink-400" />
@@ -203,10 +217,33 @@ const MatchesPlayedView = ({ matches, players }: MatchesPlayedViewProps) => {
                       </div>
                     </div>
 
-                    {/* Expand Button */}
-                    <Button variant="ghost" size="sm" className="text-on-dark-muted hover:text-on-dark">
-                      {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                    </Button>
+                    {/* Actions */}
+                    <div className="flex items-center space-x-2">
+                      {/* Delete Button */}
+                      {onDeleteMatch && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteMatch(match.id);
+                          }}
+                          className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
+
+                      {/* Expand Button */}
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-on-dark-muted hover:text-on-dark"
+                        onClick={() => setExpandedMatch(isExpanded ? null : match.id)}
+                      >
+                        {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardHeader>
