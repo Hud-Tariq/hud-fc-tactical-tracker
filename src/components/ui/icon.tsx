@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-export type IconName = 
+export type IconName =
   | 'attacker'
   | 'create-match'
   | 'defender'
@@ -16,7 +16,7 @@ export type IconName =
   | 'team-tournament'
   | 'tournament-everywhere'
   | 'trophy'
-  | 'wall-goalie';
+  | 'wall-goalkeeper';
 
 const iconPaths: Record<IconName, string> = {
   'attacker': '/src/assets/icons/attacker.svg',
