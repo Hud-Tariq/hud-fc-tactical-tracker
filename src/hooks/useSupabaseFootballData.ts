@@ -53,6 +53,22 @@ export const useSupabaseFootballData = () => {
   const fetchMatches = async () => {
     try {
       console.log('Fetching matches...');
+
+      // Check authentication first
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError) {
+        console.error('Authentication error:', authError);
+        throw new Error(`Authentication failed: ${authError.message}`);
+      }
+
+      if (!user) {
+        console.log('No authenticated user found');
+        setMatches([]);
+        return;
+      }
+
+      console.log('User authenticated, fetching matches for user:', user.id);
+
       const { data, error } = await supabase
         .from('matches')
         .select(`
@@ -71,9 +87,13 @@ export const useSupabaseFootballData = () => {
             saves_count
           )
         `)
+        .eq('user_id', user.id)
         .order('date', { ascending: false });
-      
-      if (error) throw error;
+
+      if (error) {
+        console.error('Supabase query error:', error);
+        throw error;
+      }
       
       const formattedMatches = data?.map(match => ({
         id: match.id,
