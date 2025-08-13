@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Player, Match } from '@/types/football';
-import { Trophy, Target, Zap, Shield, TrendingUp, Users, BarChart3, Calendar } from 'lucide-react';
+import { TrendingUp, Users, BarChart3, Calendar } from 'lucide-react';
+import { Icon } from '@/components/ui/icon';
 import MatchesPlayedView from './MatchesPlayedView';
 
 interface StatisticsProps {
@@ -141,7 +142,7 @@ const Statistics = ({ players, matches = [] }: StatisticsProps) => {
         <Card className="floating-card hover:scale-105 transition-all duration-300 border-l-4 border-l-green-400">
           <CardHeader className="pb-3">
             <CardTitle className="text-green-400 flex items-center space-x-2 text-base sm:text-lg font-poppins">
-              <Target className="w-5 h-5" />
+              <Icon name="goal" size={20} className="w-5 h-5" />
               <span>Top Scorer</span>
             </CardTitle>
           </CardHeader>
@@ -164,7 +165,7 @@ const Statistics = ({ players, matches = [] }: StatisticsProps) => {
         <Card className="floating-card hover:scale-105 transition-all duration-300 border-l-4 border-l-blue-400">
           <CardHeader className="pb-3">
             <CardTitle className="text-blue-400 flex items-center space-x-2 text-base sm:text-lg font-poppins">
-              <Zap className="w-5 h-5" />
+              <Icon name="lightning-forward" size={20} className="w-5 h-5" />
               <span>Top Assister</span>
             </CardTitle>
           </CardHeader>
@@ -187,7 +188,7 @@ const Statistics = ({ players, matches = [] }: StatisticsProps) => {
         <Card className="floating-card hover:scale-105 transition-all duration-300 border-l-4 border-l-purple-400">
           <CardHeader className="pb-3">
             <CardTitle className="text-purple-400 flex items-center space-x-2 text-base sm:text-lg font-poppins">
-              <Trophy className="w-5 h-5" />
+              <Icon name="trophy" size={20} className="w-5 h-5" />
               <span>Most Experienced</span>
             </CardTitle>
           </CardHeader>
@@ -211,9 +212,9 @@ const Statistics = ({ players, matches = [] }: StatisticsProps) => {
           <Card className="floating-card hover:scale-105 transition-all duration-300 border-l-4 border-l-amber-400">
             <CardHeader className="pb-3">
               <CardTitle className="text-amber-400 flex items-center space-x-2 text-base sm:text-lg font-poppins">
-                <Shield className="w-5 h-5" />
-                <span>Best Keeper</span>
-              </CardTitle>
+              <Icon name="goalkeeper" size={20} className="w-5 h-5" />
+              <span>Best Keeper</span>
+            </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="text-xl sm:text-2xl font-bold text-on-dark">{bestKeeper.name}</div>
