@@ -83,7 +83,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
           <span className="text-on-dark-muted font-medium">Squad Management</span>
         </div>
         <h1 className="text-4xl lg:text-6xl font-bold text-on-dark font-poppins mb-4 lg:mb-6">
-          Your Elite
+          Your
           <span className="gradient-text-light ml-3">Squad</span>
         </h1>
         <p className="text-lg lg:text-2xl text-on-dark-muted max-w-3xl mx-auto">
