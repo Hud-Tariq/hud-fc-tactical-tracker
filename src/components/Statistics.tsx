@@ -212,7 +212,7 @@ const Statistics = ({ players, matches = [] }: StatisticsProps) => {
           <Card className="floating-card hover:scale-105 transition-all duration-300 border-l-4 border-l-amber-400">
             <CardHeader className="pb-3">
               <CardTitle className="text-amber-400 flex items-center space-x-2 text-base sm:text-lg font-poppins">
-              <Icon name="goalkeeper" size={20} className="w-5 h-5" />
+              <Icon name="wall-goalkeeper" size={20} className="w-5 h-5" />
               <span>Best Keeper</span>
             </CardTitle>
             </CardHeader>
