@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import PlayerCard from './PlayerCard';
 import { Player, Match, Goal } from '@/types/football';
-import { Calendar, Users, Target, Trophy, Plus, Minus, Save, Clock } from 'lucide-react';
+import { Calendar, Users, Plus, Minus, Save, Clock } from 'lucide-react';
+import { Icon } from '@/components/ui/icon';
 
 interface MatchCreationProps {
   players: Player[];
@@ -277,7 +278,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
         <div className="p-6">
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-400/30 flex items-center justify-center">
-              <Target className="w-5 h-5 text-green-400" />
+              <Icon name="goal" size={20} className="w-5 h-5 text-green-400" />
             </div>
             <h3 className="text-2xl font-bold text-on-dark font-poppins">Available Players</h3>
           </div>
@@ -327,7 +328,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-yellow-400/30 flex items-center justify-center">
-                    <Trophy className="w-5 h-5 text-yellow-400" />
+                    <Icon name="trophy" size={20} className="w-5 h-5 text-yellow-400" />
                   </div>
                   <h3 className="text-2xl font-bold text-on-dark font-poppins">Goals & Assists</h3>
                 </div>
@@ -442,7 +443,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
             <div className="p-6">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border border-purple-400/30 flex items-center justify-center">
-                  <Target className="w-5 h-5 text-purple-400" />
+                  <Icon name="goalkeeper" size={20} className="w-5 h-5 text-purple-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-on-dark font-poppins">Saves</h3>
               </div>
