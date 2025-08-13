@@ -45,7 +45,6 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             {/* Navigation Items - Desktop */}
             <div className="hidden lg:flex items-center space-x-4">
               {navItems.map((item, index) => {
-                const Icon = item.icon;
                 const isActive = activeTab === item.id;
 
                 return (
@@ -62,7 +61,11 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
                       }
                     `}
                   >
-                    <Icon className="w-5 h-5" />
+                    {item.isCustom ? (
+                      <Icon name={item.icon as any} size={20} className="w-5 h-5" />
+                    ) : (
+                      React.createElement(item.icon as any, { className: "w-5 h-5" })
+                    )}
                     <span className="font-medium text-base">{item.label}</span>
 
                     {/* Active indicator */}
