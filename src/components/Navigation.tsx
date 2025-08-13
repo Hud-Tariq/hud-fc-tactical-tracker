@@ -80,7 +80,6 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             {/* Navigation Items - Tablet & Small Desktop */}
             <div className="hidden sm:flex lg:hidden items-center space-x-1 md:space-x-2">
               {navItems.map((item, index) => {
-                const Icon = item.icon;
                 const isActive = activeTab === item.id;
 
                 return (
@@ -96,7 +95,11 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
                       }
                     `}
                   >
-                    <Icon className="w-4 h-4" />
+                    {item.isCustom ? (
+                      <Icon name={item.icon as any} size={16} className="w-4 h-4" />
+                    ) : (
+                      React.createElement(item.icon as any, { className: "w-4 h-4" })
+                    )}
                     <span className="font-medium hidden md:inline">{item.label}</span>
 
                     {/* Active indicator */}
