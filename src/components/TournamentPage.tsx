@@ -102,13 +102,13 @@ const TournamentPage = () => {
   const getFormatIcon = (format: TournamentFormat) => {
     switch (format) {
       case 'single_elimination':
-        return <FontAwesomeIcon icon={faFlag} className="w-4 h-4" />;
+        return <span className="text-sm">🏁</span>;
       case 'double_elimination':
         return <Medal className="w-4 h-4" />;
       case 'league':
-        return <FontAwesomeIcon icon={faFutbol} className="w-4 h-4" />;
+        return <span className="text-sm">⚽</span>;
       case 'group_stage':
-        return <FontAwesomeIcon icon={faShirt} className="w-4 h-4" />;
+        return <span className="text-sm">👕</span>;
       default:
         return <Trophy className="w-4 h-4" />;
     }
@@ -139,7 +139,7 @@ const TournamentPage = () => {
       {/* Hero Header */}
       <div className="section-header">
         <div className="inline-flex items-center px-4 py-2 rounded-full glass-card border border-yellow-400/30 mb-4">
-          <FontAwesomeIcon icon={faFutbol} className="w-5 h-5 mr-2 text-yellow-400" />
+          <span className="text-yellow-400 text-lg mr-2">⚽</span>
           <span className="text-on-dark-muted font-medium">Tournaments</span>
         </div>
         <h1 className="text-4xl lg:text-6xl font-bold text-on-dark font-poppins mb-4 lg:mb-6">
