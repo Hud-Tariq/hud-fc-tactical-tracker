@@ -85,7 +85,6 @@ const Index = () => {
             players={players}
             onBack={() => setCurrentView('create-match')}
             onDeleteMatch={deleteMatch}
-            onCompleteMatch={handleMatchComplete}
           />
         );
       case 'tournaments':

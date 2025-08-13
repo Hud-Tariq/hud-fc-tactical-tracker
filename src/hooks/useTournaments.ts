@@ -26,7 +26,8 @@ export const useTournaments = () => {
           *,
           tournament_teams (
             *,
-            teams (*)
+            teams (*),
+            tournament_players (*)
           ),
           tournament_stages (*)
         `)
@@ -58,7 +59,8 @@ export const useTournaments = () => {
           *,
           tournament_teams (
             *,
-            teams (*)
+            teams (*),
+            tournament_players (*)
           ),
           tournament_stages (*)
         `)
