@@ -8,6 +8,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import PlayerCard from './PlayerCard';
 import { Player, Match, Goal } from '@/types/football';
 import { Calendar, Users, Target, Trophy, Plus, Minus, Save, Clock } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFutbol, faShirt, faWhistle } from '@fortawesome/free-solid-svg-icons';
 
 interface MatchCreationProps {
   players: Player[];
@@ -119,7 +121,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
       {/* Hero Header */}
       <div className="section-header">
         <div className="inline-flex items-center px-4 py-2 rounded-full glass-card border border-purple-400/30 mb-4">
-          <Calendar className="w-5 h-5 mr-2 text-purple-400" />
+          <FontAwesomeIcon icon={faFutbol} className="w-5 h-5 mr-2 text-purple-400" />
           <span className="text-on-dark-muted font-medium">Match Creation</span>
         </div>
         <h1 className="text-4xl lg:text-6xl font-bold text-on-dark font-poppins mb-4 lg:mb-6">
@@ -177,7 +179,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-400/30 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-blue-400" />
+                  <FontAwesomeIcon icon={faShirt} className="w-5 h-5 text-blue-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-blue-300 font-poppins">Team A</h3>
               </div>
@@ -227,7 +229,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/20 to-pink-500/20 border border-red-400/30 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-red-400" />
+                  <FontAwesomeIcon icon={faShirt} className="w-5 h-5 text-red-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-red-300 font-poppins">Team B</h3>
               </div>
