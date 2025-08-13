@@ -26,8 +26,6 @@ import {
   Crown,
   Shield
 } from 'lucide-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFutbol, faShirt, faWhistle, faFlag } from '@fortawesome/free-solid-svg-icons';
 import { Tournament, TournamentStatus, TournamentFormat, CreateTournamentRequest, Team } from '@/types/tournament';
 
 const TournamentPage = () => {
