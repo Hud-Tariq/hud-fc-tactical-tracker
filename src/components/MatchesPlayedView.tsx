@@ -4,21 +4,17 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Player, Match } from '@/types/football';
-import { 
-  Calendar, 
-  Users, 
-  Trophy, 
-  Target, 
-  Shield, 
-  Clock, 
+import {
+  Calendar,
+  Users,
+  Clock,
   Search,
   Filter,
   ChevronDown,
   ChevronUp,
-  TrendingUp,
-  Award,
-  Zap
+  TrendingUp
 } from 'lucide-react';
+import { Icon } from '@/components/ui/icon';
 
 interface MatchesPlayedViewProps {
   matches: Match[];
