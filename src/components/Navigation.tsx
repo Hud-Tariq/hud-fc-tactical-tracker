@@ -142,33 +142,48 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
 
           {/* Mobile Navigation Menu Dropdown */}
           {isMobileMenuOpen && (
-            <div className="sm:hidden mt-4 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
-              <div className="space-y-2">
-                {navItems.map((item) => {
-                  const isActive = activeTab === item.id;
+            <div className="sm:hidden mt-4 p-6 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 shadow-2xl">
+              <div className="space-y-4">
+                {/* Navigation Items */}
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold text-on-dark-muted uppercase tracking-wide mb-3">Navigation</h3>
+                  {navItems.map((item) => {
+                    const isActive = activeTab === item.id;
 
-                  return (
-                    <Button
-                      key={item.id}
-                      variant="ghost"
-                      onClick={() => handleTabChange(item.id)}
-                      className={`
-                        w-full flex items-center justify-start space-x-3 px-4 py-3 rounded-xl transition-all duration-300
-                        ${isActive
-                          ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30'
-                          : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
-                        }
-                      `}
-                    >
-                      {item.isCustom ? (
-                        <Icon name={item.icon as any} size={20} className="w-5 h-5" />
-                      ) : (
-                        React.createElement(item.icon as any, { className: "w-5 h-5" })
-                      )}
-                      <span className="font-medium text-base">{item.label}</span>
-                    </Button>
-                  );
-                })}
+                    return (
+                      <Button
+                        key={item.id}
+                        variant="ghost"
+                        onClick={() => handleTabChange(item.id)}
+                        className={`
+                          w-full flex items-center justify-start space-x-3 px-4 py-4 rounded-xl transition-all duration-300
+                          ${isActive
+                            ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30'
+                            : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
+                          }
+                        `}
+                      >
+                        {item.isCustom ? (
+                          <Icon name={item.icon as any} size={20} className="w-5 h-5" />
+                        ) : (
+                          React.createElement(item.icon as any, { className: "w-5 h-5" })
+                        )}
+                        <span className="font-medium text-base">{item.label}</span>
+                      </Button>
+                    );
+                  })}
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-white/10 my-4"></div>
+
+                {/* Profile Section */}
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold text-on-dark-muted uppercase tracking-wide mb-3">Account</h3>
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <UserMenu />
+                  </div>
+                </div>
               </div>
             </div>
           )}
