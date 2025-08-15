@@ -284,7 +284,7 @@ export const useSupabaseFootballData = () => {
       
       if (error) throw error;
       
-      await fetchPlayers();
+      await fetchPlayers(true);
       
       toast({
         title: "Success",
@@ -344,9 +344,10 @@ export const useSupabaseFootballData = () => {
         await StatisticsService.processMatchStatistics(completeMatch, players);
         console.log('Statistics processing completed');
       }
-      
-      await Promise.all([fetchMatches(), fetchPlayers()]);
-      
+
+      // Force refresh after creating match
+      await Promise.all([fetchMatches(true), fetchPlayers(true)]);
+
       toast({
         title: "Success",
         description: "Match created successfully!",
@@ -400,8 +401,8 @@ export const useSupabaseFootballData = () => {
         console.log('Statistics processing completed');
       }
 
-      await Promise.all([fetchMatches(), fetchPlayers()]);
-      
+      await Promise.all([fetchMatches(true), fetchPlayers(true)]);
+
       toast({
         title: "Success",
         description: `Match completed! Score: ${scoreA} - ${scoreB}`,
@@ -485,7 +486,7 @@ export const useSupabaseFootballData = () => {
 
       console.log('Match deletion completed successfully');
 
-      await Promise.all([fetchMatches(), fetchPlayers()]);
+      await Promise.all([fetchMatches(true), fetchPlayers(true)]);
 
       toast({
         title: "Success",
@@ -544,11 +545,15 @@ export const useSupabaseFootballData = () => {
     players,
     matches,
     loading,
+    playersLoading,
+    matchesLoading,
     addPlayer,
     createMatch,
     completeMatch,
     deleteMatch,
     getPlayerById,
-    refreshData: () => Promise.all([fetchPlayers(), fetchMatches()])
+    refreshData: () => Promise.all([fetchPlayers(true), fetchMatches(true)]),
+    refreshPlayers: () => fetchPlayers(true),
+    refreshMatches: () => fetchMatches(true)
   };
 };
