@@ -283,17 +283,17 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
             <h3 className="text-2xl font-bold text-on-dark font-poppins">Available Players</h3>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
             {availablePlayers.map((player) => (
-              <div key={player.id} className="space-y-3">
+              <div key={player.id} className="space-y-2 sm:space-y-3">
                 <PlayerCard player={player} selectable />
-                <div className="flex space-x-2">
+                <div className="flex space-x-1.5 sm:space-x-2">
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => handlePlayerSelect(player, 'A')}
                     disabled={teamA.length >= 5}
-                    className="flex-1 bg-blue-500/10 border-blue-400/30 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400/50"
+                    className="flex-1 bg-blue-500/10 border-blue-400/30 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400/50 text-xs sm:text-sm px-2 sm:px-3"
                   >
                     Team A
                   </Button>
@@ -302,7 +302,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                     variant="outline"
                     onClick={() => handlePlayerSelect(player, 'B')}
                     disabled={teamB.length >= 5}
-                    className="flex-1 bg-red-500/10 border-red-400/30 text-red-300 hover:bg-red-500/20 hover:border-red-400/50"
+                    className="flex-1 bg-red-500/10 border-red-400/30 text-red-300 hover:bg-red-500/20 hover:border-red-400/50 text-xs sm:text-sm px-2 sm:px-3"
                   >
                     Team B
                   </Button>
