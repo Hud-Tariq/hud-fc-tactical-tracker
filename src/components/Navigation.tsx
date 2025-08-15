@@ -156,7 +156,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
                         variant="ghost"
                         onClick={() => handleTabChange(item.id)}
                         className={`
-                          w-full flex items-center justify-start space-x-3 px-4 py-4 rounded-xl transition-all duration-300 focus:outline-none focus:ring-0
+                          w-full flex items-center justify-start space-x-3 px-4 py-4 rounded-xl transition-all duration-300 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0
                           ${isActive
                             ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30'
                             : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
