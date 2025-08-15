@@ -61,32 +61,32 @@ const PlayerCard = ({ player, onClick, selectable = false, selected = false }: P
       `}
       onClick={() => onClick?.(player)}
     >
-      <CardContent className="p-5">
+      <CardContent className="p-3 sm:p-4 lg:p-5">
         {/* Header with Position and Rating */}
-        <div className="flex items-start justify-between mb-4">
+        <div className="flex items-start justify-between mb-3 sm:mb-4">
           <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br ${getPositionColor(player.position)} border backdrop-blur`}>
-              <Icon name={positionIconName} size={20} className="w-5 h-5" />
+            <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center bg-gradient-to-br ${getPositionColor(player.position)} border backdrop-blur`}>
+              <Icon name={positionIconName} size={16} className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <Badge 
               variant="outline" 
-              className={`text-xs font-medium bg-gradient-to-r ${getPositionColor(player.position)} border backdrop-blur px-3 py-1 rounded-full`}
+              className={`text-xs font-medium bg-gradient-to-r ${getPositionColor(player.position)} border backdrop-blur px-2 sm:px-3 py-1 rounded-full`}
             >
               {player.position}
             </Badge>
           </div>
           
           <div className="flex items-center space-x-2">
-            <Star className="w-4 h-4 text-yellow-400" />
-            <Badge className={`bg-gradient-to-r ${getRatingColor(player.rating)} text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg`}>
+            <Star className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400" />
+            <Badge className={`bg-gradient-to-r ${getRatingColor(player.rating)} text-white text-xs sm:text-sm font-bold px-2 sm:px-3 py-1 rounded-full shadow-lg`}>
               {player.rating}
             </Badge>
           </div>
         </div>
 
         {/* Player Info */}
-        <div className="space-y-3">
-          <h3 className="font-bold text-lg text-on-dark group-hover:gradient-text-light transition-all duration-300 font-poppins">
+        <div className="space-y-2 sm:space-y-3">
+          <h3 className="font-bold text-base sm:text-lg text-on-dark group-hover:gradient-text-light transition-all duration-300 font-poppins line-clamp-1">
             {player.name}
           </h3>
           <div className="flex items-center justify-between">
@@ -100,14 +100,14 @@ const PlayerCard = ({ player, onClick, selectable = false, selected = false }: P
         </div>
 
         {/* Stats Grid */}
-        <div className="mt-6 pt-4 border-t border-white/10">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10">
-              <p className="font-bold text-lg text-on-dark">{player.matchesPlayed}</p>
+        <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-white/10">
+          <div className="grid grid-cols-2 gap-2 sm:gap-4">
+            <div className="text-center p-2 sm:p-3 rounded-lg sm:rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10">
+              <p className="font-bold text-base sm:text-lg text-on-dark">{player.matchesPlayed}</p>
               <p className="text-xs text-on-dark-muted">Matches</p>
             </div>
-            <div className="text-center p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10">
-              <p className="font-bold text-lg text-on-dark">{player.totalGoals}</p>
+            <div className="text-center p-2 sm:p-3 rounded-lg sm:rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10">
+              <p className="font-bold text-base sm:text-lg text-on-dark">{player.totalGoals}</p>
               <p className="text-xs text-on-dark-muted">Goals</p>
             </div>
           </div>
@@ -115,7 +115,7 @@ const PlayerCard = ({ player, onClick, selectable = false, selected = false }: P
 
         {/* Performance Rating */}
         {player.averageMatchRating > 0 && (
-          <div className="mt-4 pt-4 border-t border-white/10">
+          <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/10">
             <div className="flex items-center justify-between text-sm mb-2">
               <span className="text-on-dark-muted">Performance</span>
               <span className="font-bold text-on-dark">{player.averageMatchRating.toFixed(1)}/10</span>
@@ -131,8 +131,8 @@ const PlayerCard = ({ player, onClick, selectable = false, selected = false }: P
 
         {/* Additional stats for key positions */}
         {(player.totalAssists > 0 || player.totalSaves > 0) && (
-          <div className="mt-4 pt-4 border-t border-white/10">
-            <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/10">
+            <div className="grid grid-cols-2 gap-1 sm:gap-2 text-xs">
               {player.totalAssists > 0 && (
                 <div className="text-center">
                   <p className="font-semibold text-on-dark">{player.totalAssists}</p>
