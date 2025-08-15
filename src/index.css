@@ -140,6 +140,17 @@
     font-feature-settings: 'cv11', 'ss01';
     font-variation-settings: 'opsz' 32;
   }
+
+  /* Prevent default button focus styles that cause white box glitches */
+  button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  button:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
   
   /* Typography Scale - Enhanced */
   .text-display {
