@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Player, Match, Goal } from '@/types/football';
 import { useToast } from '@/hooks/use-toast';
@@ -8,7 +8,14 @@ export const useSupabaseFootballData = () => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
+  const [playersLoading, setPlayersLoading] = useState(false);
+  const [matchesLoading, setMatchesLoading] = useState(false);
   const { toast } = useToast();
+
+  // Cache refs to prevent unnecessary re-fetches
+  const lastFetchTime = useRef<{ players: number; matches: number }>({ players: 0, matches: 0 });
+  const currentUserId = useRef<string | null>(null);
+  const CACHE_DURATION = 30000; // 30 seconds cache
 
   // Fetch players from Supabase
   const fetchPlayers = async () => {
