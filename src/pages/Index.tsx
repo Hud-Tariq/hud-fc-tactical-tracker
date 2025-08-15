@@ -73,8 +73,14 @@ const Index = () => {
   const renderCurrentView = () => {
     switch (currentView) {
       case 'squad':
+        if (loading && players.length === 0) {
+          return <SquadLoadingSkeleton />;
+        }
         return <SquadManagement players={players} onAddPlayer={addPlayer} onPlayerClick={handlePlayerClick} />;
       case 'create-match':
+        if (loading && players.length === 0) {
+          return <SquadLoadingSkeleton />;
+        }
         return (
           <MatchCreation
             players={players}
@@ -82,6 +88,9 @@ const Index = () => {
           />
         );
       case 'view-matches':
+        if ((loading || matchesLoading) && matches.length === 0) {
+          return <MatchLoadingSkeleton />;
+        }
         return (
           <MatchView
             matches={matches}
@@ -93,8 +102,14 @@ const Index = () => {
       case 'tournaments':
         return <TournamentPage />;
       case 'statistics':
+        if ((loading || matchesLoading) && (players.length === 0 || matches.length === 0)) {
+          return <MatchLoadingSkeleton />;
+        }
         return <Statistics players={players} matches={matches} onRemoveMatch={deleteMatch} />;
       default:
+        if (loading && players.length === 0) {
+          return <SquadLoadingSkeleton />;
+        }
         return <SquadManagement players={players} onAddPlayer={addPlayer} onPlayerClick={handlePlayerClick} />;
     }
   };
