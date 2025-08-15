@@ -96,8 +96,8 @@ const AuthPage = () => {
                   Email Address
                 </Label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                    <Mail className="h-6 w-6 text-purple-500" />
                   </div>
                   <Input
                     id="signin-email"
@@ -105,7 +105,7 @@ const AuthPage = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="w-full h-14 pl-12 pr-4 border-2 border-gray-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:border-purple-400 focus:ring-4 focus:ring-purple-400/20 transition-all duration-300 text-lg"
+                    className="w-full h-14 pl-14 pr-4 border-2 border-gray-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:border-purple-400 focus:ring-4 focus:ring-purple-400/20 transition-all duration-300 text-lg bg-white"
                     required
                   />
                 </div>
@@ -117,8 +117,8 @@ const AuthPage = () => {
                   Password
                 </Label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                    <Lock className="h-6 w-6 text-purple-500" />
                   </div>
                   <Input
                     id="signin-password"
@@ -126,15 +126,15 @@ const AuthPage = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="w-full h-14 pl-12 pr-12 border-2 border-gray-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:border-purple-400 focus:ring-4 focus:ring-purple-400/20 transition-all duration-300 text-lg"
+                    className="w-full h-14 pl-14 pr-14 border-2 border-gray-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:border-purple-400 focus:ring-4 focus:ring-purple-400/20 transition-all duration-300 text-lg bg-white"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-purple-500 hover:text-purple-700 transition-colors z-10"
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showPassword ? <EyeOff className="h-6 w-6" /> : <Eye className="h-6 w-6" />}
                   </button>
                 </div>
               </div>
