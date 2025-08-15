@@ -17,6 +17,10 @@ export const useTournaments = () => {
   const { toast } = useToast();
   const { user } = useAuth();
 
+  // Cache to prevent unnecessary re-fetches
+  const lastFetchTime = useRef<{ tournaments: number; myTournaments: number }>({ tournaments: 0, myTournaments: 0 });
+  const CACHE_DURATION = 60000; // 1 minute cache for tournaments
+
   const fetchTournaments = async () => {
     try {
       console.log('Fetching tournaments...');
