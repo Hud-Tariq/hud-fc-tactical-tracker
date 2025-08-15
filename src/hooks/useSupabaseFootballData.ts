@@ -17,9 +17,18 @@ export const useSupabaseFootballData = () => {
   const currentUserId = useRef<string | null>(null);
   const CACHE_DURATION = 30000; // 30 seconds cache
 
-  // Fetch players from Supabase
-  const fetchPlayers = async () => {
+  // Optimized fetch players with caching
+  const fetchPlayers = useCallback(async (forceRefresh = false) => {
     try {
+      const now = Date.now();
+
+      // Check cache validity
+      if (!forceRefresh && now - lastFetchTime.current.players < CACHE_DURATION) {
+        console.log('Using cached players data');
+        return;
+      }
+
+      setPlayersLoading(true);
       console.log('Fetching players...');
 
       // Check authentication first
@@ -32,14 +41,17 @@ export const useSupabaseFootballData = () => {
       if (!user) {
         console.log('No authenticated user found');
         setPlayers([]);
+        setPlayersLoading(false);
         return;
       }
 
+      // Update current user reference
+      currentUserId.current = user.id;
       console.log('User authenticated, fetching players for user:', user.id);
 
       const { data, error } = await supabase
         .from('players')
-        .select('*')
+        .select('id, name, age, position, rating, matches_played, total_goals, total_assists, total_saves, clean_sheets')
         .eq('user_id', user.id)
         .order('name');
 
@@ -47,7 +59,7 @@ export const useSupabaseFootballData = () => {
         console.error('Supabase query error:', error);
         throw error;
       }
-      
+
       const mappedPlayers = data?.map(player => ({
         id: player.id,
         name: player.name,
@@ -62,9 +74,11 @@ export const useSupabaseFootballData = () => {
         averageMatchRating: player.matches_played > 0 ? player.rating / 10 : 0,
         matchRatings: []
       })) || [];
-      
+
       console.log('Fetched players:', mappedPlayers.length);
       setPlayers(mappedPlayers);
+      lastFetchTime.current.players = now;
+
     } catch (error) {
       console.error('Error fetching players:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -73,8 +87,10 @@ export const useSupabaseFootballData = () => {
         description: `Failed to fetch players: ${errorMessage}`,
         variant: "destructive",
       });
+    } finally {
+      setPlayersLoading(false);
     }
-  };
+  }, [toast]);
 
   // Fetch matches from Supabase
   const fetchMatches = async () => {
