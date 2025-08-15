@@ -111,7 +111,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
 
                     {/* Active indicator */}
                     {isActive && (
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-pink-500/10 to-purple-600/10 animate-pulse"></div>
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-pink-500/5 to-purple-600/5"></div>
                     )}
                   </Button>
                 );
