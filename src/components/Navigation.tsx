@@ -1,5 +1,5 @@
-import React from 'react';
-import { Users, Calendar, BarChart3 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Users, Calendar, BarChart3, Menu, X } from 'lucide-react';
 import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import UserMenu from '@/components/UserMenu';
@@ -10,12 +10,19 @@ interface NavigationProps {
 }
 
 const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const navItems = [
     { id: 'squad', label: 'Squad', icon: 'squad', isCustom: true },
     { id: 'create-match', label: 'Matches', icon: 'lightning-forward', isCustom: true },
     { id: 'tournaments', label: 'Tournaments', icon: 'trophy', isCustom: true },
     { id: 'statistics', label: 'Statistics', icon: 'statistics', isCustom: true },
   ];
+
+  const handleTabChange = (tab: string) => {
+    onTabChange(tab);
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <nav className="sticky top-0 z-50 p-2 sm:p-4 lg:p-6">
@@ -111,36 +118,20 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
               })}
             </div>
 
-            {/* Mobile Navigation Menu - Very Small Screens */}
-            <div className="sm:hidden flex items-center space-x-1 flex-grow justify-center max-w-xs">
-              {navItems.map((item) => {
-                const isActive = activeTab === item.id;
-
-                return (
-                  <Button
-                    key={item.id}
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onTabChange(item.id)}
-                    className={`
-                      relative p-2 rounded-lg transition-all duration-300 flex-1 max-w-16
-                      ${isActive
-                        ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30'
-                        : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
-                      }
-                    `}
-                  >
-                    {item.isCustom ? (
-                      <Icon name={item.icon as any} size={16} className="w-4 h-4 mx-auto" />
-                    ) : (
-                      React.createElement(item.icon as any, { className: "w-4 h-4 mx-auto" })
-                    )}
-                    {isActive && (
-                      <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-pink-500/10 to-purple-600/10 animate-pulse"></div>
-                    )}
-                  </Button>
-                );
-              })}
+            {/* Mobile Hamburger Menu Button */}
+            <div className="sm:hidden flex items-center">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 rounded-lg text-on-dark hover:text-white hover:bg-white/10 transition-all duration-300"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
+              </Button>
             </div>
 
             {/* User Menu */}
@@ -148,6 +139,39 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
               <UserMenu />
             </div>
           </div>
+
+          {/* Mobile Navigation Menu Dropdown */}
+          {isMobileMenuOpen && (
+            <div className="sm:hidden mt-4 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+              <div className="space-y-2">
+                {navItems.map((item) => {
+                  const isActive = activeTab === item.id;
+
+                  return (
+                    <Button
+                      key={item.id}
+                      variant="ghost"
+                      onClick={() => handleTabChange(item.id)}
+                      className={`
+                        w-full flex items-center justify-start space-x-3 px-4 py-3 rounded-xl transition-all duration-300
+                        ${isActive
+                          ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30'
+                          : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
+                        }
+                      `}
+                    >
+                      {item.isCustom ? (
+                        <Icon name={item.icon as any} size={20} className="w-5 h-5" />
+                      ) : (
+                        React.createElement(item.icon as any, { className: "w-5 h-5" })
+                      )}
+                      <span className="font-medium text-base">{item.label}</span>
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </nav>
