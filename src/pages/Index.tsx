@@ -128,7 +128,7 @@ const Index = () => {
       
       {/* Main Content */}
       <main className="content-container">
-        <div className="w-full px-4 lg:px-8 xl:px-12 py-4 lg:py-8">
+        <div className="w-full px-2 sm:px-4 lg:px-8 xl:px-12 py-2 sm:py-4 lg:py-8">
           <div className="animate-fade-in">
             {renderCurrentView()}
           </div>
