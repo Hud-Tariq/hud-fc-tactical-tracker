@@ -171,7 +171,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
       </div>
 
       {/* Team Selection */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
         {/* Team A */}
         <div className="floating-card">
           <div className="p-6">
