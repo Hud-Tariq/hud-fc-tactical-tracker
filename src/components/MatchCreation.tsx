@@ -127,7 +127,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
           Create
           <span className="gradient-text-light ml-3">Match</span>
         </h1>
-        <p className="text-lg lg:text-2xl text-on-dark-muted max-w-3xl mx-auto">
+        <p className="text-base sm:text-lg lg:text-2xl text-on-dark-muted max-w-none sm:max-w-3xl mx-auto px-2 sm:px-0">
           Set up teams, track goals, and create memorable football matches
         </p>
       </div>
