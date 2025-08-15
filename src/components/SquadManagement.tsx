@@ -87,13 +87,13 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
           Your
           <span className="gradient-text-light ml-3">Squad</span>
         </h1>
-        <p className="text-lg lg:text-2xl text-on-dark-muted max-w-3xl mx-auto">
+        <p className="text-base sm:text-lg lg:text-2xl text-on-dark-muted max-w-none sm:max-w-3xl mx-auto px-2 sm:px-0">
           Manage your team of {players.length} players and build the perfect formation
         </p>
       </div>
 
       {/* Squad Statistics Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 xl:gap-8 mb-8 lg:mb-16">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 xl:gap-8 mb-6 sm:mb-8 lg:mb-16">
         {[
           { icon: Users, label: 'Total Players', value: squadStats.totalPlayers, color: 'text-blue-400', isCustom: false },
           { icon: 'statistics', label: 'Avg Rating', value: squadStats.averageRating, color: 'text-purple-400', isCustom: true },
@@ -101,28 +101,28 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
           { icon: TrendingUp, label: 'Matches Played', value: squadStats.totalMatches, color: 'text-pink-400', isCustom: false }
         ].map((stat, index) => (
           <div key={stat.label} className={`floating-card animate-fade-in animate-stagger-${index + 1}`}>
-            <div className="p-4 lg:p-8 text-center">
-              <div className="flex items-center justify-center w-12 h-12 lg:w-16 lg:h-16 mx-auto mb-3 lg:mb-6 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20">
+            <div className="p-3 sm:p-4 lg:p-8 text-center">
+              <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mx-auto mb-2 sm:mb-3 lg:mb-6 rounded-xl sm:rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20">
                 {stat.isCustom ? (
-                  <Icon name={stat.icon as any} size={32} className={`w-6 h-6 lg:w-8 lg:h-8 ${stat.color}`} />
+                  <Icon name={stat.icon as any} size={24} className={`w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 ${stat.color}`} />
                 ) : (
-                  React.createElement(stat.icon as any, { className: `w-6 h-6 lg:w-8 lg:h-8 ${stat.color}` })
+                  React.createElement(stat.icon as any, { className: `w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 ${stat.color}` })
                 )}
               </div>
-              <p className="text-2xl lg:text-4xl font-bold text-on-dark mb-1 lg:mb-3">{stat.value}</p>
-              <p className="text-on-dark-muted text-xs lg:text-base">{stat.label}</p>
+              <p className="text-xl sm:text-2xl lg:text-4xl font-bold text-on-dark mb-1 lg:mb-3">{stat.value}</p>
+              <p className="text-on-dark-muted text-xs sm:text-sm lg:text-base">{stat.label}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* Add Player Button */}
-      <div className="flex justify-center mb-8 lg:mb-16">
+      <div className="flex justify-center mb-6 sm:mb-8 lg:mb-16">
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button
               size="lg"
-              className="px-6 lg:px-12 py-3 lg:py-5 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg shadow-pink-500/25 text-sm lg:text-lg"
+              className="px-4 sm:px-6 lg:px-12 py-2.5 sm:py-3 lg:py-5 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg shadow-pink-500/25 text-sm lg:text-lg"
             >
               <Plus className="w-4 h-4 lg:w-6 lg:h-6 mr-2" />
               Add New Player
@@ -254,8 +254,8 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
                       </div>
                     </div>
                   </div>
-                  <div className="p-4 lg:p-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-6">
+                  <div className="p-3 sm:p-4 lg:p-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
                       {groupedPlayers[position].map((player, playerIndex) => (
                         <div key={player.id} className={`animate-fade-in animate-stagger-${playerIndex + 1}`}>
                           <PlayerCard player={player} onClick={() => onPlayerClick(player)} />
