@@ -505,6 +505,7 @@ export const useSupabaseFootballData = () => {
 
   const getPlayerById = (id: string) => players.find(p => p.id === id);
 
+  // Optimized data loading with staggered fetching
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -520,8 +521,13 @@ export const useSupabaseFootballData = () => {
         if (user) {
           console.log('User authenticated, fetching data...');
           setLoading(true);
-          await Promise.all([fetchPlayers(), fetchMatches()]);
-          setLoading(false);
+
+          // Fetch players first (usually smaller dataset)
+          await fetchPlayers(true);
+          setLoading(false); // Allow UI to render with players data
+
+          // Then fetch matches in background
+          await fetchMatches(true);
         } else {
           console.log('No authenticated user');
           setLoading(false);
@@ -539,7 +545,7 @@ export const useSupabaseFootballData = () => {
     };
 
     loadData();
-  }, []);
+  }, [fetchPlayers, fetchMatches, toast]);
 
   return {
     players,
