@@ -70,94 +70,129 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 flex items-center justify-center p-4">
-      <div className="relative w-full max-w-md">
-        {/* Main card with diagonal cut */}
-        <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden">
-          {/* Diagonal purple section */}
-          <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-bl from-purple-500 to-purple-600 transform skew-x-12 origin-top-right translate-x-4"></div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 flex items-stretch sm:items-center justify-center p-4 sm:p-6">
+      <div className="relative w-full max-w-md my-auto">
+        {/* Main card with diagonal cut - Enhanced for mobile */}
+        <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden min-h-[90vh] sm:min-h-0 flex flex-col">
+          {/* Diagonal purple section - Responsive */}
+          <div className="absolute top-0 right-0 w-24 sm:w-32 h-full bg-gradient-to-bl from-purple-500 to-purple-600 transform skew-x-12 origin-top-right translate-x-3 sm:translate-x-4"></div>
 
-          {/* Content */}
-          <div className="relative z-10 p-12">
-            {/* Title */}
-            <h1 className="text-3xl font-bold text-gray-800 mb-8">Login</h1>
+          {/* Content - Enhanced vertical layout */}
+          <div className="relative z-10 p-8 sm:p-12 flex-1 flex flex-col justify-center">
+            {/* Welcome Section */}
+            <div className="text-center mb-12">
+              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center shadow-lg">
+                <Lock className="w-10 h-10 text-purple-600" />
+              </div>
+              <h1 className="text-4xl sm:text-3xl font-bold text-gray-800 mb-3">Welcome Back</h1>
+              <p className="text-gray-500 text-lg">Sign in to continue</p>
+            </div>
 
             {/* Login Form */}
-            <form onSubmit={handleSignIn} className="space-y-6">
+            <form onSubmit={handleSignIn} className="space-y-8">
               {/* Email Input */}
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                <Label htmlFor="signin-email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address
+                </Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Mail className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <Input
+                    id="signin-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="w-full h-14 pl-12 pr-4 border-2 border-gray-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:border-purple-400 focus:ring-4 focus:ring-purple-400/20 transition-all duration-300 text-lg"
+                    required
+                  />
                 </div>
-                <Input
-                  id="signin-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Username or Email"
-                  className="w-full h-12 pl-12 pr-4 border border-gray-200 rounded-lg text-gray-800 placeholder:text-gray-400 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-200"
-                  required
-                />
               </div>
 
               {/* Password Input */}
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                <Label htmlFor="signin-password" className="block text-sm font-medium text-gray-700 mb-2">
+                  Password
+                </Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Lock className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <Input
+                    id="signin-password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    className="w-full h-14 pl-12 pr-12 border-2 border-gray-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:border-purple-400 focus:ring-4 focus:ring-purple-400/20 transition-all duration-300 text-lg"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
                 </div>
-                <Input
-                  id="signin-password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password"
-                  className="w-full h-12 pl-12 pr-12 border border-gray-200 rounded-lg text-gray-800 placeholder:text-gray-400 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-200"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </div>
+
+              {/* Remember Me & Forgot Password */}
+              <div className="flex items-center justify-between text-sm">
+                <label className="flex items-center">
+                  <input type="checkbox" className="rounded border-gray-300 text-purple-600 focus:ring-purple-500" />
+                  <span className="ml-2 text-gray-600">Remember me</span>
+                </label>
+                <button type="button" className="text-purple-600 hover:text-purple-700 font-medium">
+                  Forgot password?
                 </button>
               </div>
 
-              {/* Login Button */}
+              {/* Login Button - Enhanced */}
               <Button
                 type="submit"
-                className="w-full h-12 bg-white border border-gray-200 rounded-full text-gray-700 font-medium hover:bg-gray-50 transition-all duration-200 flex items-center justify-between px-6 group mt-8"
+                className="w-full h-14 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold text-lg rounded-xl transition-all duration-300 hover:scale-[1.02] transform shadow-lg shadow-purple-500/25 flex items-center justify-center group"
                 disabled={loading}
               >
                 {loading ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Signing In...</span>
-                    <div className="w-4"></div>
+                    <Loader2 className="mr-3 h-5 w-5 animate-spin" />
+                    Signing you in...
                   </>
                 ) : (
                   <>
-                    <span>LOG IN HERE</span>
-                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    Sign In
+                    <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </>
                 )}
               </Button>
             </form>
+
+            {/* Sign Up Section */}
+            <div className="text-center mt-10 pt-8 border-t border-gray-200">
+              <p className="text-gray-600 mb-4">Don't have an account?</p>
+              <Button
+                onClick={() => setEmail('')}
+                variant="outline"
+                className="w-full h-12 border-2 border-purple-200 text-purple-600 hover:bg-purple-50 hover:border-purple-300 font-medium rounded-xl transition-all duration-300"
+              >
+                Create Account
+              </Button>
+            </div>
           </div>
 
-          {/* Bottom section in purple area */}
-          <div className="absolute bottom-6 right-6 text-white text-sm">
-            <p className="mb-2">Log in via</p>
+          {/* Decorative elements in purple area */}
+          <div className="absolute bottom-8 right-8 text-white text-xs opacity-60">
             <div className="flex space-x-2">
-              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                <Mail className="w-4 h-4" />
+              <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
+                <Lock className="w-3 h-3" />
               </div>
-              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
-                </svg>
+              <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
+                <Star className="w-3 h-3" />
               </div>
             </div>
           </div>
