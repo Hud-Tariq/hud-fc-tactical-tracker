@@ -2,25 +2,70 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HUD FC - Tactical Tracker</title>
-    <meta name="description" content="Professional football team management and match analysis platform" />
-    <meta name="author" content="HUD FC" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Hud FC Manager - Football Management System</title>
+    <meta name="description" content="Professional football team management system with squad management, match creation, tournaments, and statistics tracking" />
+    <meta name="author" content="Hud FC Manager" />
+    <meta name="keywords" content="football, soccer, team management, squad, matches, tournaments, statistics, sports" />
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Hud FC Manager" />
+    <meta name="theme-color" content="#7c3aed" />
+    <meta name="background-color" content="#1a0b2e" />
+    <meta name="color-scheme" content="dark" />
+
+    <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="/src/assets/images/logo.png" type="image/png">
-    <link rel="apple-touch-icon" href="/src/assets/images/logo.png">
-    <link rel="shortcut icon" href="/src/assets/images/logo.png" type="image/png">
 
-    <meta property="og:title" content="HUD FC - Tactical Tracker" />
-    <meta property="og:description" content="Professional football team management and match analysis platform" />
+    <!-- Icons and Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#7c3aed">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/icons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/icons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/icons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-icon-180x180.png">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Hud FC Manager - Football Management System" />
+    <meta property="og:description" content="Professional football team management system with squad management, match creation, tournaments, and statistics tracking" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/src/assets/images/logo.png" />
+    <meta property="og:image" content="/icons/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://hudfc-manager.app" />
+    <meta property="og:site_name" content="Hud FC Manager" />
 
+    <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@hudfc" />
-    <meta name="twitter:image" content="/src/assets/images/logo.png" />
+    <meta name="twitter:site" content="@hudfcmanager" />
+    <meta name="twitter:creator" content="@hudfcmanager" />
+    <meta name="twitter:title" content="Hud FC Manager - Football Management System" />
+    <meta name="twitter:description" content="Professional football team management system" />
+    <meta name="twitter:image" content="/icons/twitter-image.png" />
+
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileColor" content="#7c3aed">
+    <meta name="msapplication-TileImage" content="/icons/ms-icon-144x144.png">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/icons/icon-192x192.png" as="image" type="image/png">
   </head>
 
   <body>
