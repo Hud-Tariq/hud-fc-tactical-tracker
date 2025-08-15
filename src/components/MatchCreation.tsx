@@ -224,7 +224,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
 
         {/* Team B */}
         <div className="floating-card">
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/20 to-pink-500/20 border border-red-400/30 flex items-center justify-center">
