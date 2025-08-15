@@ -92,9 +92,18 @@ export const useSupabaseFootballData = () => {
     }
   }, [toast]);
 
-  // Fetch matches from Supabase
-  const fetchMatches = async () => {
+  // Optimized fetch matches with caching and pagination
+  const fetchMatches = useCallback(async (forceRefresh = false) => {
     try {
+      const now = Date.now();
+
+      // Check cache validity
+      if (!forceRefresh && now - lastFetchTime.current.matches < CACHE_DURATION) {
+        console.log('Using cached matches data');
+        return;
+      }
+
+      setMatchesLoading(true);
       console.log('Fetching matches...');
 
       // Check authentication first
@@ -107,37 +116,43 @@ export const useSupabaseFootballData = () => {
       if (!user) {
         console.log('No authenticated user found');
         setMatches([]);
+        setMatchesLoading(false);
         return;
       }
 
       console.log('User authenticated, fetching matches for user:', user.id);
 
+      // Fetch matches with limit for better performance
       const { data, error } = await supabase
         .from('matches')
         .select(`
-          *,
+          id,
+          date,
+          team_a_players,
+          team_b_players,
+          score_a,
+          score_b,
+          completed,
           match_goals (
-            id,
             scorer_id,
             assister_id,
             team,
-            minute,
             is_own_goal
           ),
           match_saves (
-            id,
             player_id,
             saves_count
           )
         `)
         .eq('user_id', user.id)
-        .order('date', { ascending: false });
+        .order('date', { ascending: false })
+        .limit(50); // Limit to recent 50 matches for performance
 
       if (error) {
         console.error('Supabase query error:', error);
         throw error;
       }
-      
+
       const formattedMatches = data?.map(match => ({
         id: match.id,
         date: match.date,
@@ -160,9 +175,11 @@ export const useSupabaseFootballData = () => {
         averageTeamARating: 0,
         averageTeamBRating: 0
       })) || [];
-      
+
       console.log('Fetched matches:', formattedMatches.length);
       setMatches(formattedMatches);
+      lastFetchTime.current.matches = now;
+
     } catch (error) {
       console.error('Error fetching matches:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -171,8 +188,10 @@ export const useSupabaseFootballData = () => {
         description: `Failed to fetch matches: ${errorMessage}`,
         variant: "destructive",
       });
+    } finally {
+      setMatchesLoading(false);
     }
-  };
+  }, [toast]);
 
   // Store match goals in database
   const storeMatchGoals = async (matchId: string, goals: Goal[]) => {
