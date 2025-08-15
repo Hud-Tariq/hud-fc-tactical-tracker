@@ -155,14 +155,14 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
             </div>
             
             {(teamA.length === 5 && teamB.length === 5) && (
-              <div className="grid grid-cols-2 gap-6">
-                <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-400/30">
-                  <h4 className="text-blue-300 font-medium mb-2">Team A Score</h4>
-                  <div className="text-4xl font-bold text-on-dark">{teamAGoals}</div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-6">
+                <div className="text-center p-3 sm:p-6 rounded-2xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-400/30">
+                  <h4 className="text-blue-300 font-medium mb-1 sm:mb-2 text-sm sm:text-base">Team A Score</h4>
+                  <div className="text-2xl sm:text-4xl font-bold text-on-dark">{teamAGoals}</div>
                 </div>
-                <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-red-500/10 to-pink-500/10 border border-red-400/30">
-                  <h4 className="text-red-300 font-medium mb-2">Team B Score</h4>
-                  <div className="text-4xl font-bold text-on-dark">{teamBGoals}</div>
+                <div className="text-center p-3 sm:p-6 rounded-2xl bg-gradient-to-br from-red-500/10 to-pink-500/10 border border-red-400/30">
+                  <h4 className="text-red-300 font-medium mb-1 sm:mb-2 text-sm sm:text-base">Team B Score</h4>
+                  <div className="text-2xl sm:text-4xl font-bold text-on-dark">{teamBGoals}</div>
                 </div>
               </div>
             )}
