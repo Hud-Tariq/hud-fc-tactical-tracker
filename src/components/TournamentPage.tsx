@@ -146,18 +146,18 @@ const TournamentPage = () => {
           Football
           <span className="gradient-text-light ml-3">Tournaments</span>
         </h1>
-        <p className="text-lg lg:text-2xl text-on-dark-muted max-w-3xl mx-auto mb-8 lg:mb-12">
+        <p className="text-base sm:text-lg lg:text-2xl text-on-dark-muted max-w-none sm:max-w-3xl mx-auto mb-6 sm:mb-8 lg:mb-12 px-2 sm:px-0">
           Compete in legendary tournaments and prove your team's worth
         </p>
         
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-6 justify-center px-2 sm:px-0">
           <TeamCreation
             onCreateTeam={handleCreateTeam}
             trigger={
               <Button
                 size="lg"
-                className="px-6 lg:px-10 py-3 lg:py-5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg shadow-cyan-500/25 text-sm lg:text-lg"
+                className="px-4 sm:px-6 lg:px-10 py-2.5 sm:py-3 lg:py-5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg shadow-cyan-500/25 text-sm lg:text-lg"
               >
                 <Shield className="w-4 h-4 lg:w-6 lg:h-6 mr-2" />
                 Create Team
@@ -169,9 +169,9 @@ const TournamentPage = () => {
       </div>
 
       {/* Search and Filters */}
-      <div className="floating-card mb-8">
-        <div className="p-6">
-          <div className="flex flex-col lg:flex-row gap-6">
+      <div className="floating-card mb-6 sm:mb-8">
+        <div className="p-4 sm:p-6">
+          <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
             {/* Search Bar */}
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-on-dark-subtle w-5 h-5" />
@@ -179,12 +179,12 @@ const TournamentPage = () => {
                 placeholder="Search tournaments..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark placeholder:text-on-dark-subtle focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20"
+                className="pl-10 sm:pl-12 h-10 sm:h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark placeholder:text-on-dark-subtle focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 text-sm sm:text-base"
               />
             </div>
             
             {/* Filter Buttons */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {filterButtons.map((filter) => {
                 const Icon = filter.icon;
                 const isActive = statusFilter === filter.id;
@@ -195,9 +195,9 @@ const TournamentPage = () => {
                     variant={isActive ? 'default' : 'outline'}
                     onClick={() => setStatusFilter(filter.id as TournamentStatus | 'all')}
                     className={`
-                      px-4 py-2 rounded-xl transition-all duration-300
-                      ${isActive 
-                        ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white border-0 shadow-lg' 
+                      px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all duration-300 text-sm sm:text-base
+                      ${isActive
+                        ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white border-0 shadow-lg'
                         : 'bg-white/10 border border-white/20 text-on-dark-muted hover:text-on-dark hover:bg-white/20'
                       }
                     `}
