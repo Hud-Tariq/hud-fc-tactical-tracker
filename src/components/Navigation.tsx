@@ -118,7 +118,12 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
               })}
             </div>
 
-            {/* Mobile Hamburger Menu Button */}
+            {/* Desktop User Menu */}
+            <div className="hidden sm:flex items-center flex-shrink-0">
+              <UserMenu />
+            </div>
+
+            {/* Mobile Hamburger Menu Button - Top Right */}
             <div className="sm:hidden flex items-center">
               <Button
                 variant="ghost"
@@ -132,11 +137,6 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
                   <Menu className="w-6 h-6" />
                 )}
               </Button>
-            </div>
-
-            {/* User Menu */}
-            <div className="flex items-center flex-shrink-0">
-              <UserMenu />
             </div>
           </div>
 
