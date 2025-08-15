@@ -70,141 +70,96 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Dynamic gradient background with animated layers */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 via-purple-900 to-pink-800"></div>
-      <div className="absolute inset-0 bg-gradient-to-tr from-blue-900/50 via-transparent to-violet-600/30 animate-pulse"></div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 flex items-center justify-center p-4">
+      <div className="relative w-full max-w-md">
+        {/* Main card with diagonal cut */}
+        <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden">
+          {/* Diagonal purple section */}
+          <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-bl from-purple-500 to-purple-600 transform skew-x-12 origin-top-right translate-x-4"></div>
 
-      {/* Floating orbs for depth */}
-      <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-r from-blue-400/20 to-purple-600/20 rounded-full filter blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-32 right-16 w-80 h-80 bg-gradient-to-r from-pink-400/20 to-violet-600/20 rounded-full filter blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-cyan-400/10 to-indigo-600/10 rounded-full filter blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+          {/* Content */}
+          <div className="relative z-10 p-12">
+            {/* Title */}
+            <h1 className="text-3xl font-bold text-gray-800 mb-8">Login</h1>
 
-      {/* Grid pattern overlay */}
-      <div className="absolute inset-0 opacity-[0.02]" style={{
-        backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.5) 1px, transparent 0)',
-        backgroundSize: '40px 40px'
-      }}></div>
-
-      {/* Main content container */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
-        <div className="w-full max-w-md">
-          {/* Floating welcome text with stars */}
-          <div className="text-center mb-12 animate-fade-in">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Star className="w-6 h-6 text-yellow-400 animate-pulse" />
-              <h1 className="text-5xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent font-poppins tracking-tight">
-                Welcome
-              </h1>
-              <Star className="w-6 h-6 text-yellow-400 animate-pulse" style={{ animationDelay: '0.5s' }} />
-            </div>
-            <p className="text-white/70 text-lg font-light tracking-wide">
-              Step into excellence
-            </p>
-          </div>
-
-          {/* Glass morphism form container */}
-          <div className="relative group animate-scale-in">
-            {/* Glowing border effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 rounded-3xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity duration-500 animate-pulse-glow"></div>
-
-            {/* Main form container */}
-            <div className="relative bg-white/10 backdrop-blur-2xl rounded-3xl p-10 shadow-2xl border border-white/20">
-
-              {/* Login Form */}
-              <form onSubmit={handleSignIn} className="space-y-8">
-                {/* Email Input with icon */}
-                <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-blue-300/70 group-focus-within:text-blue-300 transition-colors" />
-                  </div>
-                  <Input
-                    id="signin-email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    className="w-full h-14 bg-white/5 backdrop-blur-sm border-2 border-white/20 rounded-2xl pl-12 pr-4 text-white placeholder:text-white/50 focus:border-blue-400/50 focus:ring-4 focus:ring-blue-400/20 transition-all duration-300 font-poppins text-lg hover:bg-white/10"
-                    required
-                  />
+            {/* Login Form */}
+            <form onSubmit={handleSignIn} className="space-y-6">
+              {/* Email Input */}
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-gray-400" />
                 </div>
+                <Input
+                  id="signin-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Username or Email"
+                  className="w-full h-12 pl-12 pr-4 border border-gray-200 rounded-lg text-gray-800 placeholder:text-gray-400 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-200"
+                  required
+                />
+              </div>
 
-                {/* Password Input with icon and toggle */}
-                <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-purple-300/70 group-focus-within:text-purple-300 transition-colors" />
-                  </div>
-                  <Input
-                    id="signin-password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    className="w-full h-14 bg-white/5 backdrop-blur-sm border-2 border-white/20 rounded-2xl pl-12 pr-12 text-white placeholder:text-white/50 focus:border-purple-400/50 focus:ring-4 focus:ring-purple-400/20 transition-all duration-300 font-poppins text-lg hover:bg-white/10"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-white/60 hover:text-white transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
+              {/* Password Input */}
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
                 </div>
-
-                {/* Login Button with enhanced styling */}
-                <Button
-                  type="submit"
-                  className="w-full h-14 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-700 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-600 text-white font-semibold text-lg rounded-2xl transition-all duration-300 hover:scale-[1.03] transform shadow-2xl shadow-blue-500/25 hover:shadow-blue-400/40 font-poppins tracking-wide relative overflow-hidden group"
-                  disabled={loading}
+                <Input
+                  id="signin-password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  className="w-full h-12 pl-12 pr-12 border border-gray-200 rounded-lg text-gray-800 placeholder:text-gray-400 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-200"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-3 h-5 w-5 animate-spin" />
-                      Signing In...
-                    </>
-                  ) : (
-                    'Sign In'
-                  )}
-                </Button>
-              </form>
-
-              {/* Forgot Password Link */}
-              <div className="text-center mt-8">
-                <button className="text-blue-300/80 hover:text-blue-200 text-sm font-poppins transition-all duration-300 hover:scale-105 underline decoration-dotted underline-offset-4">
-                  Forgot Password?
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
 
-              {/* Elegant divider */}
-              <div className="flex items-center my-10">
-                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-                <span className="px-4 text-white/50 text-sm font-light">or</span>
-                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-              </div>
-
-              {/* Sign Up Option with enhanced styling */}
-              <div className="text-center space-y-4">
-                <p className="text-white/70 text-base font-light tracking-wide">
-                  New to our platform?
-                </p>
-                <Button
-                  onClick={() => setEmail('')}
-                  variant="ghost"
-                  className="text-purple-300 hover:text-purple-200 hover:bg-purple-500/20 font-poppins transition-all duration-300 text-lg px-8 py-3 rounded-2xl border border-purple-400/30 hover:border-purple-300/50 hover:scale-105 tracking-wide"
-                >
-                  Create Account
-                </Button>
-              </div>
-            </div>
+              {/* Login Button */}
+              <Button
+                type="submit"
+                className="w-full h-12 bg-white border border-gray-200 rounded-full text-gray-700 font-medium hover:bg-gray-50 transition-all duration-200 flex items-center justify-between px-6 group mt-8"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Signing In...</span>
+                    <div className="w-4"></div>
+                  </>
+                ) : (
+                  <>
+                    <span>LOG IN HERE</span>
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </>
+                )}
+              </Button>
+            </form>
           </div>
 
-          {/* Subtle bottom text */}
-          <div className="text-center mt-8 opacity-60">
-            <p className="text-white/40 text-sm font-light">
-              Secure • Fast • Reliable
-            </p>
+          {/* Bottom section in purple area */}
+          <div className="absolute bottom-6 right-6 text-white text-sm">
+            <p className="mb-2">Log in via</p>
+            <div className="flex space-x-2">
+              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                <Mail className="w-4 h-4" />
+              </div>
+              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
