@@ -214,24 +214,27 @@ const TournamentPage = () => {
 
       {/* Tournament Tabs */}
       <Tabs defaultValue="browse" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 h-14 p-1 bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-2xl">
+        <TabsList className="grid w-full grid-cols-3 h-12 sm:h-14 p-1 bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-2xl overflow-hidden">
           <TabsTrigger
             value="browse"
-            className="rounded-xl font-medium text-on-dark hover:text-white hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300"
+            className="rounded-xl font-medium text-on-dark hover:text-white hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300 text-xs sm:text-sm lg:text-base px-1 sm:px-2 lg:px-4"
           >
-            Browse Tournaments
+            <span className="hidden sm:inline">Browse Tournaments</span>
+            <span className="sm:hidden">Browse</span>
           </TabsTrigger>
           <TabsTrigger
             value="my-tournaments"
-            className="rounded-xl font-medium text-on-dark hover:text-white hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300"
+            className="rounded-xl font-medium text-on-dark hover:text-white hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300 text-xs sm:text-sm lg:text-base px-1 sm:px-2 lg:px-4"
           >
-            My Tournaments
+            <span className="hidden sm:inline">My Tournaments</span>
+            <span className="sm:hidden">My</span>
           </TabsTrigger>
           <TabsTrigger
             value="leaderboard"
-            className="rounded-xl font-medium text-on-dark hover:text-white hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300"
+            className="rounded-xl font-medium text-on-dark hover:text-white hover:bg-white/10 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300 text-xs sm:text-sm lg:text-base px-1 sm:px-2 lg:px-4"
           >
-            Leaderboard
+            <span className="hidden sm:inline">Leaderboard</span>
+            <span className="sm:hidden">Board</span>
           </TabsTrigger>
         </TabsList>
 
