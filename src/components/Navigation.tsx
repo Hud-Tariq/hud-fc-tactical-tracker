@@ -95,7 +95,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
                     variant="ghost"
                     onClick={() => onTabChange(item.id)}
                     className={`
-                      relative flex items-center space-x-1 md:space-x-2 px-2 md:px-3 py-2 md:py-3 rounded-xl transition-all duration-300 text-xs md:text-sm focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0
+                      no-focus-ring relative flex items-center space-x-1 md:space-x-2 px-2 md:px-3 py-2 md:py-3 rounded-xl transition-all duration-300 text-xs md:text-sm
                       ${isActive
                         ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30 shadow-lg'
                         : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
