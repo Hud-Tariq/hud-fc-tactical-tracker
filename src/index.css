@@ -247,8 +247,9 @@
 /* Enhanced Animation System */
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.8s ease-out forwards;
+    animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     opacity: 0;
+    will-change: opacity, transform;
   }
   
   .animate-slide-up {
