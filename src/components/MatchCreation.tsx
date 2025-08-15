@@ -274,8 +274,8 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
       </div>
 
       {/* Available Players */}
-      <div className="floating-card mb-8">
-        <div className="p-6">
+      <div className="floating-card mb-6 sm:mb-8">
+        <div className="p-4 sm:p-6">
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-400/30 flex items-center justify-center">
               <Icon name="goal" size={20} className="w-5 h-5 text-green-400" />
