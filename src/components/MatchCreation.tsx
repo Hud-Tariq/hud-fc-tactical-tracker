@@ -508,7 +508,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
           onClick={handleCreateMatch}
           disabled={!matchDate || teamA.length !== 5 || teamB.length !== 5}
           size="lg"
-          className="px-12 py-4 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold text-lg rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg shadow-emerald-500/25"
+          className="px-6 sm:px-12 py-3 sm:py-4 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold text-base sm:text-lg rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg shadow-emerald-500/25"
         >
           <Save className="w-6 h-6 mr-3" />
           Create Match
