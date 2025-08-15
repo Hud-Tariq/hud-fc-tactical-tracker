@@ -33,6 +33,19 @@ const Index = () => {
     console.log('Player clicked:', player);
   };
 
+  const handleTabChange = (newTab: string) => {
+    if (newTab === currentView) return; // Don't animate if same tab
+
+    setIsTransitioning(true);
+
+    // Short delay to allow fade out
+    setTimeout(() => {
+      setCurrentView(newTab);
+      setAnimationKey(prev => prev + 1); // Force re-animation
+      setIsTransitioning(false);
+    }, 150);
+  };
+
   const handleMatchComplete = async (
     matchId: string, 
     teamAScore: number, 
