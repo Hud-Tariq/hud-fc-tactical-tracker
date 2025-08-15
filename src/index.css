@@ -151,6 +151,22 @@
     outline: none !important;
     box-shadow: none !important;
   }
+
+  /* Navigation specific focus prevention */
+  nav button:focus,
+  nav button:focus-visible,
+  nav button:active {
+    outline: none !important;
+    box-shadow: none !important;
+    ring: none !important;
+    border-color: transparent !important;
+  }
+
+  /* Prevent any focus rings on navigation buttons */
+  nav button {
+    --tw-ring-shadow: none !important;
+    --tw-ring-offset-shadow: none !important;
+  }
   
   /* Typography Scale - Enhanced */
   .text-display {
