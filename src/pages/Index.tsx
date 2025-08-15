@@ -5,6 +5,7 @@ import MatchCreation from '@/components/MatchCreation';
 import MatchView from '@/components/MatchView';
 import Statistics from '@/components/Statistics';
 import TournamentPage from '@/components/TournamentPage';
+import { SquadLoadingSkeleton, TournamentLoadingSkeleton, MatchLoadingSkeleton } from '@/components/LoadingSkeleton';
 import { useSupabaseFootballData } from '@/hooks/useSupabaseFootballData';
 import { useAuth } from '@/hooks/useAuth';
 import AuthPage from '@/components/AuthPage';
