@@ -139,7 +139,7 @@ const Index = () => {
       </div>
 
       {/* Navigation */}
-      <Navigation activeTab={currentView} onTabChange={setCurrentView} />
+      <Navigation activeTab={currentView} onTabChange={handleTabChange} />
       
       {/* Main Content */}
       <main className="content-container">
