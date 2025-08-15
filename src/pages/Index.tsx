@@ -144,7 +144,14 @@ const Index = () => {
       {/* Main Content */}
       <main className="content-container">
         <div className="w-full px-2 sm:px-4 lg:px-8 xl:px-12 py-2 sm:py-4 lg:py-8">
-          <div className="animate-fade-in">
+          <div
+            key={animationKey}
+            className={`transition-all duration-300 ${
+              isTransitioning
+                ? 'opacity-0 translate-y-4 scale-95'
+                : 'opacity-100 translate-y-0 scale-100 animate-fade-in'
+            }`}
+          >
             {renderCurrentView()}
           </div>
         </div>
