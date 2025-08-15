@@ -14,15 +14,17 @@ import { Goal } from '@/types/football';
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
   const [currentView, setCurrentView] = useState('squad');
-  const { 
-    players, 
-    matches, 
-    loading, 
-    addPlayer, 
-    createMatch, 
+  const {
+    players,
+    matches,
+    loading,
+    playersLoading,
+    matchesLoading,
+    addPlayer,
+    createMatch,
     completeMatch,
     deleteMatch,
-    getPlayerById 
+    getPlayerById
   } = useSupabaseFootballData();
 
   const handlePlayerClick = (player: any) => {
