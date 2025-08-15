@@ -31,16 +31,16 @@ const UserMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="glass-card-strong border-white/20 text-on-dark rounded-xl min-w-48 p-2"
+        className="bg-black/80 backdrop-blur-xl border-2 border-red-400/30 text-white rounded-xl min-w-48 p-2 shadow-2xl shadow-red-500/20"
       >
         <DropdownMenuItem
           onClick={handleSignOut}
-          className="cursor-pointer hover:bg-gradient-to-r hover:from-red-500/20 hover:to-pink-500/20 text-on-dark-muted hover:text-white rounded-lg px-3 py-3 transition-all duration-300"
+          className="cursor-pointer hover:bg-gradient-to-r hover:from-red-500/30 hover:to-pink-500/30 text-white hover:text-red-100 rounded-lg px-3 py-3 transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 border border-transparent hover:border-red-400/50"
         >
-          <div className="w-8 h-8 bg-gradient-to-br from-red-400 to-pink-500 rounded-lg flex items-center justify-center mr-3">
+          <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-pink-600 rounded-lg flex items-center justify-center mr-3 shadow-lg">
             <LogOut className="w-4 h-4 text-white" />
           </div>
-          <span className="font-medium">Sign Out</span>
+          <span className="font-semibold text-white">Sign Out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
