@@ -133,8 +133,8 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
       </div>
 
       {/* Match Details Card */}
-      <div className="floating-card mb-8">
-        <div className="p-6">
+      <div className="floating-card mb-6 sm:mb-8">
+        <div className="p-4 sm:p-6">
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-400/30 flex items-center justify-center">
               <Clock className="w-5 h-5 text-blue-400" />
