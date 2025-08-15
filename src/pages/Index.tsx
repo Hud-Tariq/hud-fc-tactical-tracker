@@ -14,6 +14,8 @@ import { Goal } from '@/types/football';
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
   const [currentView, setCurrentView] = useState('squad');
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [animationKey, setAnimationKey] = useState(0);
   const {
     players,
     matches,
