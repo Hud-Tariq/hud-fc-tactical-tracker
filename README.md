@@ -2,6 +2,8 @@
 
 A comprehensive football management platform that allows users to manage their squad, create matches, track statistics, and organize tournaments. Built with modern web technologies for a seamless user experience.
 
+> **📋 IMPORTANT LICENSE NOTICE**: This software is open source for viewing and local use only. Public hosting, redistribution, or commercial use is prohibited. See [LICENSE.md](LICENSE.md) for details.
+
 ![App Overview](docs/screenshots/app-overview.png)
 *Main dashboard showing squad management and navigation*
 
