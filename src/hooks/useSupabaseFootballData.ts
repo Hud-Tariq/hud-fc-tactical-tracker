@@ -5,12 +5,8 @@ import { useToast } from '@/hooks/use-toast';
 import { StatisticsService } from '@/services/statisticsService';
 
 export const useSupabaseFootballData = () => {
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [matches, setMatches] = useState<Match[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [playersLoading, setPlayersLoading] = useState(false);
-  const [matchesLoading, setMatchesLoading] = useState(false);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   // Track current user to avoid unnecessary re-fetches
   const currentUserId = useRef<string | null>(null);
