@@ -3,6 +3,7 @@ import { Users, Calendar, BarChart3, Menu, X } from 'lucide-react';
 import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import UserMenu from '@/components/UserMenu';
+import logoImage from '@/assets/images/logo.png';
 
 interface NavigationProps {
   activeTab: string;
