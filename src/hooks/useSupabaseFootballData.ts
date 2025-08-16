@@ -12,24 +12,14 @@ export const useSupabaseFootballData = () => {
   const [matchesLoading, setMatchesLoading] = useState(false);
   const { toast } = useToast();
 
-  // Cache refs to prevent unnecessary re-fetches
-  const lastFetchTime = useRef<{ players: number; matches: number }>({ players: 0, matches: 0 });
+  // Track current user to avoid unnecessary re-fetches
   const currentUserId = useRef<string | null>(null);
-  const CACHE_DURATION = 30000; // 30 seconds cache
 
-  // Optimized fetch players with enhanced debugging
+  // Optimized fetch players without aggressive caching
   const fetchPlayers = useCallback(async (forceRefresh = false) => {
     try {
-      const now = Date.now();
       console.log('=== FETCH PLAYERS START ===');
       console.log('Force refresh:', forceRefresh);
-      console.log('Cache check:', now - lastFetchTime.current.players, 'vs', CACHE_DURATION);
-
-      // Check cache validity - but allow force refresh to bypass
-      if (!forceRefresh && now - lastFetchTime.current.players < CACHE_DURATION) {
-        console.log('Using cached players data - skipping fetch');
-        return;
-      }
 
       setPlayersLoading(true);
       console.log('Starting players fetch...');
@@ -92,7 +82,6 @@ export const useSupabaseFootballData = () => {
       console.log('Mapped players count:', mappedPlayers.length);
       console.log('Setting players state...');
       setPlayers(mappedPlayers);
-      lastFetchTime.current.players = now;
       console.log('=== FETCH PLAYERS SUCCESS ===');
 
     } catch (error) {
@@ -112,18 +101,11 @@ export const useSupabaseFootballData = () => {
     }
   }, [toast]);
 
-  // Optimized fetch matches with enhanced debugging
+  // Optimized fetch matches with simplified query structure
   const fetchMatches = useCallback(async (forceRefresh = false) => {
     try {
-      const now = Date.now();
       console.log('=== FETCH MATCHES START ===');
       console.log('Force refresh:', forceRefresh);
-
-      // Check cache validity - but allow force refresh to bypass
-      if (!forceRefresh && now - lastFetchTime.current.matches < CACHE_DURATION) {
-        console.log('Using cached matches data - skipping fetch');
-        return;
-      }
 
       setMatchesLoading(true);
       console.log('Starting matches fetch...');
@@ -147,28 +129,10 @@ export const useSupabaseFootballData = () => {
       console.log('User authenticated for matches:', user.id);
       console.log('Executing matches query...');
 
-      // Fetch matches with limit for better performance
+      // Fetch matches without expensive joins - get goals and saves separately if needed
       const { data, error } = await supabase
         .from('matches')
-        .select(`
-          id,
-          date,
-          team_a_players,
-          team_b_players,
-          score_a,
-          score_b,
-          completed,
-          match_goals (
-            scorer_id,
-            assister_id,
-            team,
-            is_own_goal
-          ),
-          match_saves (
-            player_id,
-            saves_count
-          )
-        `)
+        .select('id, date, team_a_players, team_b_players, score_a, score_b, completed')
         .eq('user_id', user.id)
         .order('date', { ascending: false })
         .limit(50);
@@ -186,33 +150,73 @@ export const useSupabaseFootballData = () => {
         throw error;
       }
 
-      const formattedMatches = data?.map(match => ({
-        id: match.id,
-        date: match.date,
-        teamA: match.team_a_players,
-        teamB: match.team_b_players,
-        scoreA: match.score_a,
-        scoreB: match.score_b,
-        completed: match.completed,
-        goals: match.match_goals?.map((goal: any) => ({
+      // Get match goals and saves in parallel for completed matches only
+      const completedMatchIds = data?.filter(m => m.completed).map(m => m.id) || [];
+
+      let matchGoals: any[] = [];
+      let matchSaves: any[] = [];
+
+      if (completedMatchIds.length > 0) {
+        const [goalsResult, savesResult] = await Promise.all([
+          supabase
+            .from('match_goals')
+            .select('match_id, scorer_id, assister_id, team, is_own_goal')
+            .in('match_id', completedMatchIds),
+          supabase
+            .from('match_saves')
+            .select('match_id, player_id, saves_count')
+            .in('match_id', completedMatchIds)
+        ]);
+
+        if (goalsResult.error) {
+          console.error('Error fetching match goals:', goalsResult.error);
+        } else {
+          matchGoals = goalsResult.data || [];
+        }
+
+        if (savesResult.error) {
+          console.error('Error fetching match saves:', savesResult.error);
+        } else {
+          matchSaves = savesResult.data || [];
+        }
+      }
+
+      const formattedMatches = data?.map(match => {
+        // Get goals for this match
+        const matchGoalsForThisMatch = matchGoals.filter(g => g.match_id === match.id);
+        const goalsFormatted = matchGoalsForThisMatch.map((goal: any) => ({
           scorer: goal.scorer_id,
           assister: goal.assister_id,
           team: goal.team as 'A' | 'B',
           isOwnGoal: goal.is_own_goal
-        })) || [],
-        saves: match.match_saves?.reduce((acc: Record<string, number>, save: any) => {
+        }));
+
+        // Get saves for this match
+        const matchSavesForThisMatch = matchSaves.filter(s => s.match_id === match.id);
+        const savesFormatted = matchSavesForThisMatch.reduce((acc: Record<string, number>, save: any) => {
           acc[save.player_id] = save.saves_count;
           return acc;
-        }, {}) || {},
-        matchRatings: {},
-        averageTeamARating: 0,
-        averageTeamBRating: 0
-      })) || [];
+        }, {});
+
+        return {
+          id: match.id,
+          date: match.date,
+          teamA: match.team_a_players,
+          teamB: match.team_b_players,
+          scoreA: match.score_a,
+          scoreB: match.score_b,
+          completed: match.completed,
+          goals: goalsFormatted,
+          saves: savesFormatted,
+          matchRatings: {},
+          averageTeamARating: 0,
+          averageTeamBRating: 0
+        };
+      }) || [];
 
       console.log('Formatted matches count:', formattedMatches.length);
       console.log('Setting matches state...');
       setMatches(formattedMatches);
-      lastFetchTime.current.matches = now;
       console.log('=== FETCH MATCHES SUCCESS ===');
 
     } catch (error) {
