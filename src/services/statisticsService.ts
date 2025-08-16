@@ -24,9 +24,10 @@ export class StatisticsService {
     rating += performance.goals * 1.5;
     rating += performance.assists * 1.0;
     rating += performance.saves * 0.1;
-    
+
+    // Enhanced defender bonuses for clean sheets
     if (performance.cleanSheet && (player.position === 'Defender' || player.position === 'Goalkeeper')) {
-      rating += 1.0;
+      rating += 1.5; // Increased from 1.0
     }
 
     if (performance.teamWon) {
@@ -43,7 +44,12 @@ export class StatisticsService {
         if (performance.assists === 0) rating -= 0.1;
         break;
       case 'Goalkeeper':
-        if (performance.saves > 5) rating += 0.5;
+        // Better rewards for exceptional saves (8+ saves)
+        if (performance.saves >= 8) {
+          rating += 1.0; // Significant bonus for exceptional performance
+        } else if (performance.saves > 5) {
+          rating += 0.5;
+        }
         break;
     }
 
