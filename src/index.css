@@ -140,6 +140,33 @@
     font-feature-settings: 'cv11', 'ss01';
     font-variation-settings: 'opsz' 32;
   }
+
+  /* Prevent default button focus styles that cause white box glitches */
+  button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  button:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Navigation specific focus prevention */
+  nav button:focus,
+  nav button:focus-visible,
+  nav button:active {
+    outline: none !important;
+    box-shadow: none !important;
+    ring: none !important;
+    border-color: transparent !important;
+  }
+
+  /* Prevent any focus rings on navigation buttons */
+  nav button {
+    --tw-ring-shadow: none !important;
+    --tw-ring-offset-shadow: none !important;
+  }
   
   /* Typography Scale - Enhanced */
   .text-display {
@@ -236,19 +263,20 @@
   }
 
   .section-header {
-    @apply text-center space-y-4 mb-8 lg:mb-12 xl:mb-16;
+    @apply text-center space-y-3 mb-6 sm:space-y-4 sm:mb-8 lg:mb-12 xl:mb-16;
   }
 
   .floating-section {
-    @apply space-y-6 p-4 lg:space-y-12 lg:px-6 lg:py-12 xl:px-8 xl:py-16;
+    @apply space-y-4 p-2 sm:space-y-6 sm:p-4 lg:space-y-12 lg:px-6 lg:py-12 xl:px-8 xl:py-16;
   }
 }
 
 /* Enhanced Animation System */
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.8s ease-out forwards;
+    animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     opacity: 0;
+    will-change: opacity, transform;
   }
   
   .animate-slide-up {
@@ -274,6 +302,40 @@
   .animate-glow {
     animation: glow 2s ease-in-out infinite alternate;
   }
+
+  /* Smooth tab transition */
+  .tab-transition {
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .tab-transition-enter {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+
+  .tab-transition-enter-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Complete focus ring elimination */
+  .no-focus-ring {
+    outline: none !important;
+    box-shadow: none !important;
+    --tw-ring-shadow: none !important;
+    --tw-ring-offset-shadow: none !important;
+    border: none !important;
+  }
+
+  .no-focus-ring:focus,
+  .no-focus-ring:focus-visible,
+  .no-focus-ring:active {
+    outline: none !important;
+    box-shadow: none !important;
+    --tw-ring-shadow: none !important;
+    --tw-ring-offset-shadow: none !important;
+  }
   
   /* Staggered animations */
   .animate-stagger-1 { animation-delay: 0.1s; }
@@ -286,7 +348,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(30px) scale(0.95);
+    transform: translateY(20px) scale(0.98);
   }
   to {
     opacity: 1;
@@ -342,9 +404,31 @@
 }
 
 /* Responsive Design Utilities */
+@media (max-width: 640px) {
+  .floating-card {
+    margin: 0.5rem;
+  }
+
+  .section-header {
+    @apply mb-6;
+  }
+
+  .section-header h1 {
+    @apply text-3xl leading-tight;
+  }
+
+  .section-header p {
+    @apply text-base px-2;
+  }
+
+  .floating-section {
+    @apply p-2 space-y-4;
+  }
+}
+
 @media (max-width: 768px) {
   .floating-card {
-    margin: 1rem;
+    margin: 0.75rem;
   }
 
   .section-header {
@@ -352,7 +436,7 @@
   }
 
   .floating-section {
-    @apply p-4 space-y-6;
+    @apply p-3 space-y-5;
   }
 }
 

@@ -3,6 +3,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from '@/hooks/useAuth';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 import Index from '@/pages/Index';
 import NotFound from '@/pages/NotFound';
 
@@ -17,6 +18,7 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Toaster />
+            <PWAInstallPrompt />
           </div>
         </Router>
       </AuthProvider>

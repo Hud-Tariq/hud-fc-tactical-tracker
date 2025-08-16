@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
@@ -16,6 +16,10 @@ export const useTournaments = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const { user } = useAuth();
+
+  // Cache to prevent unnecessary re-fetches
+  const lastFetchTime = useRef<{ tournaments: number; myTournaments: number }>({ tournaments: 0, myTournaments: 0 });
+  const CACHE_DURATION = 60000; // 1 minute cache for tournaments
 
   const fetchTournaments = async () => {
     try {

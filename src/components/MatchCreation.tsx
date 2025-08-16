@@ -127,14 +127,14 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
           Create
           <span className="gradient-text-light ml-3">Match</span>
         </h1>
-        <p className="text-lg lg:text-2xl text-on-dark-muted max-w-3xl mx-auto">
+        <p className="text-base sm:text-lg lg:text-2xl text-on-dark-muted max-w-none sm:max-w-3xl mx-auto px-2 sm:px-0">
           Set up teams, track goals, and create memorable football matches
         </p>
       </div>
 
       {/* Match Details Card */}
-      <div className="floating-card mb-8">
-        <div className="p-6">
+      <div className="floating-card mb-6 sm:mb-8">
+        <div className="p-4 sm:p-6">
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-400/30 flex items-center justify-center">
               <Clock className="w-5 h-5 text-blue-400" />
@@ -155,14 +155,14 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
             </div>
             
             {(teamA.length === 5 && teamB.length === 5) && (
-              <div className="grid grid-cols-2 gap-6">
-                <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-400/30">
-                  <h4 className="text-blue-300 font-medium mb-2">Team A Score</h4>
-                  <div className="text-4xl font-bold text-on-dark">{teamAGoals}</div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-6">
+                <div className="text-center p-3 sm:p-6 rounded-2xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-400/30">
+                  <h4 className="text-blue-300 font-medium mb-1 sm:mb-2 text-sm sm:text-base">Team A Score</h4>
+                  <div className="text-2xl sm:text-4xl font-bold text-on-dark">{teamAGoals}</div>
                 </div>
-                <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-red-500/10 to-pink-500/10 border border-red-400/30">
-                  <h4 className="text-red-300 font-medium mb-2">Team B Score</h4>
-                  <div className="text-4xl font-bold text-on-dark">{teamBGoals}</div>
+                <div className="text-center p-3 sm:p-6 rounded-2xl bg-gradient-to-br from-red-500/10 to-pink-500/10 border border-red-400/30">
+                  <h4 className="text-red-300 font-medium mb-1 sm:mb-2 text-sm sm:text-base">Team B Score</h4>
+                  <div className="text-2xl sm:text-4xl font-bold text-on-dark">{teamBGoals}</div>
                 </div>
               </div>
             )}
@@ -171,10 +171,10 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
       </div>
 
       {/* Team Selection */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
         {/* Team A */}
         <div className="floating-card">
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-400/30 flex items-center justify-center">
@@ -224,7 +224,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
 
         {/* Team B */}
         <div className="floating-card">
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/20 to-pink-500/20 border border-red-400/30 flex items-center justify-center">
@@ -274,8 +274,8 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
       </div>
 
       {/* Available Players */}
-      <div className="floating-card mb-8">
-        <div className="p-6">
+      <div className="floating-card mb-6 sm:mb-8">
+        <div className="p-4 sm:p-6">
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-400/30 flex items-center justify-center">
               <Icon name="goal" size={20} className="w-5 h-5 text-green-400" />
@@ -283,17 +283,17 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
             <h3 className="text-2xl font-bold text-on-dark font-poppins">Available Players</h3>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
             {availablePlayers.map((player) => (
-              <div key={player.id} className="space-y-3">
+              <div key={player.id} className="space-y-2 sm:space-y-3">
                 <PlayerCard player={player} selectable />
-                <div className="flex space-x-2">
+                <div className="flex space-x-1.5 sm:space-x-2">
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => handlePlayerSelect(player, 'A')}
                     disabled={teamA.length >= 5}
-                    className="flex-1 bg-blue-500/10 border-blue-400/30 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400/50"
+                    className="flex-1 bg-blue-500/10 border-blue-400/30 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400/50 text-xs sm:text-sm px-2 sm:px-3"
                   >
                     Team A
                   </Button>
@@ -302,7 +302,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                     variant="outline"
                     onClick={() => handlePlayerSelect(player, 'B')}
                     disabled={teamB.length >= 5}
-                    className="flex-1 bg-red-500/10 border-red-400/30 text-red-300 hover:bg-red-500/20 hover:border-red-400/50"
+                    className="flex-1 bg-red-500/10 border-red-400/30 text-red-300 hover:bg-red-500/20 hover:border-red-400/50 text-xs sm:text-sm px-2 sm:px-3"
                   >
                     Team B
                   </Button>
@@ -508,7 +508,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
           onClick={handleCreateMatch}
           disabled={!matchDate || teamA.length !== 5 || teamB.length !== 5}
           size="lg"
-          className="px-12 py-4 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold text-lg rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg shadow-emerald-500/25"
+          className="px-6 sm:px-12 py-3 sm:py-4 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold text-base sm:text-lg rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg shadow-emerald-500/25"
         >
           <Save className="w-6 h-6 mr-3" />
           Create Match

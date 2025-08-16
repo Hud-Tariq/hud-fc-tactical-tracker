@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Player, Match, Goal } from '@/types/football';
 import { useToast } from '@/hooks/use-toast';
@@ -8,11 +8,27 @@ export const useSupabaseFootballData = () => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
+  const [playersLoading, setPlayersLoading] = useState(false);
+  const [matchesLoading, setMatchesLoading] = useState(false);
   const { toast } = useToast();
 
-  // Fetch players from Supabase
-  const fetchPlayers = async () => {
+  // Cache refs to prevent unnecessary re-fetches
+  const lastFetchTime = useRef<{ players: number; matches: number }>({ players: 0, matches: 0 });
+  const currentUserId = useRef<string | null>(null);
+  const CACHE_DURATION = 30000; // 30 seconds cache
+
+  // Optimized fetch players with caching
+  const fetchPlayers = useCallback(async (forceRefresh = false) => {
     try {
+      const now = Date.now();
+
+      // Check cache validity
+      if (!forceRefresh && now - lastFetchTime.current.players < CACHE_DURATION) {
+        console.log('Using cached players data');
+        return;
+      }
+
+      setPlayersLoading(true);
       console.log('Fetching players...');
 
       // Check authentication first
@@ -25,14 +41,17 @@ export const useSupabaseFootballData = () => {
       if (!user) {
         console.log('No authenticated user found');
         setPlayers([]);
+        setPlayersLoading(false);
         return;
       }
 
+      // Update current user reference
+      currentUserId.current = user.id;
       console.log('User authenticated, fetching players for user:', user.id);
 
       const { data, error } = await supabase
         .from('players')
-        .select('*')
+        .select('id, name, age, position, rating, matches_played, total_goals, total_assists, total_saves, clean_sheets')
         .eq('user_id', user.id)
         .order('name');
 
@@ -40,7 +59,7 @@ export const useSupabaseFootballData = () => {
         console.error('Supabase query error:', error);
         throw error;
       }
-      
+
       const mappedPlayers = data?.map(player => ({
         id: player.id,
         name: player.name,
@@ -55,9 +74,11 @@ export const useSupabaseFootballData = () => {
         averageMatchRating: player.matches_played > 0 ? player.rating / 10 : 0,
         matchRatings: []
       })) || [];
-      
+
       console.log('Fetched players:', mappedPlayers.length);
       setPlayers(mappedPlayers);
+      lastFetchTime.current.players = now;
+
     } catch (error) {
       console.error('Error fetching players:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -66,12 +87,23 @@ export const useSupabaseFootballData = () => {
         description: `Failed to fetch players: ${errorMessage}`,
         variant: "destructive",
       });
+    } finally {
+      setPlayersLoading(false);
     }
-  };
+  }, [toast]);
 
-  // Fetch matches from Supabase
-  const fetchMatches = async () => {
+  // Optimized fetch matches with caching and pagination
+  const fetchMatches = useCallback(async (forceRefresh = false) => {
     try {
+      const now = Date.now();
+
+      // Check cache validity
+      if (!forceRefresh && now - lastFetchTime.current.matches < CACHE_DURATION) {
+        console.log('Using cached matches data');
+        return;
+      }
+
+      setMatchesLoading(true);
       console.log('Fetching matches...');
 
       // Check authentication first
@@ -84,37 +116,43 @@ export const useSupabaseFootballData = () => {
       if (!user) {
         console.log('No authenticated user found');
         setMatches([]);
+        setMatchesLoading(false);
         return;
       }
 
       console.log('User authenticated, fetching matches for user:', user.id);
 
+      // Fetch matches with limit for better performance
       const { data, error } = await supabase
         .from('matches')
         .select(`
-          *,
+          id,
+          date,
+          team_a_players,
+          team_b_players,
+          score_a,
+          score_b,
+          completed,
           match_goals (
-            id,
             scorer_id,
             assister_id,
             team,
-            minute,
             is_own_goal
           ),
           match_saves (
-            id,
             player_id,
             saves_count
           )
         `)
         .eq('user_id', user.id)
-        .order('date', { ascending: false });
+        .order('date', { ascending: false })
+        .limit(50); // Limit to recent 50 matches for performance
 
       if (error) {
         console.error('Supabase query error:', error);
         throw error;
       }
-      
+
       const formattedMatches = data?.map(match => ({
         id: match.id,
         date: match.date,
@@ -137,9 +175,11 @@ export const useSupabaseFootballData = () => {
         averageTeamARating: 0,
         averageTeamBRating: 0
       })) || [];
-      
+
       console.log('Fetched matches:', formattedMatches.length);
       setMatches(formattedMatches);
+      lastFetchTime.current.matches = now;
+
     } catch (error) {
       console.error('Error fetching matches:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -148,8 +188,10 @@ export const useSupabaseFootballData = () => {
         description: `Failed to fetch matches: ${errorMessage}`,
         variant: "destructive",
       });
+    } finally {
+      setMatchesLoading(false);
     }
-  };
+  }, [toast]);
 
   // Store match goals in database
   const storeMatchGoals = async (matchId: string, goals: Goal[]) => {
@@ -242,7 +284,7 @@ export const useSupabaseFootballData = () => {
       
       if (error) throw error;
       
-      await fetchPlayers();
+      await fetchPlayers(true);
       
       toast({
         title: "Success",
@@ -302,9 +344,10 @@ export const useSupabaseFootballData = () => {
         await StatisticsService.processMatchStatistics(completeMatch, players);
         console.log('Statistics processing completed');
       }
-      
-      await Promise.all([fetchMatches(), fetchPlayers()]);
-      
+
+      // Force refresh after creating match
+      await Promise.all([fetchMatches(true), fetchPlayers(true)]);
+
       toast({
         title: "Success",
         description: "Match created successfully!",
@@ -358,8 +401,8 @@ export const useSupabaseFootballData = () => {
         console.log('Statistics processing completed');
       }
 
-      await Promise.all([fetchMatches(), fetchPlayers()]);
-      
+      await Promise.all([fetchMatches(true), fetchPlayers(true)]);
+
       toast({
         title: "Success",
         description: `Match completed! Score: ${scoreA} - ${scoreB}`,
@@ -443,7 +486,7 @@ export const useSupabaseFootballData = () => {
 
       console.log('Match deletion completed successfully');
 
-      await Promise.all([fetchMatches(), fetchPlayers()]);
+      await Promise.all([fetchMatches(true), fetchPlayers(true)]);
 
       toast({
         title: "Success",
@@ -462,6 +505,7 @@ export const useSupabaseFootballData = () => {
 
   const getPlayerById = (id: string) => players.find(p => p.id === id);
 
+  // Optimized data loading with staggered fetching
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -477,8 +521,13 @@ export const useSupabaseFootballData = () => {
         if (user) {
           console.log('User authenticated, fetching data...');
           setLoading(true);
-          await Promise.all([fetchPlayers(), fetchMatches()]);
-          setLoading(false);
+
+          // Fetch players first (usually smaller dataset)
+          await fetchPlayers(true);
+          setLoading(false); // Allow UI to render with players data
+
+          // Then fetch matches in background
+          await fetchMatches(true);
         } else {
           console.log('No authenticated user');
           setLoading(false);
@@ -496,17 +545,21 @@ export const useSupabaseFootballData = () => {
     };
 
     loadData();
-  }, []);
+  }, [fetchPlayers, fetchMatches, toast]);
 
   return {
     players,
     matches,
     loading,
+    playersLoading,
+    matchesLoading,
     addPlayer,
     createMatch,
     completeMatch,
     deleteMatch,
     getPlayerById,
-    refreshData: () => Promise.all([fetchPlayers(), fetchMatches()])
+    refreshData: () => Promise.all([fetchPlayers(true), fetchMatches(true)]),
+    refreshPlayers: () => fetchPlayers(true),
+    refreshMatches: () => fetchMatches(true)
   };
 };

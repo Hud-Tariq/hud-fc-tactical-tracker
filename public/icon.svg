@@ -1,0 +1,56 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" style="stop-color:#8B5CF6"/>
+      <stop offset="50%" style="stop-color:#7C3AED"/>
+      <stop offset="100%" style="stop-color:#6D28D9"/>
+    </radialGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F472B6"/>
+      <stop offset="100%" style="stop-color:#EC4899"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" rx="90" fill="url(#bg)"/>
+  
+  <!-- Football/Soccer ball -->
+  <circle cx="256" cy="200" r="80" fill="white" stroke="#333" stroke-width="4"/>
+  
+  <!-- Football pattern -->
+  <g stroke="#333" stroke-width="3" fill="none">
+    <!-- Pentagon in center -->
+    <polygon points="256,140 276,160 266,185 246,185 236,160"/>
+    <!-- Connecting lines -->
+    <path d="M256,140 L256,120"/>
+    <path d="M276,160 L300,150"/>
+    <path d="M266,185 L280,210"/>
+    <path d="M246,185 L232,210"/>
+    <path d="M236,160 L212,150"/>
+  </g>
+  
+  <!-- Trophy/Cup base -->
+  <rect x="220" y="320" width="72" height="120" rx="8" fill="url(#accent)"/>
+  <rect x="210" y="430" width="92" height="20" rx="10" fill="#FCD34D"/>
+  <rect x="200" y="440" width="112" height="15" rx="7" fill="#F59E0B"/>
+  
+  <!-- Trophy handles -->
+  <path d="M210,340 Q190,340 190,360 Q190,380 210,380" stroke="url(#accent)" stroke-width="8" fill="none"/>
+  <path d="M302,340 Q322,340 322,360 Q322,380 302,380" stroke="url(#accent)" stroke-width="8" fill="none"/>
+  
+  <!-- Manager/Coach whistle -->
+  <circle cx="380" cy="140" r="25" fill="#FCD34D" stroke="#F59E0B" stroke-width="3"/>
+  <circle cx="380" cy="140" r="8" fill="#F59E0B"/>
+  <rect x="375" y="105" width="10" height="25" rx="5" fill="#6B7280"/>
+  
+  <!-- Strategy arrows -->
+  <g stroke="#F472B6" stroke-width="4" fill="#F472B6">
+    <path d="M120,350 L160,320 L140,310 M160,320 L140,330" stroke-linecap="round"/>
+    <path d="M120,400 L160,430 L140,440 M160,430 L140,420" stroke-linecap="round"/>
+  </g>
+  
+  <!-- HUD text badge -->
+  <rect x="60" y="80" width="100" height="40" rx="20" fill="rgba(255,255,255,0.9)"/>
+  <text x="110" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#7C3AED">HUD FC</text>
+</svg>

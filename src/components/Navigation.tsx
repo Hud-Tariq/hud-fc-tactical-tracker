@@ -1,5 +1,5 @@
-import React from 'react';
-import { Users, Calendar, BarChart3 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Users, Calendar, BarChart3, Menu, X } from 'lucide-react';
 import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import UserMenu from '@/components/UserMenu';
@@ -10,12 +10,19 @@ interface NavigationProps {
 }
 
 const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const navItems = [
     { id: 'squad', label: 'Squad', icon: 'squad', isCustom: true },
     { id: 'create-match', label: 'Matches', icon: 'lightning-forward', isCustom: true },
     { id: 'tournaments', label: 'Tournaments', icon: 'trophy', isCustom: true },
     { id: 'statistics', label: 'Statistics', icon: 'statistics', isCustom: true },
   ];
+
+  const handleTabChange = (tab: string) => {
+    onTabChange(tab);
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <nav className="sticky top-0 z-50 p-2 sm:p-4 lg:p-6">
@@ -54,7 +61,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
                     size="lg"
                     onClick={() => onTabChange(item.id)}
                     className={`
-                      relative flex items-center space-x-3 px-6 py-4 rounded-xl transition-all duration-300 h-auto
+                      no-focus-ring relative flex items-center space-x-3 px-6 py-4 rounded-xl transition-all duration-300 h-auto
                       ${isActive
                         ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30 shadow-lg'
                         : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
@@ -70,7 +77,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
 
                     {/* Active indicator */}
                     {isActive && (
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-pink-500/10 to-purple-600/10 animate-pulse"></div>
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-pink-500/5 to-purple-600/5"></div>
                     )}
                   </Button>
                 );
@@ -88,7 +95,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
                     variant="ghost"
                     onClick={() => onTabChange(item.id)}
                     className={`
-                      relative flex items-center space-x-1 md:space-x-2 px-2 md:px-3 py-2 md:py-3 rounded-xl transition-all duration-300 text-xs md:text-sm
+                      no-focus-ring relative flex items-center space-x-1 md:space-x-2 px-2 md:px-3 py-2 md:py-3 rounded-xl transition-all duration-300 text-xs md:text-sm
                       ${isActive
                         ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30 shadow-lg'
                         : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
@@ -104,50 +111,82 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
 
                     {/* Active indicator */}
                     {isActive && (
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-pink-500/10 to-purple-600/10 animate-pulse"></div>
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-pink-500/5 to-purple-600/5"></div>
                     )}
                   </Button>
                 );
               })}
             </div>
 
-            {/* Mobile Navigation Menu - Very Small Screens */}
-            <div className="sm:hidden flex items-center space-x-1 flex-grow justify-center max-w-xs">
-              {navItems.map((item) => {
-                const isActive = activeTab === item.id;
-
-                return (
-                  <Button
-                    key={item.id}
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onTabChange(item.id)}
-                    className={`
-                      relative p-2 rounded-lg transition-all duration-300 flex-1 max-w-16
-                      ${isActive
-                        ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30'
-                        : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
-                      }
-                    `}
-                  >
-                    {item.isCustom ? (
-                      <Icon name={item.icon as any} size={16} className="w-4 h-4 mx-auto" />
-                    ) : (
-                      React.createElement(item.icon as any, { className: "w-4 h-4 mx-auto" })
-                    )}
-                    {isActive && (
-                      <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-pink-500/10 to-purple-600/10 animate-pulse"></div>
-                    )}
-                  </Button>
-                );
-              })}
-            </div>
-
-            {/* User Menu */}
-            <div className="flex items-center flex-shrink-0">
+            {/* Desktop User Menu */}
+            <div className="hidden sm:flex items-center flex-shrink-0">
               <UserMenu />
             </div>
+
+            {/* Mobile Hamburger Menu Button - Top Right */}
+            <div className="sm:hidden flex items-center">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 rounded-lg text-on-dark hover:text-white hover:bg-white/10 transition-all duration-300"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
+              </Button>
+            </div>
           </div>
+
+          {/* Mobile Navigation Menu Dropdown */}
+          {isMobileMenuOpen && (
+            <div className="sm:hidden mt-4 p-6 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 shadow-2xl">
+              <div className="space-y-4">
+                {/* Navigation Items */}
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold text-on-dark-muted uppercase tracking-wide mb-3">Navigation</h3>
+                  {navItems.map((item) => {
+                    const isActive = activeTab === item.id;
+
+                    return (
+                      <Button
+                        key={item.id}
+                        variant="ghost"
+                        onClick={() => handleTabChange(item.id)}
+                        className={`
+                          no-focus-ring w-full flex items-center justify-start space-x-3 px-4 py-4 rounded-xl transition-all duration-300
+                          ${isActive
+                            ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30'
+                            : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
+                          }
+                        `}
+                      >
+                        {item.isCustom ? (
+                          <Icon name={item.icon as any} size={20} className="w-5 h-5" />
+                        ) : (
+                          React.createElement(item.icon as any, { className: "w-5 h-5" })
+                        )}
+                        <span className="font-medium text-base">{item.label}</span>
+                      </Button>
+                    );
+                  })}
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-white/10 my-4"></div>
+
+                {/* Profile Section */}
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold text-on-dark-muted uppercase tracking-wide mb-3">Account</h3>
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <UserMenu />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </nav>
