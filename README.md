@@ -279,9 +279,11 @@ The built application (`dist` folder) can be deployed to any static hosting serv
 
 ## 🤝 Contributing
 
+**Before contributing, please read the [LICENSE.md](LICENSE.md) to understand the project's licensing terms.**
+
 ### Development Setup
 
-1. **Fork the repository**
+1. **Fork the repository** (for contribution purposes only)
 2. **Create a feature branch**
    ```bash
    git checkout -b feature/your-feature-name
@@ -297,6 +299,10 @@ The built application (`dist` folder) can be deployed to any static hosting serv
 - Write descriptive commit messages
 - Add comments for complex logic
 - Ensure responsive design principles
+
+### Contribution Agreement
+
+By contributing to this project, you agree that your contributions will be licensed under the same restrictive terms as outlined in [LICENSE.md](LICENSE.md).
 
 ## 📄 License
 
