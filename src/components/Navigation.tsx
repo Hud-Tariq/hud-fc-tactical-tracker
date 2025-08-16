@@ -1,10 +1,8 @@
-
 import React, { useState } from 'react';
 import { Users, Calendar, BarChart3, Menu, X } from 'lucide-react';
 import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import UserMenu from '@/components/UserMenu';
-import logoImage from '@/assets/images/logo.png';
 
 interface NavigationProps {
   activeTab: string;
@@ -34,13 +32,9 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             {/* Logo Section - Responsive */}
             <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4 flex-shrink-0">
               <div className="relative">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl overflow-hidden shadow-lg bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl overflow-hidden shadow-lg">
                   <img
-<<<<<<< HEAD
-                    src={logoImage}
-=======
                     src="/images/logo.png"
->>>>>>> refs/remotes/origin/main
                     alt="Hud FC Manager Logo"
                     className="w-full h-full object-cover"
                   />
