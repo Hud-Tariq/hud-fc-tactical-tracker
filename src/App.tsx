@@ -6,6 +6,7 @@ import { AuthProvider } from '@/hooks/useAuth';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import Index from '@/pages/Index';
 import NotFound from '@/pages/NotFound';
+import { Analytics } from '@vercel/analytics/react';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -30,6 +31,7 @@ function App() {
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toaster />
+              <Analytics />
             </div>
           </Router>
         </AuthProvider>
