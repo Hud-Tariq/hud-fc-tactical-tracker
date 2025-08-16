@@ -388,8 +388,11 @@ export const useSupabaseFootballData = () => {
         console.log('Statistics processing completed');
       }
 
-      // Force refresh after creating match
-      await Promise.all([fetchMatches(true), fetchPlayers(true)]);
+      // Invalidate queries after creating match
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['matches', user?.id] }),
+        queryClient.invalidateQueries({ queryKey: ['players', user?.id] })
+      ]);
 
       toast({
         title: "Success",
@@ -444,7 +447,10 @@ export const useSupabaseFootballData = () => {
         console.log('Statistics processing completed');
       }
 
-      await Promise.all([fetchMatches(true), fetchPlayers(true)]);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['matches', user?.id] }),
+        queryClient.invalidateQueries({ queryKey: ['players', user?.id] })
+      ]);
 
       toast({
         title: "Success",
@@ -529,7 +535,10 @@ export const useSupabaseFootballData = () => {
 
       console.log('Match deletion completed successfully');
 
-      await Promise.all([fetchMatches(true), fetchPlayers(true)]);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['matches', user?.id] }),
+        queryClient.invalidateQueries({ queryKey: ['players', user?.id] })
+      ]);
 
       toast({
         title: "Success",
