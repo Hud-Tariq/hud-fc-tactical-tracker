@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Plus, Users, TrendingUp, Star } from 'lucide-react';
-import { Icon } from '@/components/ui/icon';
+import { Icon, IconName } from '@/components/ui/icon';
 import PlayerCard from './PlayerCard';
 import { Player } from '@/types/football';
 
@@ -69,7 +68,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
     'Forward': 'from-red-400 via-pink-400 to-purple-400'
   };
 
-  const positionIcons = {
+  const positionIcons: Record<string, IconName> = {
     'Goalkeeper': 'goalkeeper',
     'Defender': 'defender',
     'Midfielder': 'midfielder',
