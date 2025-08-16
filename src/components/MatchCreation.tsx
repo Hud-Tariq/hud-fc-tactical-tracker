@@ -307,7 +307,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                     size="sm"
                     variant="outline"
                     onClick={() => handlePlayerSelect(player, 'A')}
-                    disabled={teamA.length >= 5}
+                    disabled={teamA.length >= 11}
                     className="flex-1 bg-blue-500/10 border-blue-400/30 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400/50 text-xs sm:text-sm px-2 sm:px-3"
                   >
                     Team A
