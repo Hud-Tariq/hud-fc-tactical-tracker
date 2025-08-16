@@ -243,7 +243,12 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                 <h3 className="text-2xl font-bold text-red-300 font-poppins">Team B</h3>
               </div>
               <div className="text-on-dark-muted">
-                {teamB.length}/5 players
+                <span className={`${teamB.length < 5 ? 'text-red-400' : teamB.length > 11 ? 'text-red-400' : 'text-green-400'}`}>
+                  {teamB.length}
+                </span>
+                <span className="text-gray-400">/5-11 players</span>
+                {teamB.length < 5 && <span className="text-red-400 text-sm block">Min: 5 players</span>}
+                {teamB.length > 11 && <span className="text-red-400 text-sm block">Max: 11 players</span>}
               </div>
             </div>
             
