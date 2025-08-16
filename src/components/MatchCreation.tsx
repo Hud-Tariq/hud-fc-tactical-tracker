@@ -24,10 +24,10 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
   const [saves, setSaves] = useState<Record<string, number>>({});
 
   const handlePlayerSelect = (player: Player, team: 'A' | 'B') => {
-    if (team === 'A' && teamA.length < 5) {
+    if (team === 'A' && teamA.length < 11) {
       setTeamA([...teamA, player]);
       setAvailablePlayers(availablePlayers.filter(p => p.id !== player.id));
-    } else if (team === 'B' && teamB.length < 5) {
+    } else if (team === 'B' && teamB.length < 11) {
       setTeamB([...teamB, player]);
       setAvailablePlayers(availablePlayers.filter(p => p.id !== player.id));
     }
