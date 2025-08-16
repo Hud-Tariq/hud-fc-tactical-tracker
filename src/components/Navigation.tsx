@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Users, Calendar, BarChart3, Menu, X } from 'lucide-react';
 import { Icon } from '@/components/ui/icon';
@@ -32,15 +31,12 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
           <div className="flex items-center justify-between">
             {/* Logo Section - Responsive */}
             <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4 flex-shrink-0">
-              <div className="relative">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl overflow-hidden shadow-lg bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center">
-                  <img
-                    src="/images/logo.png"
-                    alt="Hud FC Manager Logo"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 opacity-30 blur animate-pulse"></div>
+              <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl overflow-hidden shadow-lg">
+                <img
+                  src="/images/logo.png"
+                  alt="Hud FC Manager Logo"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="hidden xs:block">
                 <h1 className="text-sm sm:text-lg lg:text-2xl font-bold text-on-dark font-poppins">

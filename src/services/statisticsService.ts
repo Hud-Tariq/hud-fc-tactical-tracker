@@ -24,9 +24,10 @@ export class StatisticsService {
     rating += performance.goals * 1.5;
     rating += performance.assists * 1.0;
     rating += performance.saves * 0.1;
-    
+
+    // Enhanced defender bonuses for clean sheets
     if (performance.cleanSheet && (player.position === 'Defender' || player.position === 'Goalkeeper')) {
-      rating += 1.0;
+      rating += 1.5; // Increased from 1.0
     }
 
     if (performance.teamWon) {
@@ -43,7 +44,12 @@ export class StatisticsService {
         if (performance.assists === 0) rating -= 0.1;
         break;
       case 'Goalkeeper':
-        if (performance.saves > 5) rating += 0.5;
+        // Better rewards for exceptional saves (8+ saves)
+        if (performance.saves >= 8) {
+          rating += 1.0; // Significant bonus for exceptional performance
+        } else if (performance.saves > 5) {
+          rating += 0.5;
+        }
         break;
     }
 
@@ -97,20 +103,50 @@ export class StatisticsService {
     };
   }
 
-  // Improved rating calculation with more gradual changes
+  // Enhanced rating calculation with improved time evolution and consistency rewards
   static calculateRatingAdjustment(
-    currentRating: number, 
-    matchRating: number, 
-    matchesPlayed: number
+    currentRating: number,
+    matchRating: number,
+    matchesPlayed: number,
+    previousRatings: number[] = [] // For consistency bonus
   ): number {
     const ratingDifference = matchRating - 6.0;
-    
-    // Base multiplier that decreases as player gets more experienced
-    const experienceFactor = Math.max(0.3, 1 - (matchesPlayed * 0.05));
-    
+
+    // Slower experience decay (2% per match vs 5%)
+    const experienceFactor = Math.max(0.3, 1 - (matchesPlayed * 0.02));
+
+    // Form boost: Struggling players (under 40 rating) get 30% faster improvement
+    const formBoost = currentRating < 40 ? 1.3 : 1.0;
+
+    // Maturity bonus: New players adapt 20% faster, experienced players change 10% slower
+    let maturityBonus: number;
+    if (matchesPlayed < 10) {
+      maturityBonus = 1.2; // New players adapt faster
+    } else if (matchesPlayed > 50) {
+      maturityBonus = 0.9; // Experienced players change slower
+    } else {
+      maturityBonus = 1.0;
+    }
+
+    // Consistency bonus: Reward consistent performance with 10% bonus
+    let consistencyBonus = 1.0;
+    if (previousRatings.length >= 3) {
+      const recentRatings = previousRatings.slice(-3);
+      const avgRecent = recentRatings.reduce((sum, r) => sum + r, 0) / recentRatings.length;
+      const variance = recentRatings.reduce((sum, r) => sum + Math.pow(r - avgRecent, 2), 0) / recentRatings.length;
+
+      // Low variance = consistent performance = bonus
+      if (variance < 1.0) {
+        consistencyBonus = 1.1;
+      }
+    }
+
     // Rating adjustment based on current rating level
     let baseMultiplier: number;
-    if (currentRating < 50) {
+    if (currentRating < 40) {
+      // Struggling players get significant help to recover
+      baseMultiplier = 1.0;
+    } else if (currentRating < 50) {
       // Low rated players improve faster
       baseMultiplier = 0.8;
     } else if (currentRating < 70) {
@@ -119,22 +155,31 @@ export class StatisticsService {
     } else if (currentRating < 85) {
       // Good players change slower
       baseMultiplier = 0.4;
+    } else if (currentRating < 90) {
+      // Elite players change slowly but still change
+      baseMultiplier = 0.3;
     } else {
-      // Elite players change very slowly
-      baseMultiplier = 0.25;
+      // Super elite players (90+) still change, just very gradually
+      baseMultiplier = 0.2;
     }
-    
+
     // Apply diminishing returns for extreme ratings
     const extremeRatingFactor = Math.max(0.2, 1 - Math.abs(ratingDifference) * 0.1);
-    
+
     // Final multiplier combines all factors
-    const finalMultiplier = baseMultiplier * experienceFactor * extremeRatingFactor;
-    
-    // Only apply significant changes for substantial performance differences
-    if (Math.abs(ratingDifference) > 0.5) {
-      return ratingDifference * finalMultiplier;
+    const finalMultiplier = baseMultiplier * experienceFactor * formBoost * maturityBonus * consistencyBonus * extremeRatingFactor;
+
+    // Smaller threshold: Changes apply for 0.2+ difference instead of 0.5+
+    if (Math.abs(ratingDifference) >= 0.2) {
+      let adjustment = ratingDifference * finalMultiplier;
+
+      // Capped changes: Maximum single-match change of 3 points (2 for higher rated players)
+      const maxChange = currentRating >= 80 ? 2.0 : 3.0;
+      adjustment = Math.max(-maxChange, Math.min(maxChange, adjustment));
+
+      return adjustment;
     }
-    
+
     return 0;
   }
 
@@ -163,12 +208,18 @@ export class StatisticsService {
 
       const newMatchesPlayed = currentPlayer.matches_played + 1;
       
-      // Improved rating adjustment with more realistic progression
+      // Enhanced rating adjustment with better time evolution and consistency rewards
       let newRating = currentPlayer.rating;
+
+      // Get previous match ratings for consistency bonus (simplified for now)
+      // In a full implementation, you'd fetch the last few match ratings from the database
+      const previousRatings: number[] = []; // TODO: Implement actual previous ratings tracking
+
       const ratingAdjustment = this.calculateRatingAdjustment(
         currentPlayer.rating,
         performance.matchRating,
-        currentPlayer.matches_played
+        currentPlayer.matches_played,
+        previousRatings
       );
       
       // Apply the rating change
