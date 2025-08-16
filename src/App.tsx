@@ -20,19 +20,21 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <ErrorBoundary>
-      <AuthProvider>
-        <Router>
-          <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-primary/5">
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <Toaster />
-          </div>
-        </Router>
-      </AuthProvider>
-    </ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary>
+        <AuthProvider>
+          <Router>
+            <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-primary/5">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Toaster />
+            </div>
+          </Router>
+        </AuthProvider>
+      </ErrorBoundary>
+    </QueryClientProvider>
   );
 }
 
