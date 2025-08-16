@@ -523,7 +523,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
       )}
 
       {/* Create Match Button */}
-      <div className="flex justify-center">
+      <div className="flex flex-col items-center space-y-3">
         <Button
           onClick={handleCreateMatch}
           disabled={!matchDate || teamA.length < 5 || teamA.length > 11 || teamB.length < 5 || teamB.length > 11}
@@ -533,6 +533,16 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
           <Save className="w-6 h-6 mr-3" />
           Create Match
         </Button>
+
+        {(!matchDate || teamA.length < 5 || teamA.length > 11 || teamB.length < 5 || teamB.length > 11) && (
+          <div className="text-center text-sm text-red-400">
+            {!matchDate && <p>• Please select a match date</p>}
+            {teamA.length < 5 && <p>• Team A needs at least 5 players</p>}
+            {teamA.length > 11 && <p>• Team A can have maximum 11 players</p>}
+            {teamB.length < 5 && <p>• Team B needs at least 5 players</p>}
+            {teamB.length > 11 && <p>• Team B can have maximum 11 players</p>}
+          </div>
+        )}
       </div>
     </div>
   );
