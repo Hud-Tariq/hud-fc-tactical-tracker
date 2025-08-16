@@ -298,7 +298,25 @@ The built application (`dist` folder) can be deployed to any static hosting serv
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+**IMPORTANT LICENSING NOTICE**
+
+This project uses a **custom restrictive license**. While the source code is open for viewing and local use, it comes with specific restrictions:
+
+### ✅ **What You CAN Do:**
+- View and study the source code for learning purposes
+- Run and modify the software locally for personal use
+- Contribute to the project via pull requests
+- Report bugs and suggest features
+
+### ❌ **What You CANNOT Do:**
+- Host or deploy this software on any public server or platform
+- Redistribute the software or any portion of it
+- Use the software for commercial purposes
+- Create and distribute derivative works
+
+**This software is provided for local development and educational purposes only.**
+
+For complete license terms, see the [LICENSE.md](LICENSE.md) file.
 
 ## 🙏 Acknowledgments
 
