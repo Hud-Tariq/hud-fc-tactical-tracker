@@ -17,22 +17,27 @@ export const useSupabaseFootballData = () => {
   const currentUserId = useRef<string | null>(null);
   const CACHE_DURATION = 30000; // 30 seconds cache
 
-  // Optimized fetch players with caching
+  // Optimized fetch players with enhanced debugging
   const fetchPlayers = useCallback(async (forceRefresh = false) => {
     try {
       const now = Date.now();
+      console.log('=== FETCH PLAYERS START ===');
+      console.log('Force refresh:', forceRefresh);
+      console.log('Cache check:', now - lastFetchTime.current.players, 'vs', CACHE_DURATION);
 
-      // Check cache validity
+      // Check cache validity - but allow force refresh to bypass
       if (!forceRefresh && now - lastFetchTime.current.players < CACHE_DURATION) {
-        console.log('Using cached players data');
+        console.log('Using cached players data - skipping fetch');
         return;
       }
 
       setPlayersLoading(true);
-      console.log('Fetching players...');
+      console.log('Starting players fetch...');
 
       // Check authentication first
+      console.log('Checking authentication...');
       const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
       if (authError) {
         console.error('Authentication error:', authError);
         throw new Error(`Authentication failed: ${authError.message}`);
@@ -47,16 +52,25 @@ export const useSupabaseFootballData = () => {
 
       // Update current user reference
       currentUserId.current = user.id;
-      console.log('User authenticated, fetching players for user:', user.id);
+      console.log('User authenticated successfully:', user.id);
 
+      console.log('Executing players query...');
       const { data, error } = await supabase
         .from('players')
         .select('id, name, age, position, rating, matches_played, total_goals, total_assists, total_saves, clean_sheets')
         .eq('user_id', user.id)
         .order('name');
 
+      console.log('Query executed. Error:', error);
+      console.log('Query result data:', data);
+
       if (error) {
-        console.error('Supabase query error:', error);
+        console.error('Supabase query error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
         throw error;
       }
 
@@ -75,52 +89,63 @@ export const useSupabaseFootballData = () => {
         matchRatings: []
       })) || [];
 
-      console.log('Fetched players:', mappedPlayers.length);
+      console.log('Mapped players count:', mappedPlayers.length);
+      console.log('Setting players state...');
       setPlayers(mappedPlayers);
       lastFetchTime.current.players = now;
+      console.log('=== FETCH PLAYERS SUCCESS ===');
 
     } catch (error) {
-      console.error('Error fetching players:', error);
+      console.error('=== FETCH PLAYERS ERROR ===');
+      console.error('Error details:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Error message:', errorMessage);
+      
       toast({
-        title: "Error",
+        title: "Error Loading Players",
         description: `Failed to fetch players: ${errorMessage}`,
         variant: "destructive",
       });
     } finally {
+      console.log('Setting playersLoading to false');
       setPlayersLoading(false);
     }
   }, [toast]);
 
-  // Optimized fetch matches with caching and pagination
+  // Optimized fetch matches with enhanced debugging
   const fetchMatches = useCallback(async (forceRefresh = false) => {
     try {
       const now = Date.now();
+      console.log('=== FETCH MATCHES START ===');
+      console.log('Force refresh:', forceRefresh);
 
-      // Check cache validity
+      // Check cache validity - but allow force refresh to bypass
       if (!forceRefresh && now - lastFetchTime.current.matches < CACHE_DURATION) {
-        console.log('Using cached matches data');
+        console.log('Using cached matches data - skipping fetch');
         return;
       }
 
       setMatchesLoading(true);
-      console.log('Fetching matches...');
+      console.log('Starting matches fetch...');
 
       // Check authentication first
+      console.log('Checking authentication for matches...');
       const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
       if (authError) {
         console.error('Authentication error:', authError);
         throw new Error(`Authentication failed: ${authError.message}`);
       }
 
       if (!user) {
-        console.log('No authenticated user found');
+        console.log('No authenticated user found for matches');
         setMatches([]);
         setMatchesLoading(false);
         return;
       }
 
-      console.log('User authenticated, fetching matches for user:', user.id);
+      console.log('User authenticated for matches:', user.id);
+      console.log('Executing matches query...');
 
       // Fetch matches with limit for better performance
       const { data, error } = await supabase
@@ -146,10 +171,18 @@ export const useSupabaseFootballData = () => {
         `)
         .eq('user_id', user.id)
         .order('date', { ascending: false })
-        .limit(50); // Limit to recent 50 matches for performance
+        .limit(50);
+
+      console.log('Matches query executed. Error:', error);
+      console.log('Matches query result data:', data);
 
       if (error) {
-        console.error('Supabase query error:', error);
+        console.error('Supabase matches query error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
         throw error;
       }
 
@@ -176,19 +209,25 @@ export const useSupabaseFootballData = () => {
         averageTeamBRating: 0
       })) || [];
 
-      console.log('Fetched matches:', formattedMatches.length);
+      console.log('Formatted matches count:', formattedMatches.length);
+      console.log('Setting matches state...');
       setMatches(formattedMatches);
       lastFetchTime.current.matches = now;
+      console.log('=== FETCH MATCHES SUCCESS ===');
 
     } catch (error) {
-      console.error('Error fetching matches:', error);
+      console.error('=== FETCH MATCHES ERROR ===');
+      console.error('Error details:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Error message:', errorMessage);
+      
       toast({
-        title: "Error",
+        title: "Error Loading Matches",
         description: `Failed to fetch matches: ${errorMessage}`,
         variant: "destructive",
       });
     } finally {
+      console.log('Setting matchesLoading to false');
       setMatchesLoading(false);
     }
   }, [toast]);
@@ -505,34 +544,43 @@ export const useSupabaseFootballData = () => {
 
   const getPlayerById = (id: string) => players.find(p => p.id === id);
 
-  // Optimized data loading with staggered fetching
+  // Enhanced data loading with detailed debugging
   useEffect(() => {
     const loadData = async () => {
       try {
-        console.log('Loading football data...');
+        console.log('=== INITIAL DATA LOAD START ===');
+        console.log('Checking user authentication...');
+        
         const { data: { user }, error } = await supabase.auth.getUser();
 
         if (error) {
-          console.error('Error getting user:', error);
+          console.error('Error getting user during initial load:', error);
           setLoading(false);
           return;
         }
 
+        console.log('User check result:', user ? `authenticated (${user.id})` : 'not authenticated');
+
         if (user) {
-          console.log('User authenticated, fetching data...');
+          console.log('User is authenticated, starting data fetch...');
           setLoading(true);
 
-          // Fetch players first (usually smaller dataset)
-          await fetchPlayers(true);
-          setLoading(false); // Allow UI to render with players data
-
-          // Then fetch matches in background
-          await fetchMatches(true);
+          console.log('Fetching players first...');
+          await fetchPlayers(true); // Force refresh on initial load
+          
+          console.log('Players fetch completed, now fetching matches...');
+          await fetchMatches(true); // Force refresh on initial load
+          
+          console.log('All data fetched successfully');
         } else {
-          console.log('No authenticated user');
-          setLoading(false);
+          console.log('No authenticated user, skipping data fetch');
         }
+        
+        console.log('Setting loading to false');
+        setLoading(false);
+        console.log('=== INITIAL DATA LOAD COMPLETE ===');
       } catch (error) {
+        console.error('=== INITIAL DATA LOAD ERROR ===');
         console.error('Network error in loadData:', error);
         setLoading(false);
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';

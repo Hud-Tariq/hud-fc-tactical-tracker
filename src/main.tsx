@@ -1,3 +1,4 @@
+
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
@@ -22,6 +23,14 @@ async function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     try {
       console.log('PWA: Registering Service Worker...');
+      
+      // Unregister any existing service workers first
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (let registration of registrations) {
+        await registration.unregister();
+        console.log('PWA: Unregistered old service worker');
+      }
+      
       const registration = await navigator.serviceWorker.register('/sw.js', {
         scope: '/'
       });

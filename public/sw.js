@@ -1,5 +1,5 @@
 // Service Worker for Hud FC Manager PWA
-const CACHE_NAME = 'hudfc-manager-v1.0.0';
+const CACHE_NAME = 'hudfc-manager-v1.0.1';
 const OFFLINE_URL = '/offline.html';
 
 // Files to cache for offline functionality
@@ -8,8 +8,7 @@ const CORE_CACHE_FILES = [
   '/index.html',
   '/offline.html',
   '/manifest.json',
-  '/src/main.tsx',
-  '/src/index.css',
+  '/images/logo.png',
   // Add main app assets
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
@@ -28,10 +27,16 @@ self.addEventListener('install', (event) => {
       try {
         const cache = await caches.open(CACHE_NAME);
         console.log('Service Worker: Caching core files');
-        await cache.addAll(CORE_CACHE_FILES);
         
-        // Cache the offline page
-        await cache.add(new Request(OFFLINE_URL, { cache: 'reload' }));
+        // Cache files one by one to avoid issues with missing files
+        for (const file of CORE_CACHE_FILES) {
+          try {
+            await cache.add(new Request(file, { cache: 'reload' }));
+            console.log('Service Worker: Cached', file);
+          } catch (error) {
+            console.warn('Service Worker: Failed to cache', file, error);
+          }
+        }
         
         // Skip waiting to activate immediately
         self.skipWaiting();
