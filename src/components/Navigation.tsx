@@ -32,7 +32,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             {/* Logo Section - Responsive */}
             <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4 flex-shrink-0">
               <div className="relative">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl overflow-hidden shadow-lg">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl overflow-hidden shadow-lg">
                   <img
                     src="/images/logo.png"
                     alt="Hud FC Manager Logo"
