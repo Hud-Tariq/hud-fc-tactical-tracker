@@ -4,9 +4,6 @@ A comprehensive football management platform that allows users to manage their s
 
 > **📋 IMPORTANT LICENSE NOTICE**: This software is open source for viewing and local use only. Public hosting, redistribution, or commercial use is prohibited. See [LICENSE.md](LICENSE.md) for details.
 
-![App Overview](docs/screenshots/app-overview.png)
-*Main dashboard showing squad management and navigation*
-
 ## 🌟 Features
 
 ### 📋 Squad Management
@@ -15,20 +12,11 @@ A comprehensive football management platform that allows users to manage their s
 - **Player Statistics**: Track comprehensive stats including goals, assists, saves, and clean sheets
 - **Rating System**: Monitor player performance with match ratings and averages
 
-![Squad Management](docs/screenshots/squad-management.png)
-*Squad management interface with player cards and statistics*
-
 ### ⚽ Match Management
 - **Flexible Team Sizes**: Support for customizable match formats from 5v5 to 11v11
 - **Match Creation**: Easy-to-use interface for setting up matches with date selection
 - **Goal & Save Tracking**: Record goals, assists, saves, and player performance
 - **Match History**: Complete history of all played matches with detailed statistics
-
-![Match Creation](docs/screenshots/match-creation.png)
-*Match creation interface showing team selection and match details*
-
-![Match View](docs/screenshots/match-view.png)
-*Match view with scoring and statistics tracking*
 
 ### 📊 Statistics & Analytics
 - **Player Performance**: Detailed individual player statistics and performance metrics
@@ -36,24 +24,15 @@ A comprehensive football management platform that allows users to manage their s
 - **Match Statistics**: In-depth match analysis with goals, assists, and saves tracking
 - **Historical Data**: Long-term performance tracking and trends
 
-![Statistics Dashboard](docs/screenshots/statistics.png)
-*Statistics dashboard showing player and team performance metrics*
-
 ### 🏆 Tournament Management
 - **Tournament Creation**: Set up tournaments with various formats
 - **Multiple Formats**: Support for single elimination, double elimination, league, and group stage formats
 - **Team Registration**: Team registration and management system
 
-![Tournament Page](docs/screenshots/tournaments.png)
-*Tournament management interface*
-
 ### 🔐 User Authentication
 - **Secure Authentication**: User registration and login system
 - **Personal Data**: Each user has their own squad and match data
 - **Data Privacy**: Secure data storage with user isolation
-
-![Authentication](docs/screenshots/auth.png)
-*Authentication interface*
 
 ## 🚀 Technology Stack
 
@@ -128,9 +107,6 @@ The application uses Supabase as the backend. The database schema includes:
 - **Tournaments Table**: Tournament information and settings
 - **Tournament Teams Table**: Team registrations and standings
 - **Tournament Matches Table**: Tournament-specific match data
-
-![Database Schema](docs/screenshots/database-schema.png)
-*Database schema overview*
 
 ## 📱 Usage Guide
 
@@ -341,34 +317,6 @@ If you encounter any issues or have questions:
 1. **Check the documentation** - Most common issues are covered here
 2. **Search existing issues** - Someone might have faced the same problem
 3. **Create a new issue** - Provide detailed information about the problem
-
----
-
-## 🏆 Screenshots Gallery
-
-### Dashboard Overview
-![Dashboard](docs/screenshots/dashboard-full.png)
-*Complete dashboard view with navigation and content areas*
-
-### Squad Management Detail
-![Squad Detail](docs/screenshots/squad-detail.png)
-*Detailed squad management with player cards and statistics*
-
-### Match Creation Flow
-![Match Flow](docs/screenshots/match-creation-flow.png)
-*Step-by-step match creation process*
-
-### Statistics Deep Dive
-![Statistics Detail](docs/screenshots/statistics-detail.png)
-*Comprehensive statistics and analytics dashboard*
-
-### Tournament Management
-![Tournament Management](docs/screenshots/tournament-management.png)
-*Tournament creation and management interface*
-
-### Responsive Design
-![Mobile View](docs/screenshots/mobile-responsive.png)
-*Mobile-responsive design across different screen sizes*
 
 ---
 
