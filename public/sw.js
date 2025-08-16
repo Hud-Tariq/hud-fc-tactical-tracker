@@ -38,8 +38,8 @@ self.addEventListener('install', (event) => {
           }
         }
         
-        // Skip waiting to activate immediately
-        self.skipWaiting();
+        // Skip waiting to activate immediately (disabled in dev)
+        // self.skipWaiting();
       } catch (error) {
         console.error('Service Worker: Installation failed', error);
       }
