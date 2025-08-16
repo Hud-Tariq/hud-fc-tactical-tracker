@@ -133,8 +133,13 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
           <span className="gradient-text-light ml-3">Match</span>
         </h1>
         <p className="text-base sm:text-lg lg:text-2xl text-on-dark-muted max-w-none sm:max-w-3xl mx-auto px-2 sm:px-0">
-          Set up teams, track goals, and create memorable football matches
+          Set up teams from 5v5 to 11v11, track goals, and create memorable football matches
         </p>
+        <div className="mt-4 p-4 rounded-xl bg-blue-500/10 border border-blue-400/20 max-w-md mx-auto">
+          <p className="text-sm text-blue-300">
+            ⚽ <strong>Team Size:</strong> Each team needs 5-11 players (e.g., 5v5, 7v8, 11v11)
+          </p>
+        </div>
       </div>
 
       {/* Match Details Card */}
