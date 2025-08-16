@@ -1,68 +1,47 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Player, Match, Goal } from '@/types/football';
 import { useToast } from '@/hooks/use-toast';
 import { StatisticsService } from '@/services/statisticsService';
 
 export const useSupabaseFootballData = () => {
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [matches, setMatches] = useState<Match[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [playersLoading, setPlayersLoading] = useState(false);
-  const [matchesLoading, setMatchesLoading] = useState(false);
   const { toast } = useToast();
-
-  // Cache refs to prevent unnecessary re-fetches
-  const lastFetchTime = useRef<{ players: number; matches: number }>({ players: 0, matches: 0 });
+  const queryClient = useQueryClient();
+  
+  // Track current user to avoid unnecessary re-fetches
   const currentUserId = useRef<string | null>(null);
-  const CACHE_DURATION = 30000; // 30 seconds cache
+  
+  // Get current user
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error) throw error;
+      return user;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
-  // Optimized fetch players with enhanced debugging
-  const fetchPlayers = useCallback(async (forceRefresh = false) => {
-    try {
-      const now = Date.now();
-      console.log('=== FETCH PLAYERS START ===');
-      console.log('Force refresh:', forceRefresh);
-      console.log('Cache check:', now - lastFetchTime.current.players, 'vs', CACHE_DURATION);
-
-      // Check cache validity - but allow force refresh to bypass
-      if (!forceRefresh && now - lastFetchTime.current.players < CACHE_DURATION) {
-        console.log('Using cached players data - skipping fetch');
-        return;
-      }
-
-      setPlayersLoading(true);
-      console.log('Starting players fetch...');
-
-      // Check authentication first
-      console.log('Checking authentication...');
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
+  // Fetch players using React Query
+  const { 
+    data: players = [], 
+    isLoading: playersLoading, 
+    error: playersError,
+    refetch: refetchPlayers
+  } = useQuery({
+    queryKey: ['players', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
       
-      if (authError) {
-        console.error('Authentication error:', authError);
-        throw new Error(`Authentication failed: ${authError.message}`);
-      }
-
-      if (!user) {
-        console.log('No authenticated user found');
-        setPlayers([]);
-        setPlayersLoading(false);
-        return;
-      }
-
-      // Update current user reference
-      currentUserId.current = user.id;
-      console.log('User authenticated successfully:', user.id);
-
-      console.log('Executing players query...');
+      console.log('=== FETCH PLAYERS START ===');
+      console.log('User ID:', user.id);
+      
       const { data, error } = await supabase
         .from('players')
         .select('id, name, age, position, rating, matches_played, total_goals, total_assists, total_saves, clean_sheets')
         .eq('user_id', user.id)
         .order('name');
-
-      console.log('Query executed. Error:', error);
-      console.log('Query result data:', data);
 
       if (error) {
         console.error('Supabase query error details:', {
@@ -90,91 +69,36 @@ export const useSupabaseFootballData = () => {
       })) || [];
 
       console.log('Mapped players count:', mappedPlayers.length);
-      console.log('Setting players state...');
-      setPlayers(mappedPlayers);
-      lastFetchTime.current.players = now;
       console.log('=== FETCH PLAYERS SUCCESS ===');
+      return mappedPlayers;
+    },
+    enabled: !!user,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    retry: 3,
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
 
-    } catch (error) {
-      console.error('=== FETCH PLAYERS ERROR ===');
-      console.error('Error details:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error('Error message:', errorMessage);
+  // Fetch matches using React Query
+  const { 
+    data: matches = [], 
+    isLoading: matchesLoading, 
+    error: matchesError,
+    refetch: refetchMatches
+  } = useQuery({
+    queryKey: ['matches', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
       
-      toast({
-        title: "Error Loading Players",
-        description: `Failed to fetch players: ${errorMessage}`,
-        variant: "destructive",
-      });
-    } finally {
-      console.log('Setting playersLoading to false');
-      setPlayersLoading(false);
-    }
-  }, [toast]);
-
-  // Optimized fetch matches with enhanced debugging
-  const fetchMatches = useCallback(async (forceRefresh = false) => {
-    try {
-      const now = Date.now();
       console.log('=== FETCH MATCHES START ===');
-      console.log('Force refresh:', forceRefresh);
+      console.log('User ID:', user.id);
 
-      // Check cache validity - but allow force refresh to bypass
-      if (!forceRefresh && now - lastFetchTime.current.matches < CACHE_DURATION) {
-        console.log('Using cached matches data - skipping fetch');
-        return;
-      }
-
-      setMatchesLoading(true);
-      console.log('Starting matches fetch...');
-
-      // Check authentication first
-      console.log('Checking authentication for matches...');
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError) {
-        console.error('Authentication error:', authError);
-        throw new Error(`Authentication failed: ${authError.message}`);
-      }
-
-      if (!user) {
-        console.log('No authenticated user found for matches');
-        setMatches([]);
-        setMatchesLoading(false);
-        return;
-      }
-
-      console.log('User authenticated for matches:', user.id);
-      console.log('Executing matches query...');
-
-      // Fetch matches with limit for better performance
+      // Fetch matches without expensive joins - get goals and saves separately if needed
       const { data, error } = await supabase
         .from('matches')
-        .select(`
-          id,
-          date,
-          team_a_players,
-          team_b_players,
-          score_a,
-          score_b,
-          completed,
-          match_goals (
-            scorer_id,
-            assister_id,
-            team,
-            is_own_goal
-          ),
-          match_saves (
-            player_id,
-            saves_count
-          )
-        `)
+        .select('id, date, team_a_players, team_b_players, score_a, score_b, completed')
         .eq('user_id', user.id)
         .order('date', { ascending: false })
         .limit(50);
-
-      console.log('Matches query executed. Error:', error);
-      console.log('Matches query result data:', data);
 
       if (error) {
         console.error('Supabase matches query error details:', {
@@ -186,51 +110,79 @@ export const useSupabaseFootballData = () => {
         throw error;
       }
 
-      const formattedMatches = data?.map(match => ({
-        id: match.id,
-        date: match.date,
-        teamA: match.team_a_players,
-        teamB: match.team_b_players,
-        scoreA: match.score_a,
-        scoreB: match.score_b,
-        completed: match.completed,
-        goals: match.match_goals?.map((goal: any) => ({
+      // Get match goals and saves in parallel for completed matches only
+      const completedMatchIds = data?.filter(m => m.completed).map(m => m.id) || [];
+      
+      let matchGoals: any[] = [];
+      let matchSaves: any[] = [];
+      
+      if (completedMatchIds.length > 0) {
+        const [goalsResult, savesResult] = await Promise.all([
+          supabase
+            .from('match_goals')
+            .select('match_id, scorer_id, assister_id, team, is_own_goal')
+            .in('match_id', completedMatchIds),
+          supabase
+            .from('match_saves')
+            .select('match_id, player_id, saves_count')
+            .in('match_id', completedMatchIds)
+        ]);
+        
+        if (goalsResult.error) {
+          console.error('Error fetching match goals:', goalsResult.error);
+        } else {
+          matchGoals = goalsResult.data || [];
+        }
+        
+        if (savesResult.error) {
+          console.error('Error fetching match saves:', savesResult.error);
+        } else {
+          matchSaves = savesResult.data || [];
+        }
+      }
+
+      const formattedMatches = data?.map(match => {
+        // Get goals for this match
+        const matchGoalsForThisMatch = matchGoals.filter(g => g.match_id === match.id);
+        const goalsFormatted = matchGoalsForThisMatch.map((goal: any) => ({
           scorer: goal.scorer_id,
           assister: goal.assister_id,
           team: goal.team as 'A' | 'B',
           isOwnGoal: goal.is_own_goal
-        })) || [],
-        saves: match.match_saves?.reduce((acc: Record<string, number>, save: any) => {
+        }));
+        
+        // Get saves for this match
+        const matchSavesForThisMatch = matchSaves.filter(s => s.match_id === match.id);
+        const savesFormatted = matchSavesForThisMatch.reduce((acc: Record<string, number>, save: any) => {
           acc[save.player_id] = save.saves_count;
           return acc;
-        }, {}) || {},
-        matchRatings: {},
-        averageTeamARating: 0,
-        averageTeamBRating: 0
-      })) || [];
+        }, {});
+        
+        return {
+          id: match.id,
+          date: match.date,
+          teamA: match.team_a_players,
+          teamB: match.team_b_players,
+          scoreA: match.score_a,
+          scoreB: match.score_b,
+          completed: match.completed,
+          goals: goalsFormatted,
+          saves: savesFormatted,
+          matchRatings: {},
+          averageTeamARating: 0,
+          averageTeamBRating: 0
+        };
+      }) || [];
 
       console.log('Formatted matches count:', formattedMatches.length);
-      console.log('Setting matches state...');
-      setMatches(formattedMatches);
-      lastFetchTime.current.matches = now;
       console.log('=== FETCH MATCHES SUCCESS ===');
-
-    } catch (error) {
-      console.error('=== FETCH MATCHES ERROR ===');
-      console.error('Error details:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error('Error message:', errorMessage);
-      
-      toast({
-        title: "Error Loading Matches",
-        description: `Failed to fetch matches: ${errorMessage}`,
-        variant: "destructive",
-      });
-    } finally {
-      console.log('Setting matchesLoading to false');
-      setMatchesLoading(false);
-    }
-  }, [toast]);
+      return formattedMatches;
+    },
+    enabled: !!user,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    retry: 3,
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
 
   // Store match goals in database
   const storeMatchGoals = async (matchId: string, goals: Goal[]) => {
@@ -300,14 +252,10 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  // Add player to Supabase with user_id
-  const addPlayer = async (playerData: Omit<Player, 'id' | 'matchesPlayed' | 'totalGoals' | 'totalAssists' | 'totalSaves' | 'cleanSheets'>) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error('User not authenticated');
-      }
+  // Add player using mutation
+  const addPlayerMutation = useMutation({
+    mutationFn: async (playerData: Omit<Player, 'id' | 'matchesPlayed' | 'totalGoals' | 'totalAssists' | 'totalSaves' | 'cleanSheets'>) => {
+      if (!user) throw new Error('User not authenticated');
 
       const { data, error } = await supabase
         .from('players')
@@ -322,14 +270,16 @@ export const useSupabaseFootballData = () => {
         .single();
       
       if (error) throw error;
-      
-      await fetchPlayers(true);
-      
+      return data;
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['players', user?.id] });
       toast({
         title: "Success",
-        description: `${playerData.name} has been added to the squad!`,
+        description: `${variables.name} has been added to the squad!`,
       });
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error('Error adding player:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       toast({
@@ -338,14 +288,14 @@ export const useSupabaseFootballData = () => {
         variant: "destructive",
       });
     }
-  };
+  });
+  
+  const addPlayer = addPlayerMutation.mutate;
 
   // Create match function with proper statistics processing
   const createMatch = async (matchData: Omit<Match, 'id'>) => {
     try {
       console.log('Creating match with data:', matchData);
-      
-      const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
         throw new Error('User not authenticated');
@@ -384,8 +334,11 @@ export const useSupabaseFootballData = () => {
         console.log('Statistics processing completed');
       }
 
-      // Force refresh after creating match
-      await Promise.all([fetchMatches(true), fetchPlayers(true)]);
+      // Invalidate queries after creating match
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['matches', user?.id] }),
+        queryClient.invalidateQueries({ queryKey: ['players', user?.id] })
+      ]);
 
       toast({
         title: "Success",
@@ -440,7 +393,10 @@ export const useSupabaseFootballData = () => {
         console.log('Statistics processing completed');
       }
 
-      await Promise.all([fetchMatches(true), fetchPlayers(true)]);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['matches', user?.id] }),
+        queryClient.invalidateQueries({ queryKey: ['players', user?.id] })
+      ]);
 
       toast({
         title: "Success",
@@ -525,7 +481,10 @@ export const useSupabaseFootballData = () => {
 
       console.log('Match deletion completed successfully');
 
-      await Promise.all([fetchMatches(true), fetchPlayers(true)]);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['matches', user?.id] }),
+        queryClient.invalidateQueries({ queryKey: ['players', user?.id] })
+      ]);
 
       toast({
         title: "Success",
@@ -542,59 +501,32 @@ export const useSupabaseFootballData = () => {
     }
   };
 
-  const getPlayerById = (id: string) => players.find(p => p.id === id);
-
-  // Enhanced data loading with detailed debugging
+  // Show toast for errors
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        console.log('=== INITIAL DATA LOAD START ===');
-        console.log('Checking user authentication...');
-        
-        const { data: { user }, error } = await supabase.auth.getUser();
+    if (playersError) {
+      const errorMessage = playersError instanceof Error ? playersError.message : 'Unknown error';
+      toast({
+        title: "Error Loading Players",
+        description: `Failed to fetch players: ${errorMessage}`,
+        variant: "destructive",
+      });
+    }
+  }, [playersError, toast]);
+  
+  useEffect(() => {
+    if (matchesError) {
+      const errorMessage = matchesError instanceof Error ? matchesError.message : 'Unknown error';
+      toast({
+        title: "Error Loading Matches",
+        description: `Failed to fetch matches: ${errorMessage}`,
+        variant: "destructive",
+      });
+    }
+  }, [matchesError, toast]);
 
-        if (error) {
-          console.error('Error getting user during initial load:', error);
-          setLoading(false);
-          return;
-        }
-
-        console.log('User check result:', user ? `authenticated (${user.id})` : 'not authenticated');
-
-        if (user) {
-          console.log('User is authenticated, starting data fetch...');
-          setLoading(true);
-
-          console.log('Fetching players first...');
-          await fetchPlayers(true); // Force refresh on initial load
-          
-          console.log('Players fetch completed, now fetching matches...');
-          await fetchMatches(true); // Force refresh on initial load
-          
-          console.log('All data fetched successfully');
-        } else {
-          console.log('No authenticated user, skipping data fetch');
-        }
-        
-        console.log('Setting loading to false');
-        setLoading(false);
-        console.log('=== INITIAL DATA LOAD COMPLETE ===');
-      } catch (error) {
-        console.error('=== INITIAL DATA LOAD ERROR ===');
-        console.error('Network error in loadData:', error);
-        setLoading(false);
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        toast({
-          title: "Network Error",
-          description: `Failed to connect to the server: ${errorMessage}`,
-          variant: "destructive",
-        });
-      }
-    };
-
-    loadData();
-  }, [fetchPlayers, fetchMatches, toast]);
-
+  const loading = playersLoading || matchesLoading;
+  const getPlayerById = (id: string) => players.find(p => p.id === id);
+  
   return {
     players,
     matches,
@@ -606,8 +538,11 @@ export const useSupabaseFootballData = () => {
     completeMatch,
     deleteMatch,
     getPlayerById,
-    refreshData: () => Promise.all([fetchPlayers(true), fetchMatches(true)]),
-    refreshPlayers: () => fetchPlayers(true),
-    refreshMatches: () => fetchMatches(true)
+    refreshData: () => Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['players', user?.id] }),
+      queryClient.invalidateQueries({ queryKey: ['matches', user?.id] })
+    ]),
+    refreshPlayers: () => queryClient.invalidateQueries({ queryKey: ['players', user?.id] }),
+    refreshMatches: () => queryClient.invalidateQueries({ queryKey: ['matches', user?.id] })
   };
 };

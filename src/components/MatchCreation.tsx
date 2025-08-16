@@ -24,10 +24,10 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
   const [saves, setSaves] = useState<Record<string, number>>({});
 
   const handlePlayerSelect = (player: Player, team: 'A' | 'B') => {
-    if (team === 'A' && teamA.length < 5) {
+    if (team === 'A' && teamA.length < 11) {
       setTeamA([...teamA, player]);
       setAvailablePlayers(availablePlayers.filter(p => p.id !== player.id));
-    } else if (team === 'B' && teamB.length < 5) {
+    } else if (team === 'B' && teamB.length < 11) {
       setTeamB([...teamB, player]);
       setAvailablePlayers(availablePlayers.filter(p => p.id !== player.id));
     }
@@ -85,7 +85,12 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
   };
 
   const handleCreateMatch = () => {
-    if (matchDate && teamA.length === 5 && teamB.length === 5) {
+    const minPlayers = 5;
+    const maxPlayers = 11;
+    const validTeamSizes = teamA.length >= minPlayers && teamA.length <= maxPlayers &&
+                          teamB.length >= minPlayers && teamB.length <= maxPlayers;
+
+    if (matchDate && validTeamSizes) {
       const validGoals = goals.filter(g => g.scorer);
       const scoreA = calculateScore('A');
       const scoreB = calculateScore('B');
@@ -128,8 +133,13 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
           <span className="gradient-text-light ml-3">Match</span>
         </h1>
         <p className="text-base sm:text-lg lg:text-2xl text-on-dark-muted max-w-none sm:max-w-3xl mx-auto px-2 sm:px-0">
-          Set up teams, track goals, and create memorable football matches
+          Set up teams from 5v5 to 11v11, track goals, and create memorable football matches
         </p>
+        <div className="mt-4 p-4 rounded-xl bg-blue-500/10 border border-blue-400/20 max-w-md mx-auto">
+          <p className="text-sm text-blue-300">
+            ⚽ <strong>Team Size:</strong> Each team needs 5-11 players (e.g., 5v5, 7v8, 11v11)
+          </p>
+        </div>
       </div>
 
       {/* Match Details Card */}
@@ -183,7 +193,12 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                 <h3 className="text-2xl font-bold text-blue-300 font-poppins">Team A</h3>
               </div>
               <div className="text-on-dark-muted">
-                {teamA.length}/5 players
+                <span className={`${teamA.length < 5 ? 'text-red-400' : teamA.length > 11 ? 'text-red-400' : 'text-green-400'}`}>
+                  {teamA.length}
+                </span>
+                <span className="text-gray-400">/5-11 players</span>
+                {teamA.length < 5 && <span className="text-red-400 text-sm block">Min: 5 players</span>}
+                {teamA.length > 11 && <span className="text-red-400 text-sm block">Max: 11 players</span>}
               </div>
             </div>
             
@@ -233,7 +248,12 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                 <h3 className="text-2xl font-bold text-red-300 font-poppins">Team B</h3>
               </div>
               <div className="text-on-dark-muted">
-                {teamB.length}/5 players
+                <span className={`${teamB.length < 5 ? 'text-red-400' : teamB.length > 11 ? 'text-red-400' : 'text-green-400'}`}>
+                  {teamB.length}
+                </span>
+                <span className="text-gray-400">/5-11 players</span>
+                {teamB.length < 5 && <span className="text-red-400 text-sm block">Min: 5 players</span>}
+                {teamB.length > 11 && <span className="text-red-400 text-sm block">Max: 11 players</span>}
               </div>
             </div>
             
@@ -292,7 +312,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                     size="sm"
                     variant="outline"
                     onClick={() => handlePlayerSelect(player, 'A')}
-                    disabled={teamA.length >= 5}
+                    disabled={teamA.length >= 11}
                     className="flex-1 bg-blue-500/10 border-blue-400/30 text-blue-300 hover:bg-blue-500/20 hover:border-blue-400/50 text-xs sm:text-sm px-2 sm:px-3"
                   >
                     Team A
@@ -301,7 +321,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                     size="sm"
                     variant="outline"
                     onClick={() => handlePlayerSelect(player, 'B')}
-                    disabled={teamB.length >= 5}
+                    disabled={teamB.length >= 11}
                     className="flex-1 bg-red-500/10 border-red-400/30 text-red-300 hover:bg-red-500/20 hover:border-red-400/50 text-xs sm:text-sm px-2 sm:px-3"
                   >
                     Team B
@@ -503,16 +523,26 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
       )}
 
       {/* Create Match Button */}
-      <div className="flex justify-center">
+      <div className="flex flex-col items-center space-y-3">
         <Button
           onClick={handleCreateMatch}
-          disabled={!matchDate || teamA.length !== 5 || teamB.length !== 5}
+          disabled={!matchDate || teamA.length < 5 || teamA.length > 11 || teamB.length < 5 || teamB.length > 11}
           size="lg"
           className="px-6 sm:px-12 py-3 sm:py-4 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold text-base sm:text-lg rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg shadow-emerald-500/25"
         >
           <Save className="w-6 h-6 mr-3" />
           Create Match
         </Button>
+
+        {(!matchDate || teamA.length < 5 || teamA.length > 11 || teamB.length < 5 || teamB.length > 11) && (
+          <div className="text-center text-sm text-red-400">
+            {!matchDate && <p>• Please select a match date</p>}
+            {teamA.length < 5 && <p>• Team A needs at least 5 players</p>}
+            {teamA.length > 11 && <p>• Team A can have maximum 11 players</p>}
+            {teamB.length < 5 && <p>• Team B needs at least 5 players</p>}
+            {teamB.length > 11 && <p>• Team B can have maximum 11 players</p>}
+          </div>
+        )}
       </div>
     </div>
   );
