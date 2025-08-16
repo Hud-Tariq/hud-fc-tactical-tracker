@@ -34,9 +34,14 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
               <div className="relative">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl overflow-hidden shadow-lg">
                   <img
-                    src="/src/assets/images/logo.png"
+                    src="/images/logo.png"
                     alt="Hud FC Manager Logo"
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.error('Logo failed to load:', e);
+                      // Fallback to a default icon if logo fails to load
+                      e.currentTarget.style.display = 'none';
+                    }}
                   />
                 </div>
                 <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 opacity-30 blur animate-pulse"></div>
