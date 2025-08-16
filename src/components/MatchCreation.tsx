@@ -85,7 +85,12 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
   };
 
   const handleCreateMatch = () => {
-    if (matchDate && teamA.length === 5 && teamB.length === 5) {
+    const minPlayers = 5;
+    const maxPlayers = 11;
+    const validTeamSizes = teamA.length >= minPlayers && teamA.length <= maxPlayers &&
+                          teamB.length >= minPlayers && teamB.length <= maxPlayers;
+
+    if (matchDate && validTeamSizes) {
       const validGoals = goals.filter(g => g.scorer);
       const scoreA = calculateScore('A');
       const scoreB = calculateScore('B');
