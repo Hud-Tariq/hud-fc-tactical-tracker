@@ -31,15 +31,12 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
           <div className="flex items-center justify-between">
             {/* Logo Section - Responsive */}
             <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4 flex-shrink-0">
-              <div className="relative">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl overflow-hidden shadow-lg">
-                  <img
-                    src="/images/logo.png"
-                    alt="Hud FC Manager Logo"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 opacity-30 blur animate-pulse"></div>
+              <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl overflow-hidden shadow-lg">
+                <img
+                  src="/images/logo.png"
+                  alt="Hud FC Manager Logo"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="hidden xs:block">
                 <h1 className="text-sm sm:text-lg lg:text-2xl font-bold text-on-dark font-poppins">
