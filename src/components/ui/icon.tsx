@@ -20,22 +20,22 @@ export type IconName =
   | 'wall-goalkeeper';
 
 const iconPaths: Record<IconName, string> = {
-  'attacker': '/src/assets/icons/attacker.svg',
-  'create-match': '/src/assets/icons/creatematch_topnavbar.svg',
-  'defender': '/src/assets/icons/defender.svg',
-  'forwards': '/src/assets/icons/forwards.svg',
-  'goal': '/src/assets/icons/goal.svg',
-  'goalkeeper': '/src/assets/icons/goalkeeper.svg',
-  'lightning-forward': '/src/assets/icons/lightning_forward.svg',
-  'midfielder': '/src/assets/icons/midfielder_brain.svg',
-  'midfielder-brain': '/src/assets/icons/midfielder_brain.svg',
-  'shield-defender': '/src/assets/icons/shield_defender.svg',
-  'squad': '/src/assets/icons/squad_topnavbar.svg',
-  'statistics': '/src/assets/icons/statistics.svg',
-  'team-tournament': '/src/assets/icons/team_tournament.svg',
-  'tournament-everywhere': '/src/assets/icons/tournament_everywhere.svg',
-  'trophy': '/src/assets/icons/trophy.svg',
-  'wall-goalkeeper': '/src/assets/icons/wall_goalie.svg',
+  'attacker': '/assets/icons/attacker.svg',
+  'create-match': '/assets/icons/creatematch_topnavbar.svg',
+  'defender': '/assets/icons/defender.svg',
+  'forwards': '/assets/icons/forwards.svg',
+  'goal': '/assets/icons/goal.svg',
+  'goalkeeper': '/assets/icons/goalkeeper.svg',
+  'lightning-forward': '/assets/icons/lightning_forward.svg',
+  'midfielder': '/assets/icons/midfielder_brain.svg',
+  'midfielder-brain': '/assets/icons/midfielder_brain.svg',
+  'shield-defender': '/assets/icons/shield_defender.svg',
+  'squad': '/assets/icons/squad_topnavbar.svg',
+  'statistics': '/assets/icons/statistics.svg',
+  'team-tournament': '/assets/icons/team_tournament.svg',
+  'tournament-everywhere': '/assets/icons/tournament_everywhere.svg',
+  'trophy': '/assets/icons/trophy.svg',
+  'wall-goalkeeper': '/assets/icons/wall_goalie.svg',
 };
 
 interface IconProps {
