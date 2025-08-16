@@ -96,6 +96,20 @@ A comprehensive football management platform that allows users to manage their s
    
    Navigate to `http://localhost:5173` to see the application running.
 
+### Android Installation
+
+1.  **Download the APK**
+    *   You can download the latest `app-release.apk` from the root of this repository or by clicking [here](./app-release.apk).
+
+2.  **Enable Unknown Sources**
+    *   On your Android device, go to **Settings > Security**.
+    *   Enable the **"Install from unknown sources"** or **"Unknown sources"** option. This allows you to install apps from outside the Google Play Store.
+    *   On newer Android versions, you may need to grant this permission to your browser or file manager app when you try to open the APK.
+
+3.  **Install the App**
+    *   Open the downloaded `app-release.apk` file on your Android device.
+    *   Follow the on-screen prompts to install the application.
+
 ### Database Setup
 
 The application uses Supabase as the backend. The database schema includes:
