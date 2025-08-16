@@ -1,4 +1,4 @@
-# ⚽ Football Management System
+# ⚽ Hud FC Manager
 
 A comprehensive football management platform that allows users to manage their squad, create matches, track statistics, and organize tournaments. Built with modern web technologies for a seamless user experience.
 
@@ -19,14 +19,14 @@ A comprehensive football management platform that allows users to manage their s
 ### ⚽ Match Management
 - **Flexible Team Sizes**: Support for customizable match formats from 5v5 to 11v11
 - **Match Creation**: Easy-to-use interface for setting up matches with date selection
-- **Live Match Tracking**: Record goals, assists, saves, and player performance in real-time
+- **Goal & Save Tracking**: Record goals, assists, saves, and player performance
 - **Match History**: Complete history of all played matches with detailed statistics
 
 ![Match Creation](docs/screenshots/match-creation.png)
 *Match creation interface showing team selection and match details*
 
 ![Match View](docs/screenshots/match-view.png)
-*Match view with live scoring and statistics tracking*
+*Match view with scoring and statistics tracking*
 
 ### 📊 Statistics & Analytics
 - **Player Performance**: Detailed individual player statistics and performance metrics
@@ -39,12 +39,11 @@ A comprehensive football management platform that allows users to manage their s
 
 ### 🏆 Tournament Management
 - **Tournament Creation**: Set up tournaments with various formats
-- **Bracket Management**: Automated bracket generation and management
 - **Multiple Formats**: Support for single elimination, double elimination, league, and group stage formats
-- **Team Registration**: Easy team registration and management system
+- **Team Registration**: Team registration and management system
 
 ![Tournament Page](docs/screenshots/tournaments.png)
-*Tournament management interface with bracket visualization*
+*Tournament management interface*
 
 ### 🔐 User Authentication
 - **Secure Authentication**: User registration and login system
@@ -52,7 +51,7 @@ A comprehensive football management platform that allows users to manage their s
 - **Data Privacy**: Secure data storage with user isolation
 
 ![Authentication](docs/screenshots/auth.png)
-*Clean authentication interface*
+*Authentication interface*
 
 ## 🚀 Technology Stack
 
@@ -63,12 +62,10 @@ A comprehensive football management platform that allows users to manage their s
 - **Tailwind CSS** - Utility-first CSS framework for rapid styling
 - **shadcn/ui** - Beautiful, accessible UI components
 - **React Router** - Client-side routing for single-page application
-- **Lucide React** - Beautiful icon library
+- **Lucide React** - Icon library
 
 ### Backend & Database
 - **Supabase** - Backend-as-a-Service with PostgreSQL database
-- **Real-time Subscriptions** - Live data updates
-- **Row Level Security** - Secure data access patterns
 - **PostgreSQL** - Robust relational database
 
 ### State Management
@@ -86,7 +83,7 @@ A comprehensive football management platform that allows users to manage their s
 
 ### Prerequisites
 - **Node.js** (v18 or higher) - [Download here](https://nodejs.org/)
-- **npm** or **yarn** - Package manager (comes with Node.js)
+- **npm** - Package manager (comes with Node.js)
 
 ### Quick Start
 
@@ -99,8 +96,6 @@ A comprehensive football management platform that allows users to manage their s
 2. **Install dependencies**
    ```bash
    npm install
-   # or
-   yarn install
    ```
 
 3. **Environment Setup**
@@ -114,8 +109,6 @@ A comprehensive football management platform that allows users to manage their s
 4. **Start the development server**
    ```bash
    npm run dev
-   # or
-   yarn dev
    ```
 
 5. **Open your browser**
@@ -143,7 +136,6 @@ The application uses Supabase as the backend. The database schema includes:
 
 1. **Create an Account**
    - Register with your email and password
-   - Verify your email if required
 
 2. **Build Your Squad**
    - Add players with their positions and ratings
@@ -153,7 +145,7 @@ The application uses Supabase as the backend. The database schema includes:
 3. **Create Your First Match**
    - Select team composition (5v5 to 11v11)
    - Choose match date
-   - Track goals, assists, and saves in real-time
+   - Track goals, assists, and saves
 
 4. **Analyze Performance**
    - View detailed statistics for players and teams
@@ -169,12 +161,6 @@ The system supports various match formats:
 - **11v11**: Full football matches
 - **Custom**: Any combination (e.g., 6v8, 9v10)
 
-#### Tournament Management
-- Create tournaments with up to X teams
-- Choose from multiple tournament formats
-- Automatic bracket generation
-- Real-time standings and results
-
 ## 🎯 Features in Detail
 
 ### Match Statistics Tracking
@@ -184,17 +170,15 @@ The system automatically calculates and tracks:
 - **Goals**: Scored by each player with assist tracking
 - **Assists**: Secondary assists and key passes
 - **Saves**: Goalkeeper statistics and clean sheets
-- **Match Ratings**: Individual player performance ratings
 - **Team Performance**: Overall team statistics and trends
 
 ### Performance Analytics
 
-Advanced analytics include:
+Analytics include:
 
 - **Player Progression**: Track improvement over time
 - **Position Analysis**: Performance by playing position
 - **Match Impact**: Key performance indicators
-- **Comparative Analysis**: Player vs player comparisons
 
 ## 🔧 Development
 
@@ -227,21 +211,18 @@ Centralized data management hook that handles:
 - Player CRUD operations
 - Match creation and management  
 - Statistics calculation
-- Real-time data synchronization
 
 #### `MatchCreation` Component
-Sophisticated match creation interface featuring:
+Match creation interface featuring:
 - Dynamic team size validation (5-11 players)
-- Real-time goal and save tracking
-- Player performance rating
+- Goal and save tracking
 - Match completion workflow
 
 #### `Statistics` Component
-Comprehensive analytics dashboard providing:
+Analytics dashboard providing:
 - Player performance metrics
 - Team statistics overview
 - Historical performance trends
-- Comparative analysis tools
 
 ### Build Scripts
 
@@ -257,9 +238,6 @@ npm run preview
 
 # Run linting
 npm run lint
-
-# Type checking
-npm run type-check
 ```
 
 ## 🚀 Deployment
@@ -299,8 +277,6 @@ The built application (`dist` folder) can be deployed to any static hosting serv
 
 ## 🤝 Contributing
 
-We welcome contributions! Here's how to get started:
-
 ### Development Setup
 
 1. **Fork the repository**
@@ -319,19 +295,6 @@ We welcome contributions! Here's how to get started:
 - Write descriptive commit messages
 - Add comments for complex logic
 - Ensure responsive design principles
-
-### Testing
-
-```bash
-# Run tests (when implemented)
-npm run test
-
-# Run type checking
-npm run type-check
-
-# Run linting
-npm run lint
-```
 
 ## 📄 License
 
@@ -352,27 +315,6 @@ If you encounter any issues or have questions:
 1. **Check the documentation** - Most common issues are covered here
 2. **Search existing issues** - Someone might have faced the same problem
 3. **Create a new issue** - Provide detailed information about the problem
-4. **Join our community** - Connect with other users and contributors
-
-## 🔮 Roadmap
-
-### Upcoming Features
-
-- **Mobile Application**: Native iOS and Android apps
-- **Advanced Analytics**: Machine learning insights and predictions
-- **Social Features**: Friend connections and match sharing
-- **Video Integration**: Match highlights and analysis
-- **API Integration**: Connect with other football data sources
-- **Multi-language Support**: Internationalization
-- **Offline Mode**: Work without internet connection
-- **Export Features**: PDF reports and data export
-
-### Performance Improvements
-
-- **Enhanced Caching**: Advanced caching strategies
-- **Real-time Updates**: WebSocket integration for live updates
-- **Progressive Web App**: PWA features for app-like experience
-- **Performance Monitoring**: Detailed performance analytics
 
 ---
 
@@ -390,17 +332,13 @@ If you encounter any issues or have questions:
 ![Match Flow](docs/screenshots/match-creation-flow.png)
 *Step-by-step match creation process*
 
-### Live Match Interface
-![Live Match](docs/screenshots/live-match.png)
-*Real-time match tracking interface*
-
 ### Statistics Deep Dive
 ![Statistics Detail](docs/screenshots/statistics-detail.png)
 *Comprehensive statistics and analytics dashboard*
 
-### Tournament Brackets
-![Tournament Brackets](docs/screenshots/tournament-brackets.png)
-*Tournament bracket visualization and management*
+### Tournament Management
+![Tournament Management](docs/screenshots/tournament-management.png)
+*Tournament creation and management interface*
 
 ### Responsive Design
 ![Mobile View](docs/screenshots/mobile-responsive.png)
