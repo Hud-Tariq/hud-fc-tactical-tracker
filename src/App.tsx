@@ -17,7 +17,6 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Toaster />
-            <PWAInstallPrompt />
           </div>
         </Router>
       </AuthProvider>
