@@ -1,4 +1,3 @@
-
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
@@ -20,6 +19,12 @@ window.addEventListener('error', (event) => {
 
 // Service Worker Registration
 async function registerServiceWorker() {
+  // Disable service worker in development to prevent constant update notifications
+  if (import.meta.env.DEV) {
+    console.log('PWA: Service Worker disabled in development mode');
+    return;
+  }
+
   if ('serviceWorker' in navigator) {
     try {
       console.log('PWA: Registering Service Worker...');
