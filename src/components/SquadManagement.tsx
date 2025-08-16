@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -69,9 +70,9 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
   };
 
   const positionIcons = {
-    'Goalkeeper': 'wall-goalkeeper',
-    'Defender': 'shield-defender',
-    'Midfielder': 'trophy',
+    'Goalkeeper': 'goalkeeper',
+    'Defender': 'defender',
+    'Midfielder': 'midfielder',
     'Forward': 'attacker'
   };
 
