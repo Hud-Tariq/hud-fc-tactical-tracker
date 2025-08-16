@@ -208,12 +208,18 @@ export class StatisticsService {
 
       const newMatchesPlayed = currentPlayer.matches_played + 1;
       
-      // Improved rating adjustment with more realistic progression
+      // Enhanced rating adjustment with better time evolution and consistency rewards
       let newRating = currentPlayer.rating;
+
+      // Get previous match ratings for consistency bonus (simplified for now)
+      // In a full implementation, you'd fetch the last few match ratings from the database
+      const previousRatings: number[] = []; // TODO: Implement actual previous ratings tracking
+
       const ratingAdjustment = this.calculateRatingAdjustment(
         currentPlayer.rating,
         performance.matchRating,
-        currentPlayer.matches_played
+        currentPlayer.matches_played,
+        previousRatings
       );
       
       // Apply the rating change
