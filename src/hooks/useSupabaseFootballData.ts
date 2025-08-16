@@ -557,56 +557,30 @@ export const useSupabaseFootballData = () => {
 
   const getPlayerById = (id: string) => players.find(p => p.id === id);
 
-  // Enhanced data loading with detailed debugging
+  // Show toast for errors
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        console.log('=== INITIAL DATA LOAD START ===');
-        console.log('Checking user authentication...');
-        
-        const { data: { user }, error } = await supabase.auth.getUser();
+    if (playersError) {
+      const errorMessage = playersError instanceof Error ? playersError.message : 'Unknown error';
+      toast({
+        title: "Error Loading Players",
+        description: `Failed to fetch players: ${errorMessage}`,
+        variant: "destructive",
+      });
+    }
+  }, [playersError, toast]);
 
-        if (error) {
-          console.error('Error getting user during initial load:', error);
-          setLoading(false);
-          return;
-        }
+  useEffect(() => {
+    if (matchesError) {
+      const errorMessage = matchesError instanceof Error ? matchesError.message : 'Unknown error';
+      toast({
+        title: "Error Loading Matches",
+        description: `Failed to fetch matches: ${errorMessage}`,
+        variant: "destructive",
+      });
+    }
+  }, [matchesError, toast]);
 
-        console.log('User check result:', user ? `authenticated (${user.id})` : 'not authenticated');
-
-        if (user) {
-          console.log('User is authenticated, starting data fetch...');
-          setLoading(true);
-
-          console.log('Fetching players first...');
-          await fetchPlayers(true); // Force refresh on initial load
-          
-          console.log('Players fetch completed, now fetching matches...');
-          await fetchMatches(true); // Force refresh on initial load
-          
-          console.log('All data fetched successfully');
-        } else {
-          console.log('No authenticated user, skipping data fetch');
-        }
-        
-        console.log('Setting loading to false');
-        setLoading(false);
-        console.log('=== INITIAL DATA LOAD COMPLETE ===');
-      } catch (error) {
-        console.error('=== INITIAL DATA LOAD ERROR ===');
-        console.error('Network error in loadData:', error);
-        setLoading(false);
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        toast({
-          title: "Network Error",
-          description: `Failed to connect to the server: ${errorMessage}`,
-          variant: "destructive",
-        });
-      }
-    };
-
-    loadData();
-  }, [fetchPlayers, fetchMatches, toast]);
+  const loading = playersLoading || matchesLoading;
 
   return {
     players,
@@ -619,8 +593,11 @@ export const useSupabaseFootballData = () => {
     completeMatch,
     deleteMatch,
     getPlayerById,
-    refreshData: () => Promise.all([fetchPlayers(true), fetchMatches(true)]),
-    refreshPlayers: () => fetchPlayers(true),
-    refreshMatches: () => fetchMatches(true)
+    refreshData: () => Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['players', user?.id] }),
+      queryClient.invalidateQueries({ queryKey: ['matches', user?.id] })
+    ]),
+    refreshPlayers: () => queryClient.invalidateQueries({ queryKey: ['players', user?.id] }),
+    refreshMatches: () => queryClient.invalidateQueries({ queryKey: ['matches', user?.id] })
   };
 };
