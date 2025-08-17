@@ -718,9 +718,28 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
             <ArrowLeft className="w-5 h-5 text-white" />
           </button>
           <DialogTitle className="text-xl font-bold text-white">{player.name}</DialogTitle>
-          <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-            <Share className="w-5 h-5 text-white" />
-          </button>
+          <button
+          onClick={() => {
+            if (navigator.share) {
+              navigator.share({
+                title: `${selectedPlayer.name} - Player Stats`,
+                text: `Check out ${selectedPlayer.name}'s stats: ${selectedPlayer.rating} rating, ${selectedPlayer.totalGoals} goals, ${selectedPlayer.matchesPlayed} matches played.`,
+                url: window.location.href
+              });
+            } else {
+              // Fallback for browsers without Web Share API
+              navigator.clipboard.writeText(
+                `${selectedPlayer.name} - Rating: ${selectedPlayer.rating}, Goals: ${selectedPlayer.totalGoals}, Matches: ${selectedPlayer.matchesPlayed}`
+              ).then(() => {
+                // You could add a toast notification here
+                alert('Player stats copied to clipboard!');
+              });
+            }
+          }}
+          className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
+        >
+          <Share className="w-5 h-5 text-white" />
+        </button>
         </div>
       </DialogHeader>
 
