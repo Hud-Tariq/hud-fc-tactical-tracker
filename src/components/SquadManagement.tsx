@@ -404,23 +404,6 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
         )}
       </div>
 
-      {/* Mobile Bottom Navigation */}
-      <div className="bg-black/50 backdrop-blur-lg border-t border-white/10 px-4 py-2 pb-6">
-        <div className="flex items-center justify-around">
-          <button className={`flex flex-col items-center py-2 px-4 rounded-xl ${activeTab === 'overview' ? 'bg-white/10' : ''}`}>
-            <Users className="w-6 h-6 text-white mb-1" />
-            <span className="text-xs text-white">Overview</span>
-          </button>
-          <button className={`flex flex-col items-center py-2 px-4 rounded-xl ${activeTab === 'formation' ? 'bg-white/10' : ''}`}>
-            <Icon name="tactics" size={24} className="w-6 h-6 text-white mb-1" />
-            <span className="text-xs text-white">Formation</span>
-          </button>
-          <button className={`flex flex-col items-center py-2 px-4 rounded-xl ${activeTab === 'stats' ? 'bg-white/10' : ''}`}>
-            <TrendingUp className="w-6 h-6 text-white mb-1" />
-            <span className="text-xs text-white">Stats</span>
-          </button>
-        </div>
-      </div>
 
       {/* Mobile Floating Action Button */}
       <button
