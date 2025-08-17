@@ -422,7 +422,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
 
       {/* Mobile Player Detail Modal */}
       <Dialog open={isPlayerDetailOpen} onOpenChange={setIsPlayerDetailOpen}>
-        <DialogContent className="bg-gray-900 border-white/20 text-white rounded-3xl fixed inset-4 max-w-none w-auto transform data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom">
+        <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-white/20 text-white rounded-3xl fixed inset-4 max-w-none w-auto transform z-[100] data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom max-h-[90vh] overflow-y-auto">
           {selectedPlayer && <MobilePlayerDetail player={selectedPlayer} />}
         </DialogContent>
       </Dialog>
