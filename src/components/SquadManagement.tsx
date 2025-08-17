@@ -415,7 +415,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
 
       {/* Mobile Add Player Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="bg-gray-900 border-white/20 text-white rounded-t-3xl rounded-b-none fixed bottom-0 left-0 right-0 max-w-none w-full transform translate-y-0 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom">
+        <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-white/20 text-white rounded-t-3xl rounded-b-none fixed bottom-0 left-0 right-0 max-w-none w-full transform translate-y-0 z-[100] data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom max-h-[90vh] overflow-y-auto">
           <MobileAddPlayerForm />
         </DialogContent>
       </Dialog>
