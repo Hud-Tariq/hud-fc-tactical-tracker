@@ -120,19 +120,27 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
               <UserMenu />
             </div>
 
-            {/* Mobile Hamburger Menu Button - Top Right */}
+            {/* Mobile Hamburger Menu Button - Enhanced */}
             <div className="sm:hidden flex items-center">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-2 rounded-lg text-on-dark hover:text-white hover:bg-white/10 transition-all duration-300"
+                className={`relative p-3 rounded-xl transition-all duration-300 border-2 ${
+                  isMobileMenuOpen
+                    ? 'bg-gradient-to-r from-primary/20 to-secondary/20 border-primary/30 text-white'
+                    : 'border-white/20 text-on-dark hover:text-white hover:bg-white/10 hover:border-white/30'
+                }`}
               >
-                {isMobileMenuOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <Menu className="w-6 h-6" />
-                )}
+                <div className="relative w-6 h-6 flex items-center justify-center">
+                  {isMobileMenuOpen ? (
+                    <X className="w-6 h-6 animate-in spin-in-180 duration-300" />
+                  ) : (
+                    <Menu className="w-6 h-6 animate-in fade-in duration-300" />
+                  )}
+                </div>
+                {/* Notification dot */}
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-primary to-secondary rounded-full border-2 border-gray-900"></div>
               </Button>
             </div>
           </div>
