@@ -254,7 +254,7 @@ const AuthPage = () => {
                   {/* Sign In Button */}
                   <Button
                     type="submit"
-                    className="w-full h-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                    className="w-full h-12 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
                     disabled={loading}
                   >
                     {loading ? (
