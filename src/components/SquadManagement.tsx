@@ -89,6 +89,24 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
     onPlayerClick(player);
   };
 
+  // Filter players based on search and position
+  const filteredPlayers = players.filter(player => {
+    const matchesSearch = player.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         player.position.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesPosition = positionFilter === 'all' || player.position === positionFilter;
+    return matchesSearch && matchesPosition;
+  });
+
+  // Update grouped players to use filtered players
+  const filteredGroupedPlayers = filteredPlayers.reduce((groups, player) => {
+    const position = player.position;
+    if (!groups[position]) {
+      groups[position] = [];
+    }
+    groups[position].push(player);
+    return groups;
+  }, {} as Record<string, Player[]>);
+
   const nextPlayer = () => {
     if (currentPlayerIndex < players.length - 1) {
       setCurrentPlayerIndex(currentPlayerIndex + 1);
