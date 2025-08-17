@@ -497,7 +497,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
           </div>
         ) : (
           <div className="px-4 space-y-4">
-            {(selectedPosition ? groupedPlayers[selectedPosition] || [] : players).map((player, index) => (
+            {(selectedPosition ? filteredGroupedPlayers[selectedPosition] || [] : filteredPlayers).map((player, index) => (
               <MobileTikTokPlayerCard 
                 key={player.id} 
                 player={player} 
