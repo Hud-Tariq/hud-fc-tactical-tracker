@@ -294,7 +294,7 @@ const AuthPage = () => {
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         placeholder="Enter your full name"
-                        className="pl-10 h-12 focus:border-primary focus:ring-primary"
+                        className="pl-10 h-12 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                         required
                       />
                     </div>
