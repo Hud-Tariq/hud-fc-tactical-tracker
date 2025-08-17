@@ -448,12 +448,14 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
 
   const MobileAddPlayerForm = () => (
     <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-white">Add Player</h2>
-        <button onClick={() => setIsDialogOpen(false)} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-          <Plus className="w-5 h-5 text-white rotate-45" />
-        </button>
-      </div>
+      <DialogHeader>
+        <div className="flex items-center justify-between mb-6">
+          <DialogTitle className="text-2xl font-bold text-white">Add Player</DialogTitle>
+          <button onClick={() => setIsDialogOpen(false)} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+            <Plus className="w-5 h-5 text-white rotate-45" />
+          </button>
+        </div>
+      </DialogHeader>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
