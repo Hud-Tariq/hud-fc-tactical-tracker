@@ -155,18 +155,18 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="main-background min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+        <div className="bg-card rounded-2xl shadow-xl border border-border overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-8 text-center">
+          <div className="bg-gradient-to-r from-primary to-secondary p-8 text-center">
             <div className="w-16 h-16 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center">
               <Lock className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-white mb-2">
               {activeTab === 'signin' ? 'Welcome Back' : 'Join Us Today'}
             </h1>
-            <p className="text-indigo-100">
+            <p className="text-white/80">
               {activeTab === 'signin' ? 'Sign in to your account' : 'Create your new account'}
             </p>
           </div>
