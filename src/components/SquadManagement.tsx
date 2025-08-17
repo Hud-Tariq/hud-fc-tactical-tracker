@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Users, TrendingUp, Star, ChevronRight, Heart, Share, MoreHorizontal, Filter, Search, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Plus, Users, TrendingUp, Star, ChevronRight, Share, MoreHorizontal, Filter, Search, ArrowLeft, ArrowRight } from 'lucide-react';
 import { Icon, IconName } from '@/components/ui/icon';
 import PlayerCard from './PlayerCard';
 import { Player } from '@/types/football';
