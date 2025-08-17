@@ -202,10 +202,10 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
         </div>
       ) : (
         <div className="space-y-8">
-          {orderedPositions.map((position, positionIndex) => {
+          {orderedPositions.filter(position => filteredGroupedPlayers[position]?.length > 0).map((position, positionIndex) => {
             const positionIconName = positionIcons[position as keyof typeof positionIcons];
             const colorClass = positionColors[position as keyof typeof positionColors]?.bg || 'from-gray-400 to-gray-500';
-            
+
             return (
               <div key={position} className={`floating-card animate-fade-in animate-stagger-${positionIndex + 1}`}>
                 <div className="overflow-hidden rounded-2xl">
@@ -217,14 +217,14 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
                       <div>
                         <h3 className="text-2xl font-bold text-white font-poppins">{position}</h3>
                         <p className="text-white/80">
-                          {groupedPlayers[position].length} player{groupedPlayers[position].length !== 1 ? 's' : ''}
+                          {filteredGroupedPlayers[position].length} player{filteredGroupedPlayers[position].length !== 1 ? 's' : ''}
                         </p>
                       </div>
                     </div>
                   </div>
                   <div className="p-3 sm:p-4 lg:p-8">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
-                      {groupedPlayers[position].map((player, playerIndex) => (
+                      {filteredGroupedPlayers[position].map((player, playerIndex) => (
                         <div key={player.id} className={`animate-fade-in animate-stagger-${playerIndex + 1}`}>
                           <PlayerCard player={player} onClick={() => onPlayerClick(player)} />
                         </div>
