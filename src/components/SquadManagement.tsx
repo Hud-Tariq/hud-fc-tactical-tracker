@@ -436,11 +436,11 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
         <div className="mb-6">
           <h2 className="text-lg font-semibold text-white mb-3">Positions</h2>
           <div className="flex space-x-3 overflow-x-auto pb-2">
-            {orderedPositions.map((position) => {
+            {orderedPositions.filter(position => filteredGroupedPlayers[position]?.length > 0).map((position) => {
               const positionColor = positionColors[position as keyof typeof positionColors];
               const positionIconName = positionIcons[position as keyof typeof positionIcons];
               const isSelected = selectedPosition === position;
-              
+
               return (
                 <button
                   key={position}
@@ -452,7 +452,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
                   </div>
                   <div className="mt-1 text-center">
                     <p className="text-white text-xs font-medium">{position.slice(0, 3)}</p>
-                    <p className="text-white/60 text-xs">{groupedPlayers[position]?.length || 0}</p>
+                    <p className="text-white/60 text-xs">{filteredGroupedPlayers[position]?.length || 0}</p>
                   </div>
                   {isSelected && (
                     <div className="absolute -top-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center">
