@@ -368,41 +368,41 @@ const AuthPage = () => {
 
                   {/* Confirm Password Field */}
                   <div className="space-y-2">
-                    <Label htmlFor="signup-confirm-password" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="signup-confirm-password" className="text-sm font-medium text-foreground">
                       Confirm Password
                     </Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary w-5 h-5 z-10" />
                       <Input
                         id="signup-confirm-password"
                         type={showConfirmPassword ? "text" : "password"}
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="Confirm your password"
-                        className="pl-10 pr-10 h-12 border-gray-200 focus:border-indigo-500 focus:ring-indigo-500"
+                        className="pl-10 pr-10 h-12 focus:border-primary focus:ring-primary"
                         required
                       />
                       <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary hover:text-secondary z-10"
                       >
                         {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </button>
                     </div>
-                    
+
                     {/* Password Match Indicator */}
                     {confirmPassword && (
                       <div className="flex items-center space-x-2 text-xs">
                         {passwordsMatch ? (
                           <>
-                            <CheckCircle className="w-4 h-4 text-green-500" />
-                            <span className="text-green-600">Passwords match</span>
+                            <CheckCircle className="w-4 h-4 text-success" />
+                            <span className="text-success">Passwords match</span>
                           </>
                         ) : (
                           <>
-                            <AlertCircle className="w-4 h-4 text-red-500" />
-                            <span className="text-red-600">Passwords don't match</span>
+                            <AlertCircle className="w-4 h-4 text-destructive" />
+                            <span className="text-destructive">Passwords don't match</span>
                           </>
                         )}
                       </div>
