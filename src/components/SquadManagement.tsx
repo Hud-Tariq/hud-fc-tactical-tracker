@@ -627,15 +627,17 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
 
   const MobilePlayerDetail = ({ player }: { player: Player }) => (
     <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <button onClick={() => setIsPlayerDetailOpen(false)} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-          <ArrowLeft className="w-5 h-5 text-white" />
-        </button>
-        <h2 className="text-xl font-bold text-white">{player.name}</h2>
-        <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-          <Share className="w-5 h-5 text-white" />
-        </button>
-      </div>
+      <DialogHeader>
+        <div className="flex items-center justify-between mb-6">
+          <button onClick={() => setIsPlayerDetailOpen(false)} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+            <ArrowLeft className="w-5 h-5 text-white" />
+          </button>
+          <DialogTitle className="text-xl font-bold text-white">{player.name}</DialogTitle>
+          <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+            <Share className="w-5 h-5 text-white" />
+          </button>
+        </div>
+      </DialogHeader>
 
       <div className="text-center mb-6">
         <div className="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-br from-primary/20 to-secondary/20 border-2 border-white/20 flex items-center justify-center mb-4">
