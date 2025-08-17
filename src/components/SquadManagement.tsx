@@ -23,6 +23,9 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [isPlayerDetailOpen, setIsPlayerDetailOpen] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [positionFilter, setPositionFilter] = useState<string>('all');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [newPlayer, setNewPlayer] = useState({
     name: '',
     age: '',
