@@ -408,9 +408,9 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
       {/* Mobile Floating Action Button */}
       <button
         onClick={() => setIsDialogOpen(true)}
-        className="fixed bottom-20 right-4 w-14 h-14 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center shadow-lg shadow-primary/25 z-50 hover:scale-110 transition-all duration-300"
+        className="fixed bottom-6 right-4 w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center shadow-xl shadow-primary/30 z-50 hover:scale-110 transition-all duration-300 border-2 border-white/20"
       >
-        <Plus className="w-6 h-6 text-white" />
+        <Plus className="w-7 h-7 text-white" />
       </button>
 
       {/* Mobile Add Player Dialog */}
