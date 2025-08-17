@@ -348,16 +348,16 @@ const AuthPage = () => {
                               className={`h-1 flex-1 rounded ${
                                 level <= passwordStrength
                                   ? level <= 2
-                                    ? 'bg-red-500'
+                                    ? 'bg-destructive'
                                     : level <= 3
-                                    ? 'bg-yellow-500'
-                                    : 'bg-green-500'
-                                  : 'bg-gray-200'
+                                    ? 'bg-warning'
+                                    : 'bg-success'
+                                  : 'bg-muted'
                               }`}
                             />
                           ))}
                         </div>
-                        <p className="text-xs text-gray-600">
+                        <p className="text-xs text-muted-foreground">
                           {passwordStrength <= 2 && 'Weak password'}
                           {passwordStrength === 3 && 'Good password'}
                           {passwordStrength >= 4 && 'Strong password'}
