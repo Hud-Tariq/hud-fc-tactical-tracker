@@ -473,8 +473,27 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
             <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center">
               <Users className="w-12 h-12 text-white/60" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">No Players Yet</h3>
-            <p className="text-white/60 mb-6">Tap the + button to add your first player</p>
+            <h3 className="text-xl font-bold text-white mb-2">
+              {players.length === 0 ? 'No Players Yet' : 'No Players Found'}
+            </h3>
+            <p className="text-white/60 mb-6">
+              {players.length === 0
+                ? 'Tap the + button to add your first player'
+                : 'Try adjusting your search or filter criteria'
+              }
+            </p>
+            {(searchQuery || positionFilter !== 'all') && (
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setPositionFilter('all');
+                  setIsFilterOpen(false);
+                }}
+                className="px-4 py-2 bg-primary rounded-lg text-white text-sm font-medium hover:bg-primary/90 transition-colors"
+              >
+                Clear Filters
+              </button>
+            )}
           </div>
         ) : (
           <div className="px-4 space-y-4">
