@@ -238,14 +238,14 @@ const AuthPage = () => {
                         type="checkbox"
                         checked={rememberMe}
                         onChange={(e) => setRememberMe(e.target.checked)}
-                        className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        className="rounded border-border text-primary focus:ring-primary"
                       />
-                      <span className="ml-2 text-gray-600">Remember me</span>
+                      <span className="ml-2 text-muted-foreground">Remember me</span>
                     </label>
                     <button
                       type="button"
                       onClick={handleForgotPassword}
-                      className="text-sm text-indigo-600 hover:text-indigo-500 font-medium"
+                      className="text-sm text-primary hover:text-secondary font-medium"
                     >
                       Forgot password?
                     </button>
