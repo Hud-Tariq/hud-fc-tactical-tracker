@@ -468,7 +468,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
 
       {/* Mobile Player Cards - TikTok Style */}
       <div className="flex-1">
-        {players.length === 0 ? (
+        {filteredPlayers.length === 0 ? (
           <div className="px-4 py-12 text-center">
             <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center">
               <Users className="w-12 h-12 text-white/60" />
