@@ -577,12 +577,9 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col space-y-2">
-              <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                <Heart className="w-5 h-5 text-white" />
-              </button>
-              <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+            {/* Action Button */}
+            <div className="flex items-center">
+              <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors duration-200">
                 <MoreHorizontal className="w-5 h-5 text-white" />
               </button>
             </div>
