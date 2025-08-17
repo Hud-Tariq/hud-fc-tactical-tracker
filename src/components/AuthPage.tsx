@@ -277,18 +277,18 @@ const AuthPage = () => {
                 <form onSubmit={handleSignUp} className="space-y-6">
                   {/* Full Name Field */}
                   <div className="space-y-2">
-                    <Label htmlFor="signup-name" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="signup-name" className="text-sm font-medium text-foreground">
                       Full Name
                     </Label>
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary w-5 h-5 z-10" />
                       <Input
                         id="signup-name"
                         type="text"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         placeholder="Enter your full name"
-                        className="pl-10 h-12 border-gray-200 focus:border-indigo-500 focus:ring-indigo-500"
+                        className="pl-10 h-12 focus:border-primary focus:ring-primary"
                         required
                       />
                     </div>
@@ -296,18 +296,18 @@ const AuthPage = () => {
 
                   {/* Email Field */}
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="signup-email" className="text-sm font-medium text-foreground">
                       Email Address
                     </Label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary w-5 h-5 z-10" />
                       <Input
                         id="signup-email"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter your email"
-                        className="pl-10 h-12 border-gray-200 focus:border-indigo-500 focus:ring-indigo-500"
+                        className="pl-10 h-12 focus:border-primary focus:ring-primary"
                         required
                       />
                     </div>
@@ -315,24 +315,24 @@ const AuthPage = () => {
 
                   {/* Password Field */}
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="signup-password" className="text-sm font-medium text-foreground">
                       Password
                     </Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary w-5 h-5 z-10" />
                       <Input
                         id="signup-password"
                         type={showPassword ? "text" : "password"}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Create a strong password"
-                        className="pl-10 pr-10 h-12 border-gray-200 focus:border-indigo-500 focus:ring-indigo-500"
+                        className="pl-10 pr-10 h-12 focus:border-primary focus:ring-primary"
                         required
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary hover:text-secondary z-10"
                       >
                         {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </button>
