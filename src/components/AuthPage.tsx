@@ -332,7 +332,7 @@ const AuthPage = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Create a strong password"
-                        className="pl-10 pr-10 h-12 focus:border-primary focus:ring-primary"
+                        className="pl-10 pr-10 h-12 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                         required
                       />
                       <button
