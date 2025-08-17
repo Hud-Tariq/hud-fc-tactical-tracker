@@ -145,48 +145,71 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             </div>
           </div>
 
-          {/* Mobile Navigation Menu Dropdown */}
+          {/* Enhanced Mobile Navigation Menu Dropdown */}
           {isMobileMenuOpen && (
-            <div className="sm:hidden mt-4 p-6 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 shadow-2xl">
-              <div className="space-y-4">
-                {/* Navigation Items */}
-                <div className="space-y-2">
-                  <h3 className="text-sm font-semibold text-on-dark-muted uppercase tracking-wide mb-3">Navigation</h3>
-                  {navItems.map((item) => {
-                    const isActive = activeTab === item.id;
-
-                    return (
-                      <Button
-                        key={item.id}
-                        variant="ghost"
-                        onClick={() => handleTabChange(item.id)}
-                        className={`
-                          no-focus-ring w-full flex items-center justify-start space-x-3 px-4 py-4 rounded-xl transition-all duration-300
-                          ${isActive
-                            ? 'bg-gradient-to-r from-pink-500/20 to-purple-600/20 text-on-dark border border-pink-400/30'
-                            : 'text-on-dark-muted hover:text-on-dark hover:bg-white/10'
-                          }
-                        `}
-                      >
-                        {item.isCustom ? (
-                          <Icon name={item.icon as any} size={20} className="w-5 h-5" />
-                        ) : (
-                          React.createElement(item.icon as any, { className: "w-5 h-5" })
-                        )}
-                        <span className="font-medium text-base">{item.label}</span>
-                      </Button>
-                    );
-                  })}
+            <div className="sm:hidden mt-4 animate-in slide-in-from-top-2 duration-300">
+              <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl overflow-hidden">
+                {/* Header */}
+                <div className="bg-gradient-to-r from-primary/20 to-secondary/20 p-4 border-b border-white/10">
+                  <h2 className="text-lg font-bold text-white font-poppins">Menu</h2>
+                  <p className="text-white/60 text-sm">Navigate your team</p>
                 </div>
 
-                {/* Divider */}
-                <div className="border-t border-white/10 my-4"></div>
+                <div className="p-4 space-y-4">
+                  {/* Navigation Items */}
+                  <div className="space-y-1">
+                    {navItems.map((item, index) => {
+                      const isActive = activeTab === item.id;
 
-                {/* Profile Section */}
-                <div className="space-y-2">
-                  <h3 className="text-sm font-semibold text-on-dark-muted uppercase tracking-wide mb-3">Account</h3>
-                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <UserMenu />
+                      return (
+                        <Button
+                          key={item.id}
+                          variant="ghost"
+                          onClick={() => handleTabChange(item.id)}
+                          className={`
+                            no-focus-ring w-full flex items-center justify-between px-4 py-4 rounded-xl transition-all duration-300 group
+                            ${isActive
+                              ? 'bg-gradient-to-r from-primary/30 to-secondary/30 text-white border border-primary/40 shadow-lg'
+                              : 'text-on-dark-muted hover:text-white hover:bg-white/10 border border-transparent hover:border-white/20'
+                            }
+                          `}
+                          style={{ animationDelay: `${index * 0.05}s` }}
+                        >
+                          <div className="flex items-center space-x-3">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                              isActive
+                                ? 'bg-white/20'
+                                : 'bg-white/5 group-hover:bg-white/10'
+                            }`}>
+                              {item.isCustom ? (
+                                <Icon name={item.icon as any} size={20} className="w-5 h-5" />
+                              ) : (
+                                React.createElement(item.icon as any, { className: "w-5 h-5" })
+                              )}
+                            </div>
+                            <div className="text-left">
+                              <span className="font-semibold text-base block">{item.label}</span>
+                              <span className="text-xs text-white/50">
+                                {item.id === 'squad' && 'Manage players'}
+                                {item.id === 'create-match' && 'Create matches'}
+                                {item.id === 'tournaments' && 'Tournament system'}
+                                {item.id === 'statistics' && 'View stats'}
+                              </span>
+                            </div>
+                          </div>
+                          <ChevronRight className={`w-5 h-5 transition-transform duration-300 ${
+                            isActive ? 'text-white' : 'text-white/30 group-hover:text-white/60'
+                          }`} />
+                        </Button>
+                      );
+                    })}
+                  </div>
+
+                  {/* User Profile Section */}
+                  <div className="mt-6 pt-4 border-t border-white/10">
+                    <div className="bg-gradient-to-r from-white/5 to-white/10 rounded-xl p-4 border border-white/10">
+                      <UserMenu />
+                    </div>
                   </div>
                 </div>
               </div>
