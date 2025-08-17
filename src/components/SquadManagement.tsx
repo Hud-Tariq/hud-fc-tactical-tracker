@@ -333,17 +333,82 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-white font-poppins">Squad</h1>
-            <p className="text-white/60 text-sm">{players.length} players</p>
+            <p className="text-white/60 text-sm">
+              {searchQuery || positionFilter !== 'all'
+                ? `${filteredPlayers.length} of ${players.length} players`
+                : `${players.length} players`
+              }
+            </p>
           </div>
           <div className="flex items-center space-x-3">
-            <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-              <Search className="w-5 h-5 text-white" />
-            </button>
-            <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-              <Filter className="w-5 h-5 text-white" />
+            <button
+              onClick={() => setIsFilterOpen(!isFilterOpen)}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 ${
+                isFilterOpen ? 'bg-primary text-white' : 'bg-white/10 text-white hover:bg-white/20'
+              }`}
+            >
+              <Filter className="w-5 h-5" />
             </button>
           </div>
         </div>
+
+        {/* Search Bar */}
+        <div className="mb-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search players by name or position..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-12 pl-10 pr-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white"
+              >
+                <Plus className="w-5 h-5 rotate-45" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Filter Panel */}
+        {isFilterOpen && (
+          <div className="mb-4 p-4 bg-white/10 rounded-xl border border-white/20 animate-in slide-in-from-top-2 duration-300">
+            <h3 className="text-white font-medium mb-3">Filter by Position</h3>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setPositionFilter('all')}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  positionFilter === 'all'
+                    ? 'bg-primary text-white'
+                    : 'bg-white/10 text-white/80 hover:bg-white/20'
+                }`}
+              >
+                All ({players.length})
+              </button>
+              {positionOrder.map(position => {
+                const count = groupedPlayers[position]?.length || 0;
+                if (count === 0) return null;
+                return (
+                  <button
+                    key={position}
+                    onClick={() => setPositionFilter(position)}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      positionFilter === position
+                        ? 'bg-primary text-white'
+                        : 'bg-white/10 text-white/80 hover:bg-white/20'
+                    }`}
+                  >
+                    {position} ({count})
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Mobile Quick Stats */}
         <div className="flex space-x-2 mb-6 overflow-x-auto pb-2">
