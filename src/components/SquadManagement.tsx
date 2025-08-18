@@ -17,7 +17,7 @@ interface SquadManagementProps {
   onRemovePlayer?: (playerId: string) => void;
 }
 
-const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagementProps) => {
+const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }: SquadManagementProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
