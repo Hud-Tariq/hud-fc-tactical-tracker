@@ -259,7 +259,7 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
       </div>
 
       {/* Mobile Content */}
-      <div className="px-4 py-6">
+      <div className="px-4 py-6 pb-24">
         {/* Step 0: Match Details */}
         {currentStep === 0 && (
           <div className="space-y-6 animate-in slide-in-from-right duration-300">
