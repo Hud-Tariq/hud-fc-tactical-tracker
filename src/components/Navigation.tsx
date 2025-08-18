@@ -23,24 +23,24 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
     };
 
     return (
-      <div className="bg-gradient-to-r from-white/5 to-white/10 rounded-xl p-4 border border-white/10">
+      <div className="bg-white/10 rounded-xl p-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-              <User className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              <User className="w-4 h-4 text-white" />
             </div>
             <div>
-              <p className="text-white font-medium">{user?.email?.split('@')[0]}</p>
-              <p className="text-white/60 text-sm">Signed in</p>
+              <p className="text-white font-medium text-sm">{user?.email?.split('@')[0]}</p>
+              <p className="text-white/60 text-xs">Signed in</p>
             </div>
           </div>
           <Button
             onClick={handleSignOut}
             variant="ghost"
             size="sm"
-            className="bg-red-500/20 hover:bg-red-500/30 text-red-300 hover:text-red-200 border border-red-400/30 hover:border-red-400/50 rounded-xl px-3 py-2 transition-all duration-300"
+            className="bg-red-500 hover:bg-red-600 text-white rounded-lg px-3 py-1.5 text-sm transition-all duration-200"
           >
-            <LogOut className="w-4 h-4 mr-2" />
+            <LogOut className="w-4 h-4 mr-1" />
             Sign Out
           </Button>
         </div>
