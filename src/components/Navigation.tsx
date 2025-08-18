@@ -145,71 +145,90 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             </div>
           </div>
 
-          {/* Enhanced Mobile Navigation Menu Dropdown */}
+          {/* Mobile Sidebar Overlay */}
           {isMobileMenuOpen && (
-            <div className="sm:hidden mt-4 animate-in slide-in-from-top-2 duration-300">
-              <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl overflow-hidden">
-                {/* Header */}
-                <div className="bg-gradient-to-r from-primary/20 to-secondary/20 p-4 border-b border-white/10">
-                  <h2 className="text-lg font-bold text-white font-poppins">Menu</h2>
-                  <p className="text-white/60 text-sm">Navigate your team</p>
+            <div className="sm:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-in fade-in duration-300">
+              <div className="absolute top-0 right-0 h-full w-80 max-w-[85vw] bg-gradient-to-b from-gray-900/95 to-black/95 backdrop-blur-xl border-l border-white/20 shadow-2xl animate-in slide-in-from-right duration-300">
+                {/* Sidebar Header */}
+                <div className="p-6 border-b border-white/10">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-xl overflow-hidden">
+                        <img
+                          src="/images/logo.png"
+                          alt="Logo"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h2 className="text-lg font-bold text-white font-poppins gradient-text-light">Hud FC Manager</h2>
+                        <p className="text-white/60 text-sm">Menu</p>
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      variant="ghost"
+                      size="sm"
+                      className="text-white/60 hover:text-white hover:bg-white/10 rounded-xl"
+                    >
+                      <X className="w-6 h-6" />
+                    </Button>
+                  </div>
                 </div>
 
-                <div className="p-4 space-y-4">
-                  {/* Navigation Items */}
-                  <div className="space-y-1">
-                    {navItems.map((item, index) => {
-                      const isActive = activeTab === item.id;
+                {/* Navigation Items */}
+                <div className="p-6 space-y-2">
+                  {navItems.map((item, index) => {
+                    const isActive = activeTab === item.id;
 
-                      return (
-                        <Button
-                          key={item.id}
-                          variant="ghost"
-                          onClick={() => handleTabChange(item.id)}
-                          className={`
-                            no-focus-ring w-full flex items-center justify-between px-4 py-4 rounded-xl transition-all duration-300 group
-                            ${isActive
-                              ? 'bg-gradient-to-r from-primary/30 to-secondary/30 text-white border border-primary/40 shadow-lg'
-                              : 'text-on-dark-muted hover:text-white hover:bg-white/10 border border-transparent hover:border-white/20'
-                            }
-                          `}
-                          style={{ animationDelay: `${index * 0.05}s` }}
-                        >
-                          <div className="flex items-center space-x-3">
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                              isActive
-                                ? 'bg-white/20'
-                                : 'bg-white/5 group-hover:bg-white/10'
-                            }`}>
-                              {item.isCustom ? (
-                                <Icon name={item.icon as any} size={20} className="w-5 h-5" />
-                              ) : (
-                                React.createElement(item.icon as any, { className: "w-5 h-5" })
-                              )}
-                            </div>
-                            <div className="text-left">
-                              <span className="font-semibold text-base block">{item.label}</span>
-                              <span className="text-xs text-white/50">
-                                {item.id === 'squad' && 'Manage players'}
-                                {item.id === 'create-match' && 'Create matches'}
-                                {item.id === 'tournaments' && 'Tournament system'}
-                                {item.id === 'statistics' && 'View stats'}
-                              </span>
-                            </div>
+                    return (
+                      <Button
+                        key={item.id}
+                        variant="ghost"
+                        onClick={() => handleTabChange(item.id)}
+                        className={`
+                          no-focus-ring w-full flex items-center justify-between px-4 py-4 rounded-xl transition-all duration-300 group h-auto
+                          ${isActive
+                            ? 'bg-gradient-to-r from-primary/30 to-secondary/30 text-white border border-primary/40 shadow-lg'
+                            : 'text-on-dark-muted hover:text-white hover:bg-white/10 border border-transparent hover:border-white/20'
+                          }
+                        `}
+                        style={{ animationDelay: `${index * 0.05}s` }}
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                            isActive
+                              ? 'bg-white/20'
+                              : 'bg-white/5 group-hover:bg-white/10'
+                          }`}>
+                            {item.isCustom ? (
+                              <Icon name={item.icon as any} size={22} className="w-5.5 h-5.5" />
+                            ) : (
+                              React.createElement(item.icon as any, { className: "w-5.5 h-5.5" })
+                            )}
                           </div>
-                          <ChevronRight className={`w-5 h-5 transition-transform duration-300 ${
-                            isActive ? 'text-white' : 'text-white/30 group-hover:text-white/60'
-                          }`} />
-                        </Button>
-                      );
-                    })}
-                  </div>
+                          <div className="text-left flex-1">
+                            <span className="font-semibold text-base block">{item.label}</span>
+                            <span className="text-xs text-white/50">
+                              {item.id === 'squad' && 'Manage players'}
+                              {item.id === 'create-match' && 'Create matches'}
+                              {item.id === 'tournaments' && 'Tournament system'}
+                              {item.id === 'statistics' && 'View stats'}
+                            </span>
+                          </div>
+                        </div>
+                        <ChevronRight className={`w-5 h-5 transition-transform duration-300 ${
+                          isActive ? 'text-white' : 'text-white/30 group-hover:text-white/60'
+                        }`} />
+                      </Button>
+                    );
+                  })}
+                </div>
 
-                  {/* User Profile Section */}
-                  <div className="mt-6 pt-4 border-t border-white/10">
-                    <div className="bg-gradient-to-r from-white/5 to-white/10 rounded-xl p-4 border border-white/10">
-                      <UserMenu />
-                    </div>
+                {/* User Profile Section */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-white/10 bg-gradient-to-t from-black/50 to-transparent">
+                  <div className="bg-gradient-to-r from-white/5 to-white/10 rounded-xl p-4 border border-white/10">
+                    <UserMenu />
                   </div>
                 </div>
               </div>
