@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Users, Calendar, BarChart3, Menu, X, ChevronRight } from 'lucide-react';
+import { Users, Calendar, BarChart3, Menu, X, ChevronRight, User, LogOut } from 'lucide-react';
 import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import UserMenu from '@/components/UserMenu';
+import { useAuth } from '@/hooks/useAuth';
 
 interface NavigationProps {
   activeTab: string;
