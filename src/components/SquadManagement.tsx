@@ -537,6 +537,49 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
           {selectedPlayer && <MobilePlayerDetail player={selectedPlayer} />}
         </DialogContent>
       </Dialog>
+
+      {/* Remove Player Confirmation Dialog */}
+      <Dialog open={!!removePlayerId} onOpenChange={() => setRemovePlayerId(null)}>
+        <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-white/20 text-white rounded-3xl fixed left-4 right-4 top-1/2 -translate-y-1/2 max-w-none w-auto z-[100] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
+          <div className="p-6">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-white text-center">Remove Player</DialogTitle>
+            </DialogHeader>
+
+            <div className="text-center py-6">
+              <div className="w-16 h-16 mx-auto mb-4 bg-red-500/20 rounded-2xl flex items-center justify-center border border-red-400/30">
+                <Trash2 className="w-8 h-8 text-red-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">
+                Remove {players.find(p => p.id === removePlayerId)?.name}?
+              </h3>
+              <p className="text-white/60 text-sm">
+                This action cannot be undone. The player will be permanently removed from your squad.
+              </p>
+            </div>
+
+            <div className="flex space-x-3">
+              <Button
+                onClick={() => setRemovePlayerId(null)}
+                className="flex-1 h-12 bg-white/10 text-white border border-white/20 rounded-xl hover:bg-white/20"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  if (removePlayerId && onRemovePlayer) {
+                    onRemovePlayer(removePlayerId);
+                    setRemovePlayerId(null);
+                  }
+                }}
+                className="flex-1 h-12 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl"
+              >
+                Remove
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 
