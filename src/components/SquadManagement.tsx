@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Users, TrendingUp, Star, ChevronRight, Share, MoreHorizontal, Filter, Search, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Plus, Users, TrendingUp, Star, ChevronRight, Share, MoreHorizontal, Filter, Search, ArrowLeft, ArrowRight, Trash2, X } from 'lucide-react';
 import { Icon, IconName } from '@/components/ui/icon';
 import PlayerCard from './PlayerCard';
 import { Player } from '@/types/football';
@@ -14,9 +14,10 @@ interface SquadManagementProps {
   players: Player[];
   onAddPlayer: (player: Omit<Player, 'id' | 'matchesPlayed' | 'totalGoals' | 'totalAssists' | 'totalSaves' | 'cleanSheets'>) => void;
   onPlayerClick: (player: Player) => void;
+  onRemovePlayer?: (playerId: string) => void;
 }
 
-const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagementProps) => {
+const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }: SquadManagementProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
@@ -32,6 +33,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
     position: '',
     rating: 50
   });
+  const [removePlayerId, setRemovePlayerId] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -535,6 +537,49 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
           {selectedPlayer && <MobilePlayerDetail player={selectedPlayer} />}
         </DialogContent>
       </Dialog>
+
+      {/* Remove Player Confirmation Dialog */}
+      <Dialog open={!!removePlayerId} onOpenChange={() => setRemovePlayerId(null)}>
+                <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-white/20 text-white rounded-3xl w-[90vw] max-w-sm fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
+          <div className="p-6">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-white text-center">Remove Player</DialogTitle>
+            </DialogHeader>
+
+            <div className="text-center py-6">
+              <div className="w-16 h-16 mx-auto mb-4 bg-red-500/20 rounded-2xl flex items-center justify-center border border-red-400/30">
+                <Trash2 className="w-8 h-8 text-red-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">
+                Remove {players.find(p => p.id === removePlayerId)?.name}?
+              </h3>
+              <p className="text-white/60 text-sm">
+                This action cannot be undone. The player will be permanently removed from your squad.
+              </p>
+            </div>
+
+            <div className="flex space-x-3">
+              <Button
+                onClick={() => setRemovePlayerId(null)}
+                className="flex-1 h-12 bg-white/10 text-white border border-white/20 rounded-xl hover:bg-white/20"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  if (removePlayerId && onRemovePlayer) {
+                    onRemovePlayer(removePlayerId);
+                    setRemovePlayerId(null);
+                  }
+                }}
+                className="flex-1 h-12 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl"
+              >
+                Remove
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 
@@ -619,6 +664,8 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
   );
 
   const MobileTikTokPlayerCard = ({ player, onClick, index }: { player: Player; onClick: () => void; index: number }) => {
+    const [showActions, setShowActions] = useState(false);
+
     const getRatingColor = (rating: number) => {
       if (rating >= 85) return 'from-emerald-400 to-green-500';
       if (rating >= 75) return 'from-blue-400 to-cyan-500';
@@ -637,15 +684,25 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
       }
     };
 
+    const handleRemoveClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setRemovePlayerId(player.id);
+    };
+
+    const handleActionsClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setShowActions(!showActions);
+    };
+
     return (
-      <div 
+      <div
         className="relative bg-gradient-to-r from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
         onClick={onClick}
         style={{ animationDelay: `${index * 0.1}s` }}
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5"></div>
-        
+
         <div className="relative p-4">
           <div className="flex items-center space-x-4">
             {/* Player Avatar */}
@@ -666,7 +723,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
                 <span>•</span>
                 <span>{player.age} years</span>
               </div>
-              
+
               {/* Stats */}
               <div className="flex items-center space-x-4 text-sm">
                 <div className="flex items-center space-x-1">
@@ -686,9 +743,20 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
               </div>
             </div>
 
-            {/* Action Button */}
-            <div className="flex items-center">
-              <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors duration-200">
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-2">
+              {onRemovePlayer && (
+                <button
+                  onClick={handleRemoveClick}
+                  className="w-10 h-10 rounded-full bg-red-500/20 border border-red-400/30 flex items-center justify-center hover:bg-red-500/30 transition-colors duration-200"
+                >
+                  <Trash2 className="w-4 h-4 text-red-400" />
+                </button>
+              )}
+              <button
+                onClick={handleActionsClick}
+                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors duration-200"
+              >
                 <MoreHorizontal className="w-5 h-5 text-white" />
               </button>
             </div>
@@ -702,7 +770,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
                 <span className="text-white font-medium">{player.averageMatchRating.toFixed(1)}/10</span>
               </div>
               <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
-                <div 
+                <div
                   className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-500"
                   style={{ width: `${(player.averageMatchRating / 10) * 100}%` }}
                 />

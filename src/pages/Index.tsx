@@ -23,6 +23,7 @@ const Index = () => {
     playersLoading,
     matchesLoading,
     addPlayer,
+    removePlayer,
     createMatch,
     completeMatch,
     deleteMatch,
@@ -91,7 +92,7 @@ const Index = () => {
         if (loading && players.length === 0) {
           return <SquadLoadingSkeleton />;
         }
-        return <SquadManagement players={players} onAddPlayer={addPlayer} onPlayerClick={handlePlayerClick} />;
+        return <SquadManagement players={players} onAddPlayer={addPlayer} onPlayerClick={handlePlayerClick} onRemovePlayer={removePlayer} />;
       case 'create-match':
         if (loading && players.length === 0) {
           return <SquadLoadingSkeleton />;
@@ -125,7 +126,7 @@ const Index = () => {
         if (loading && players.length === 0) {
           return <SquadLoadingSkeleton />;
         }
-        return <SquadManagement players={players} onAddPlayer={addPlayer} onPlayerClick={handlePlayerClick} />;
+        return <SquadManagement players={players} onAddPlayer={addPlayer} onPlayerClick={handlePlayerClick} onRemovePlayer={removePlayer} />;
     }
   };
 

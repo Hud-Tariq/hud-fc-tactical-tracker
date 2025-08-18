@@ -292,6 +292,42 @@ export const useSupabaseFootballData = () => {
   
   const addPlayer = addPlayerMutation.mutate;
 
+  // Remove player using mutation
+  const removePlayerMutation = useMutation({
+    mutationFn: async (playerId: string) => {
+      if (!user) throw new Error('User not authenticated');
+
+      const { error } = await supabase
+        .from('players')
+        .delete()
+        .eq('id', playerId)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+      return playerId;
+    },
+    onSuccess: (playerId, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['players', user?.id] });
+      // Find the player name for the toast
+      const player = players.find(p => p.id === playerId);
+      toast({
+        title: "Success",
+        description: `${player?.name || 'Player'} has been removed from the squad.`,
+      });
+    },
+    onError: (error) => {
+      console.error('Error removing player:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      toast({
+        title: "Error",
+        description: `Failed to remove player: ${errorMessage}`,
+        variant: "destructive",
+      });
+    }
+  });
+
+  const removePlayer = removePlayerMutation.mutate;
+
   // Create match function with proper statistics processing
   const createMatch = async (matchData: Omit<Match, 'id'>) => {
     try {
@@ -534,6 +570,7 @@ export const useSupabaseFootballData = () => {
     playersLoading,
     matchesLoading,
     addPlayer,
+    removePlayer,
     createMatch,
     completeMatch,
     deleteMatch,
