@@ -572,26 +572,26 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
       </div>
 
       {/* Mobile Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-t border-white/10 p-4">
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-t border-white/10 p-4 z-50 safe-area-pb">
         <div className="flex items-center justify-between">
           <Button
             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
             disabled={currentStep === 0}
             variant="outline"
-            className="border-white/20 text-white hover:bg-white/10"
+            className="border-white/20 text-white hover:bg-white/10 h-12 px-6 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          
-          <div className="text-white/60 text-sm">
+
+          <div className="text-white/60 text-sm font-medium">
             {currentStep + 1} of {steps.length}
           </div>
-          
+
           <Button
             onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
             disabled={currentStep === steps.length - 1 || !canProceedToNextStep()}
-            className="bg-primary hover:bg-primary/90"
+            className="bg-primary hover:bg-primary/90 h-12 px-6 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
             <ArrowRight className="w-4 h-4 ml-2" />
