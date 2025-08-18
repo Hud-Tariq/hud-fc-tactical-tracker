@@ -770,71 +770,84 @@ const TournamentPage = () => {
     </div>
   );
 
-  // Mobile Tournament Card Component
-  const MobileTournamentCard = ({ tournament, index, onJoin, joiningTournament, userTeams, selectedTeam, setSelectedTeam, handleCreateTeam }: any) => (
-    <div 
-      className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden animate-in slide-in-from-bottom duration-300"
+  // Flutter-style Material Design Tournament Card Component
+  const FlutterTournamentCard = ({ tournament, index, onJoin, joiningTournament, userTeams, selectedTeam, setSelectedTeam, handleCreateTeam }: any) => (
+    <div
+      className="bg-white rounded-3xl shadow-lg shadow-gray-200/50 border border-gray-100 overflow-hidden animate-in slide-in-from-bottom duration-300 hover:shadow-xl hover:shadow-gray-300/30 transition-all duration-300"
       style={{ animationDelay: `${index * 0.1}s` }}
     >
-      {/* Tournament Header */}
-      <div className="p-4 border-b border-white/10">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
-            <h3 className="text-lg font-bold text-white mb-1">{tournament.name}</h3>
-            <p className="text-white/60 text-sm line-clamp-2">{tournament.description}</p>
+      {/* Material Design Header */}
+      <div className="p-6 border-b border-gray-100">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-start space-x-4 flex-1">
+            <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/25">
+              {getFormatIcon(tournament.format)}
+            </div>
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-gray-900 mb-2 font-inter">{tournament.name}</h3>
+              <p className="text-gray-600 text-sm line-clamp-2 font-medium">{tournament.description}</p>
+            </div>
           </div>
           <div className="ml-3">
-            <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status)} text-white text-xs px-3 py-1 rounded-full`}>
+            <div className={`bg-gradient-to-r ${getStatusColor(tournament.status)} text-white text-xs font-semibold px-4 py-2 rounded-full shadow-md`}>
               {tournament.status}
-            </Badge>
+            </div>
           </div>
         </div>
-        
-        <div className="flex items-center space-x-4 text-sm text-white/60">
-          <div className="flex items-center space-x-1">
-            {getFormatIcon(tournament.format)}
-            <span>{tournament.format.replace('_', ' ')}</span>
+
+        <div className="flex items-center space-x-6 text-sm text-gray-600">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center">
+              {getFormatIcon(tournament.format)}
+            </div>
+            <span className="font-medium">{tournament.format.replace('_', ' ')}</span>
           </div>
-          <div className="flex items-center space-x-1">
-            <Users className="w-4 h-4" />
-            <span>{tournament.max_teams} teams</span>
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center">
+              <Users className="w-4 h-4 text-gray-600" />
+            </div>
+            <span className="font-medium">{tournament.max_teams} teams</span>
           </div>
         </div>
       </div>
 
-      {/* Tournament Stats */}
-      <div className="p-4 grid grid-cols-2 gap-3">
-        <div className="bg-white/5 rounded-lg p-3 text-center">
-          <div className="flex items-center justify-center mb-1">
-            <DollarSign className="w-4 h-4 text-yellow-400 mr-1" />
-            <span className="text-white font-medium">${tournament.entry_fee}</span>
+      {/* Material Design Stats Grid */}
+      <div className="p-6 grid grid-cols-2 gap-4">
+        <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4 text-center shadow-sm">
+          <div className="flex items-center justify-center mb-2">
+            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md shadow-green-500/25">
+              <DollarSign className="w-5 h-5 text-white" />
+            </div>
           </div>
-          <p className="text-white/60 text-xs">Entry Fee</p>
+          <p className="text-gray-900 font-bold text-lg">${tournament.entry_fee}</p>
+          <p className="text-gray-600 text-xs font-medium">Entry Fee</p>
         </div>
-        <div className="bg-white/5 rounded-lg p-3 text-center">
-          <div className="flex items-center justify-center mb-1">
-            <Trophy className="w-4 h-4 text-purple-400 mr-1" />
-            <span className="text-white font-medium">${tournament.prize_pool}</span>
+        <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-2xl p-4 text-center shadow-sm">
+          <div className="flex items-center justify-center mb-2">
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md shadow-purple-500/25">
+              <Trophy className="w-5 h-5 text-white" />
+            </div>
           </div>
-          <p className="text-white/60 text-xs">Prize Pool</p>
+          <p className="text-gray-900 font-bold text-lg">${tournament.prize_pool}</p>
+          <p className="text-gray-600 text-xs font-medium">Prize Pool</p>
         </div>
       </div>
 
-      {/* Action Section */}
-      <div className="p-4 border-t border-white/10">
+      {/* Material Design Action Section */}
+      <div className="p-6 border-t border-gray-100 bg-gray-50/50">
         {tournament.status === 'open' ? (
           userTeams.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <Select value={selectedTeam} onValueChange={setSelectedTeam}>
-                <SelectTrigger className="w-full h-12 bg-white/10 border border-white/20 rounded-xl text-white">
+                <SelectTrigger className="w-full h-14 bg-white border-2 border-gray-200 rounded-2xl text-gray-900 font-medium focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 shadow-sm">
                   <SelectValue placeholder="Select your team" />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-900 border-white/20">
+                <SelectContent className="bg-white border-2 border-gray-200 rounded-2xl shadow-xl shadow-gray-300/20">
                   {userTeams.map((team: any) => (
-                    <SelectItem key={team.id} value={team.id} className="text-white">
-                      <div className="flex items-center space-x-2">
+                    <SelectItem key={team.id} value={team.id} className="text-gray-900 font-medium hover:bg-gray-50 rounded-xl mx-1">
+                      <div className="flex items-center space-x-3">
                         <div
-                          className="w-4 h-4 rounded-full"
+                          className="w-5 h-5 rounded-full shadow-sm"
                           style={{ backgroundColor: team.home_color || '#6366f1' }}
                         />
                         <span>{team.name}</span>
@@ -843,109 +856,113 @@ const TournamentPage = () => {
                   ))}
                 </SelectContent>
               </Select>
-              <Button
+              <button
                 onClick={onJoin}
                 disabled={!selectedTeam || joiningTournament === tournament.id}
-                className="w-full h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl font-medium"
+                className="w-full h-14 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-2xl font-semibold shadow-lg shadow-green-600/25 hover:shadow-xl hover:shadow-green-600/30 transition-all duration-300 active:scale-95 flex items-center justify-center space-x-2"
               >
                 {joiningTournament === tournament.id ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Joining...
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Joining...</span>
                   </>
                 ) : (
                   <>
-                    <Trophy className="w-4 h-4 mr-2" />
-                    Join Tournament
+                    <Trophy className="w-5 h-5" />
+                    <span>Join Tournament</span>
                   </>
                 )}
-              </Button>
+              </button>
             </div>
           ) : (
-            <div className="space-y-3">
-              <div className="bg-yellow-500/10 border border-yellow-400/30 rounded-lg p-3 text-center">
-                <p className="text-yellow-300 text-sm">You need a team to join</p>
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-4 text-center shadow-sm">
+                <p className="text-amber-700 text-sm font-semibold">You need a team to join</p>
               </div>
               <TeamCreation
                 onCreateTeam={handleCreateTeam}
                 trigger={
-                  <Button className="w-full h-12 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white rounded-xl">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Create Team First
-                  </Button>
+                  <button className="w-full h-14 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl font-semibold shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/30 transition-all duration-300 active:scale-95 flex items-center justify-center space-x-2">
+                    <Plus className="w-5 h-5" />
+                    <span>Create Team First</span>
+                  </button>
                 }
               />
             </div>
           )
         ) : (
-          <Button
+          <button
             disabled
-            className="w-full h-12 bg-white/10 text-white/60 rounded-xl cursor-not-allowed"
+            className="w-full h-14 bg-gray-100 text-gray-500 rounded-2xl cursor-not-allowed font-semibold flex items-center justify-center space-x-2"
           >
             {tournament.status === 'in_progress' ? (
               <>
-                <Eye className="w-4 h-4 mr-2" />
-                View Matches
+                <Eye className="w-5 h-5" />
+                <span>View Matches</span>
               </>
             ) : (
               <>
-                <Trophy className="w-4 h-4 mr-2" />
-                View Results
+                <Trophy className="w-5 h-5" />
+                <span>View Results</span>
               </>
             )}
-          </Button>
+          </button>
         )}
       </div>
     </div>
   );
 
-  // Mobile My Tournament Card Component
-  const MobileMyTournamentCard = ({ tournament, index }: any) => (
-    <div 
-      className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-purple-400/20 rounded-2xl overflow-hidden animate-in slide-in-from-bottom duration-300"
+  // Flutter-style Material Design My Tournament Card Component
+  const FlutterMyTournamentCard = ({ tournament, index }: any) => (
+    <div
+      className="bg-white rounded-3xl shadow-lg shadow-purple-200/30 border border-purple-100 overflow-hidden animate-in slide-in-from-bottom duration-300 hover:shadow-xl hover:shadow-purple-300/40 transition-all duration-300"
       style={{ animationDelay: `${index * 0.1}s` }}
     >
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
-            <h3 className="text-lg font-bold text-white mb-1">{tournament.name}</h3>
-            <div className="flex items-center space-x-2">
-              <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status)} text-white text-xs px-2 py-1 rounded-full`}>
-                {tournament.status}
-              </Badge>
-              <span className="text-white/60 text-sm">
-                {tournament.tournament_teams?.length || 0}/{tournament.max_teams} teams
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+      <div className="p-6">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-start space-x-4 flex-1">
+            <div className="w-14 h-14 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-600/25">
               {getFormatIcon(tournament.format)}
             </div>
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-gray-900 mb-2 font-inter">{tournament.name}</h3>
+              <div className="flex items-center space-x-3">
+                <div className={`bg-gradient-to-r ${getStatusColor(tournament.status)} text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md`}>
+                  {tournament.status}
+                </div>
+                <span className="text-gray-600 text-sm font-medium">
+                  {tournament.tournament_teams?.length || 0}/{tournament.max_teams} teams
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="bg-white/5 rounded-lg p-2 text-center">
-            <div className="flex items-center justify-center mb-1">
-              <DollarSign className="w-3 h-3 text-yellow-400 mr-1" />
-              <span className="text-white text-sm font-medium">${tournament.entry_fee}</span>
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 text-center shadow-sm">
+            <div className="flex items-center justify-center mb-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-md shadow-amber-500/25">
+                <DollarSign className="w-4 h-4 text-white" />
+              </div>
             </div>
-            <p className="text-white/60 text-xs">Entry Fee</p>
+            <p className="text-gray-900 font-bold">${tournament.entry_fee}</p>
+            <p className="text-gray-600 text-xs font-medium">Entry Fee</p>
           </div>
-          <div className="bg-white/5 rounded-lg p-2 text-center">
-            <div className="flex items-center justify-center mb-1">
-              <Trophy className="w-3 h-3 text-purple-400 mr-1" />
-              <span className="text-white text-sm font-medium">${tournament.prize_pool}</span>
+          <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-2xl p-4 text-center shadow-sm">
+            <div className="flex items-center justify-center mb-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md shadow-purple-500/25">
+                <Trophy className="w-4 h-4 text-white" />
+              </div>
             </div>
-            <p className="text-white/60 text-xs">Prize Pool</p>
+            <p className="text-gray-900 font-bold">${tournament.prize_pool}</p>
+            <p className="text-gray-600 text-xs font-medium">Prize Pool</p>
           </div>
         </div>
 
-        <Button className="w-full h-10 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white rounded-xl text-sm">
-          <Trophy className="w-4 h-4 mr-2" />
-          Manage Tournament
-        </Button>
+        <button className="w-full h-12 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-2xl font-semibold shadow-lg shadow-orange-500/25 hover:shadow-xl hover:shadow-orange-500/30 transition-all duration-300 active:scale-95 flex items-center justify-center space-x-2">
+          <Trophy className="w-5 h-5" />
+          <span>Manage Tournament</span>
+        </button>
       </div>
     </div>
   );
