@@ -540,7 +540,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
 
       {/* Remove Player Confirmation Dialog */}
       <Dialog open={!!removePlayerId} onOpenChange={() => setRemovePlayerId(null)}>
-        <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-white/20 text-white rounded-3xl fixed inset-4 top-1/2 -translate-y-1/2 max-w-sm mx-auto z-[100] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
+                <DialogContent className="bg-gray-900/95 backdrop-blur-xl border-white/20 text-white rounded-3xl w-[90vw] max-w-sm fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
           <div className="p-6">
             <DialogHeader>
               <DialogTitle className="text-xl font-bold text-white text-center">Remove Player</DialogTitle>
