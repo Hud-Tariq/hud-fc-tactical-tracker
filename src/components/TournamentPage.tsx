@@ -685,98 +685,111 @@ const TournamentPage = () => {
     </div>
   );
 
-  // Simple Mobile Tournament Card Component
+  // Enhanced Mobile Tournament Card Component
   const MobileTournamentCard = ({ tournament, index, onJoin, joiningTournament, userTeams, selectedTeam, setSelectedTeam, handleCreateTeam }: any) => (
-    <div className="floating-card animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
-            <h3 className="text-lg font-bold text-on-dark font-poppins mb-1">{tournament.name}</h3>
-            <p className="text-sm text-on-dark-muted line-clamp-2">{tournament.description}</p>
+    <div className="floating-card animate-fade-in hover-lift" style={{ animationDelay: `${index * 0.1}s` }}>
+      <div className="p-5">
+        {/* Enhanced header with better spacing */}
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-start space-x-3 flex-1">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/25 flex-shrink-0">
+              {getFormatIcon(tournament.format as TournamentFormat)}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg font-bold text-on-dark font-poppins mb-1 line-clamp-1">{tournament.name}</h3>
+              <p className="text-sm text-on-dark-muted line-clamp-2 leading-relaxed">{tournament.description}</p>
+            </div>
           </div>
-          <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status as TournamentStatus)} text-white text-xs px-3 py-1 rounded-full ml-3`}>
+          <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status as TournamentStatus)} text-white text-xs px-3 py-1.5 rounded-full ml-3 shadow-lg flex-shrink-0`}>
             {tournament.status}
           </Badge>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
-            <div className="flex items-center justify-center mb-1">
-              <DollarSign className="w-4 h-4 text-yellow-400 mr-1" />
-              <span className="text-sm font-medium text-on-dark">${tournament.entry_fee}</span>
+        {/* Enhanced stats grid with better visual hierarchy */}
+        <div className="grid grid-cols-2 gap-4 mb-5">
+          <div className="p-4 rounded-2xl bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border border-yellow-400/20 text-center hover:scale-105 transition-transform duration-200">
+            <div className="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl mx-auto mb-2 flex items-center justify-center shadow-md">
+              <DollarSign className="w-4 h-4 text-white" />
             </div>
-            <p className="text-xs text-on-dark-subtle">Entry Fee</p>
+            <div className="text-base font-bold text-on-dark">${tournament.entry_fee}</div>
+            <p className="text-xs text-yellow-300 font-medium">Entry Fee</p>
           </div>
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
-            <div className="flex items-center justify-center mb-1">
-              <Trophy className="w-4 h-4 text-purple-400 mr-1" />
-              <span className="text-sm font-medium text-on-dark">${tournament.prize_pool}</span>
+          <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-400/20 text-center hover:scale-105 transition-transform duration-200">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl mx-auto mb-2 flex items-center justify-center shadow-md">
+              <Trophy className="w-4 h-4 text-white" />
             </div>
-            <p className="text-xs text-on-dark-subtle">Prize Pool</p>
+            <div className="text-base font-bold text-on-dark">${tournament.prize_pool}</div>
+            <p className="text-xs text-purple-300 font-medium">Prize Pool</p>
           </div>
         </div>
 
-        <div className="flex items-center space-x-4 text-sm text-on-dark-muted mb-4">
-          <div className="flex items-center space-x-1">
-            {getFormatIcon(tournament.format as TournamentFormat)}
-            <span>{tournament.format.replace('_', ' ')}</span>
+        {/* Enhanced info row with better icons */}
+        <div className="flex items-center justify-between text-sm text-on-dark-muted mb-5 p-3 rounded-xl bg-white/5 border border-white/10">
+          <div className="flex items-center space-x-2">
+            <div className="w-6 h-6 bg-white/10 rounded-lg flex items-center justify-center">
+              {getFormatIcon(tournament.format as TournamentFormat)}
+            </div>
+            <span className="font-medium">{tournament.format.replace('_', ' ')}</span>
           </div>
-          <div className="flex items-center space-x-1">
-            <Users className="w-4 h-4" />
-            <span>{tournament.max_teams} teams</span>
+          <div className="flex items-center space-x-2">
+            <div className="w-6 h-6 bg-white/10 rounded-lg flex items-center justify-center">
+              <Users className="w-3 h-3" />
+            </div>
+            <span className="font-medium">{tournament.max_teams} teams</span>
           </div>
         </div>
 
+        {/* Enhanced action section */}
         {tournament.status === 'open' ? (
           userTeams.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <Select value={selectedTeam} onValueChange={setSelectedTeam}>
-                <SelectTrigger className="w-full h-10 bg-white/10 border border-white/20 rounded-xl text-on-dark">
+                <SelectTrigger className="w-full h-12 bg-white/10 border-2 border-white/20 rounded-xl text-on-dark font-medium focus:border-purple-400 transition-all duration-200">
                   <SelectValue placeholder="Select your team" />
                 </SelectTrigger>
-                <SelectContent className="glass-card-strong border-white/20">
+                <SelectContent className="glass-card-strong border-white/20 rounded-xl">
                   {userTeams.map((team: any) => (
-                    <SelectItem key={team.id} value={team.id} className="text-on-dark hover:bg-white/10">
-                      <div className="flex items-center gap-2">
+                    <SelectItem key={team.id} value={team.id} className="text-on-dark hover:bg-white/10 rounded-lg mx-1">
+                      <div className="flex items-center gap-3">
                         <div
-                          className="w-4 h-4 rounded-full"
+                          className="w-4 h-4 rounded-full border border-white/20"
                           style={{ backgroundColor: team.home_color || '#6366f1' }}
                         />
-                        {team.name}
+                        <span className="font-medium">{team.name}</span>
                       </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               <Button
-                className="w-full h-10 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium rounded-xl"
+                className="w-full h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30 transition-all duration-300"
                 disabled={!selectedTeam || joiningTournament === tournament.id}
                 onClick={onJoin}
               >
                 {joiningTournament === tournament.id ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Joining...
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    <span>Joining...</span>
                   </>
                 ) : (
                   <>
-                    <Trophy className="w-4 h-4 mr-2" />
-                    Join Tournament
+                    <Trophy className="w-5 h-5 mr-2" />
+                    <span>Join Tournament</span>
                   </>
                 )}
               </Button>
             </div>
           ) : (
-            <div className="space-y-3">
-              <p className="text-xs text-yellow-300 text-center p-2 rounded-lg bg-yellow-500/10 border border-yellow-400/30">
-                You need a team to join
-              </p>
+            <div className="space-y-4">
+              <div className="text-center p-4 rounded-xl bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-400/30">
+                <p className="text-sm text-yellow-300 font-medium">You need a team to join this tournament</p>
+              </div>
               <TeamCreation
                 onCreateTeam={handleCreateTeam}
                 trigger={
-                  <Button className="w-full h-10 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-medium rounded-xl">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Create Team First
+                  <Button className="w-full h-12 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-cyan-500/25 hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300">
+                    <Plus className="w-5 h-5 mr-2" />
+                    <span>Create Team First</span>
                   </Button>
                 }
               />
@@ -784,10 +797,22 @@ const TournamentPage = () => {
           )
         ) : (
           <Button
-            className="w-full h-10 bg-white/10 text-on-dark-muted font-medium rounded-xl cursor-not-allowed"
+            className="w-full h-12 bg-white/10 text-on-dark-muted font-semibold rounded-xl cursor-not-allowed border border-white/10"
             disabled
           >
-            {tournament.status === 'in_progress' ? 'View Matches' : 'View Results'}
+            <div className="flex items-center justify-center space-x-2">
+              {tournament.status === 'in_progress' ? (
+                <>
+                  <Eye className="w-5 h-5" />
+                  <span>View Matches</span>
+                </>
+              ) : (
+                <>
+                  <Trophy className="w-5 h-5" />
+                  <span>View Results</span>
+                </>
+              )}
+            </div>
           </Button>
         )}
       </div>
