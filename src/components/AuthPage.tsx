@@ -2,41 +2,93 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Mail, Lock, Eye, EyeOff, Star } from 'lucide-react';
+import { Loader2, Mail, Lock, Eye, EyeOff, User, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
 
 const AuthPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [activeTab, setActiveTab] = useState('signin');
+  const [rememberMe, setRememberMe] = useState(false);
   const { toast } = useToast();
+
+  // Password strength validator
+  const getPasswordStrength = (password: string) => {
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    return strength;
+  };
+
+  const passwordStrength = getPasswordStrength(password);
+  const passwordsMatch = password === confirmPassword && confirmPassword.length > 0;
+
+  const resetForm = () => {
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setFullName('');
+    setShowPassword(false);
+    setShowConfirmPassword(false);
+  };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    if (password !== confirmPassword) {
+      toast({
+        title: "Password Mismatch",
+        description: "Passwords do not match. Please try again.",
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (passwordStrength < 3) {
+      toast({
+        title: "Weak Password",
+        description: "Please create a stronger password with at least 8 characters, including uppercase, lowercase, and numbers.",
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
+    }
 
     try {
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            full_name: fullName
+          }
         }
       });
 
       if (error) throw error;
 
       toast({
-        title: "Success!",
-        description: "Check your email for verification link",
+        title: "Welcome aboard! 🎉",
+        description: "Please check your email for a verification link to complete your registration.",
       });
+      
+      resetForm();
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: "Registration Failed",
         description: error.message,
         variant: "destructive",
       });
@@ -57,10 +109,13 @@ const AuthPage = () => {
 
       if (error) throw error;
 
-      // Redirect will happen automatically via auth state change
+      toast({
+        title: "Welcome back! 👋",
+        description: "You've been successfully signed in.",
+      });
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: "Sign In Failed",
         description: error.message,
         variant: "destructive",
       });
@@ -69,132 +124,318 @@ const AuthPage = () => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (!email) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Reset Link Sent",
+        description: "Check your email for password reset instructions.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 flex items-stretch sm:items-center justify-center p-4 sm:p-6">
-      <div className="relative w-full max-w-md my-auto">
-        {/* Main card with diagonal cut - Enhanced for mobile */}
-        <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden min-h-[90vh] sm:min-h-0 flex flex-col">
-          {/* Diagonal purple section - Responsive */}
-          <div className="absolute top-0 right-0 w-24 sm:w-32 h-full bg-gradient-to-bl from-purple-500 to-purple-600 transform skew-x-12 origin-top-right translate-x-3 sm:translate-x-4"></div>
-
-          {/* Content - Enhanced vertical layout */}
-          <div className="relative z-10 p-8 sm:p-12 flex-1 flex flex-col justify-center">
-            {/* Welcome Section */}
-            <div className="text-center mb-12">
-              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center shadow-lg">
-                <Lock className="w-10 h-10 text-purple-600" />
-              </div>
-              <h1 className="text-4xl sm:text-3xl font-bold text-gray-800 mb-3">Welcome Back</h1>
-              <p className="text-gray-500 text-lg">Sign in to continue</p>
+    <div className="main-background min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-card rounded-2xl shadow-xl border border-border overflow-hidden">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-primary to-secondary p-8 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center">
+              <Lock className="w-8 h-8 text-white" />
             </div>
-
-            {/* Login Form */}
-            <form onSubmit={handleSignIn} className="space-y-8">
-              {/* Email Input */}
-              <div className="relative">
-                <Label htmlFor="signin-email" className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
-                </Label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <Mail className="h-6 w-6 text-purple-500" />
-                  </div>
-                  <Input
-                    id="signin-email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    className="w-full h-14 pl-14 pr-4 border-2 border-gray-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:border-purple-400 focus:ring-4 focus:ring-purple-400/20 transition-all duration-300 text-lg bg-white"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Password Input */}
-              <div className="relative">
-                <Label htmlFor="signin-password" className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </Label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <Lock className="h-6 w-6 text-purple-500" />
-                  </div>
-                  <Input
-                    id="signin-password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    className="w-full h-14 pl-14 pr-14 border-2 border-gray-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:border-purple-400 focus:ring-4 focus:ring-purple-400/20 transition-all duration-300 text-lg bg-white"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-purple-500 hover:text-purple-700 transition-colors z-10"
-                  >
-                    {showPassword ? <EyeOff className="h-6 w-6" /> : <Eye className="h-6 w-6" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center">
-                  <input type="checkbox" className="rounded border-gray-300 text-purple-600 focus:ring-purple-500" />
-                  <span className="ml-2 text-gray-600">Remember me</span>
-                </label>
-                <button type="button" className="text-purple-600 hover:text-purple-700 font-medium">
-                  Forgot password?
-                </button>
-              </div>
-
-              {/* Login Button - Enhanced */}
-              <Button
-                type="submit"
-                className="w-full h-14 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold text-lg rounded-xl transition-all duration-300 hover:scale-[1.02] transform shadow-lg shadow-purple-500/25 flex items-center justify-center group"
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-3 h-5 w-5 animate-spin" />
-                    Signing you in...
-                  </>
-                ) : (
-                  <>
-                    Sign In
-                    <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </>
-                )}
-              </Button>
-            </form>
-
-            {/* Sign Up Section */}
-            <div className="text-center mt-10 pt-8 border-t border-gray-200">
-              <p className="text-gray-600 mb-4">Don't have an account?</p>
-              <Button
-                onClick={() => setEmail('')}
-                variant="outline"
-                className="w-full h-12 border-2 border-purple-200 text-purple-600 hover:bg-purple-50 hover:border-purple-300 font-medium rounded-xl transition-all duration-300"
-              >
-                Create Account
-              </Button>
-            </div>
+            <h1 className="text-2xl font-bold text-white mb-2">
+              {activeTab === 'signin' ? 'Welcome Back' : 'Join Us Today'}
+            </h1>
+            <p className="text-white/80">
+              {activeTab === 'signin' ? 'Sign in to your account' : 'Create your new account'}
+            </p>
           </div>
 
-          {/* Decorative elements in purple area */}
-          <div className="absolute bottom-8 right-8 text-white text-xs opacity-60">
-            <div className="flex space-x-2">
-              <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                <Lock className="w-3 h-3" />
-              </div>
-              <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                <Star className="w-3 h-3" />
-              </div>
-            </div>
+          {/* Auth Tabs */}
+          <div className="p-8">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-8 bg-muted text-muted-foreground border-border">
+                <TabsTrigger
+                  value="signin"
+                  className="text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-muted-foreground hover:text-foreground"
+                >
+                  Sign In
+                </TabsTrigger>
+                <TabsTrigger
+                  value="signup"
+                  className="text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-muted-foreground hover:text-foreground"
+                >
+                  Sign Up
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Sign In Tab */}
+              <TabsContent value="signin" className="space-y-6">
+                <form onSubmit={handleSignIn} className="space-y-6">
+                  {/* Email Field */}
+                  <div className="space-y-2">
+                    <Label htmlFor="signin-email" className="text-sm font-medium text-foreground">
+                      Email Address
+                    </Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary w-5 h-5 z-10" />
+                      <Input
+                        id="signin-email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter your email"
+                        className="pl-10 h-12 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Password Field */}
+                  <div className="space-y-2">
+                    <Label htmlFor="signin-password" className="text-sm font-medium text-foreground">
+                      Password
+                    </Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary w-5 h-5 z-10" />
+                      <Input
+                        id="signin-password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Enter your password"
+                        className="pl-10 pr-10 h-12 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary hover:text-secondary z-10"
+                      >
+                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Remember Me & Forgot Password */}
+                  <div className="flex items-center justify-between">
+                    <label className="flex items-center text-sm">
+                      <input
+                        type="checkbox"
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                        className="rounded border-border text-primary focus:ring-primary"
+                      />
+                      <span className="ml-2 text-muted-foreground">Remember me</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleForgotPassword}
+                      className="text-sm text-primary hover:text-secondary font-medium"
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+
+                  {/* Sign In Button */}
+                  <Button
+                    type="submit"
+                    className="w-full h-12 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Signing In...
+                      </>
+                    ) : (
+                      <>
+                        Sign In
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </TabsContent>
+
+              {/* Sign Up Tab */}
+              <TabsContent value="signup" className="space-y-6">
+                <form onSubmit={handleSignUp} className="space-y-6">
+                  {/* Full Name Field */}
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-name" className="text-sm font-medium text-foreground">
+                      Full Name
+                    </Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary w-5 h-5 z-10" />
+                      <Input
+                        id="signup-name"
+                        type="text"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        placeholder="Enter your full name"
+                        className="pl-10 h-12 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Email Field */}
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-email" className="text-sm font-medium text-foreground">
+                      Email Address
+                    </Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary w-5 h-5 z-10" />
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter your email"
+                        className="pl-10 h-12 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Password Field */}
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-password" className="text-sm font-medium text-foreground">
+                      Password
+                    </Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary w-5 h-5 z-10" />
+                      <Input
+                        id="signup-password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Create a strong password"
+                        className="pl-10 pr-10 h-12 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary hover:text-secondary z-10"
+                      >
+                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                    
+                    {/* Password Strength Indicator */}
+                    {password && (
+                      <div className="space-y-2">
+                        <div className="flex space-x-1">
+                          {[1, 2, 3, 4, 5].map((level) => (
+                            <div
+                              key={level}
+                              className={`h-1 flex-1 rounded ${
+                                level <= passwordStrength
+                                  ? level <= 2
+                                    ? 'bg-destructive'
+                                    : level <= 3
+                                    ? 'bg-warning'
+                                    : 'bg-success'
+                                  : 'bg-muted'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {passwordStrength <= 2 && 'Weak password'}
+                          {passwordStrength === 3 && 'Good password'}
+                          {passwordStrength >= 4 && 'Strong password'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Confirm Password Field */}
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-confirm-password" className="text-sm font-medium text-foreground">
+                      Confirm Password
+                    </Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary w-5 h-5 z-10" />
+                      <Input
+                        id="signup-confirm-password"
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Confirm your password"
+                        className="pl-10 pr-10 h-12 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary hover:text-secondary z-10"
+                      >
+                        {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+
+                    {/* Password Match Indicator */}
+                    {confirmPassword && (
+                      <div className="flex items-center space-x-2 text-xs">
+                        {passwordsMatch ? (
+                          <>
+                            <CheckCircle className="w-4 h-4 text-success" />
+                            <span className="text-success">Passwords match</span>
+                          </>
+                        ) : (
+                          <>
+                            <AlertCircle className="w-4 h-4 text-destructive" />
+                            <span className="text-destructive">Passwords don't match</span>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Sign Up Button */}
+                  <Button
+                    type="submit"
+                    className="w-full h-12 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                    disabled={loading || !passwordsMatch || passwordStrength < 3}
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Creating Account...
+                      </>
+                    ) : (
+                      <>
+                        Create Account
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </div>
