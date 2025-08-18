@@ -112,6 +112,19 @@ export default {
 				'pulse-glow': {
 					'0%, 100%': { boxShadow: '0 0 5px hsl(var(--primary))' },
 					'50%': { boxShadow: '0 0 20px hsl(var(--primary)), 0 0 30px hsl(var(--primary))' }
+				},
+				'material-enter': {
+					'0%': { opacity: '0', transform: 'translateY(16px) scale(0.95)' },
+					'100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
+				},
+				'material-exit': {
+					'0%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+					'100%': { opacity: '0', transform: 'translateY(-8px) scale(0.95)' }
+				},
+				'flutter-bounce': {
+					'0%': { opacity: '0', transform: 'translateY(20px) scale(0.9)' },
+					'50%': { transform: 'translateY(-5px) scale(1.02)' },
+					'100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
 				}
 			},
 			animation: {
