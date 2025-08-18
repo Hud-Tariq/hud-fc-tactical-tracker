@@ -23,6 +23,7 @@ const Index = () => {
     playersLoading,
     matchesLoading,
     addPlayer,
+    removePlayer,
     createMatch,
     completeMatch,
     deleteMatch,
