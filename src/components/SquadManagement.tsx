@@ -33,6 +33,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
     position: '',
     rating: 50
   });
+  const [removePlayerId, setRemovePlayerId] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
