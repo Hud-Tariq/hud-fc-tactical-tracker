@@ -126,7 +126,7 @@ const Index = () => {
         if (loading && players.length === 0) {
           return <SquadLoadingSkeleton />;
         }
-        return <SquadManagement players={players} onAddPlayer={addPlayer} onPlayerClick={handlePlayerClick} />;
+        return <SquadManagement players={players} onAddPlayer={addPlayer} onPlayerClick={handlePlayerClick} onRemovePlayer={removePlayer} />;
     }
   };
 
