@@ -61,9 +61,9 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 p-2 sm:p-4 lg:p-6">
+    <nav className="sticky top-0 z-50 p-0 sm:p-4 lg:p-6">
       <div className="container mx-auto max-w-7xl">
-        <div className="glass-nav rounded-2xl px-3 sm:px-4 lg:px-8 py-3 sm:py-4 lg:py-6">
+        <div className="glass-nav rounded-none sm:rounded-2xl px-4 sm:px-4 lg:px-8 py-4 sm:py-4 lg:py-6">
           <div className="flex items-center justify-between">
             {/* Logo Section - Responsive */}
             <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4 flex-shrink-0">
