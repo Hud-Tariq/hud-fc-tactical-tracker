@@ -621,6 +621,8 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
   );
 
   const MobileTikTokPlayerCard = ({ player, onClick, index }: { player: Player; onClick: () => void; index: number }) => {
+    const [showActions, setShowActions] = useState(false);
+
     const getRatingColor = (rating: number) => {
       if (rating >= 85) return 'from-emerald-400 to-green-500';
       if (rating >= 75) return 'from-blue-400 to-cyan-500';
@@ -639,15 +641,25 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
       }
     };
 
+    const handleRemoveClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setRemovePlayerId(player.id);
+    };
+
+    const handleActionsClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setShowActions(!showActions);
+    };
+
     return (
-      <div 
+      <div
         className="relative bg-gradient-to-r from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
         onClick={onClick}
         style={{ animationDelay: `${index * 0.1}s` }}
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5"></div>
-        
+
         <div className="relative p-4">
           <div className="flex items-center space-x-4">
             {/* Player Avatar */}
@@ -668,7 +680,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
                 <span>•</span>
                 <span>{player.age} years</span>
               </div>
-              
+
               {/* Stats */}
               <div className="flex items-center space-x-4 text-sm">
                 <div className="flex items-center space-x-1">
@@ -688,9 +700,20 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
               </div>
             </div>
 
-            {/* Action Button */}
-            <div className="flex items-center">
-              <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors duration-200">
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-2">
+              {onRemovePlayer && (
+                <button
+                  onClick={handleRemoveClick}
+                  className="w-10 h-10 rounded-full bg-red-500/20 border border-red-400/30 flex items-center justify-center hover:bg-red-500/30 transition-colors duration-200"
+                >
+                  <Trash2 className="w-4 h-4 text-red-400" />
+                </button>
+              )}
+              <button
+                onClick={handleActionsClick}
+                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors duration-200"
+              >
                 <MoreHorizontal className="w-5 h-5 text-white" />
               </button>
             </div>
@@ -704,7 +727,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
                 <span className="text-white font-medium">{player.averageMatchRating.toFixed(1)}/10</span>
               </div>
               <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
-                <div 
+                <div
                   className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-500"
                   style={{ width: `${(player.averageMatchRating / 10) * 100}%` }}
                 />
