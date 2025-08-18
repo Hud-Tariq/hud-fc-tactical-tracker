@@ -524,98 +524,106 @@ const TournamentPage = () => {
     </div>
   );
 
-  // Mobile Layout - Brilliant Native App Experience
+  // Mobile Layout - Flutter-inspired Material Design
   const MobileLayout = () => (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-purple-900 to-black">
-      {/* Mobile Header */}
-      <div className="sticky top-0 z-40 bg-gray-900/95 backdrop-blur-xl border-b border-white/10">
-        <div className="px-4 py-4">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-2xl font-bold text-white font-poppins">Tournaments</h1>
-              <p className="text-white/60 text-sm">Compete and conquer</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Flutter-style AppBar */}
+      <div className="sticky top-0 z-50 bg-white shadow-lg shadow-black/5">
+        <div className="px-4 py-4 safe-area-top">
+          {/* AppBar Header */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/25">
+                <Trophy className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 font-inter">Tournaments</h1>
+                <p className="text-gray-600 text-sm font-medium">Compete and conquer</p>
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <TournamentCreation 
-                onCreateTournament={handleCreateTournament}
-                trigger={
-                  <Button size="sm" className="bg-yellow-500 hover:bg-yellow-600 rounded-full w-10 h-10 p-0">
-                    <Plus className="w-5 h-5" />
-                  </Button>
-                }
+
+            {/* Floating Action Button */}
+            <TournamentCreation
+              onCreateTournament={handleCreateTournament}
+              trigger={
+                <button className="w-14 h-14 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-xl shadow-blue-600/25 flex items-center justify-center hover:shadow-2xl hover:shadow-blue-600/30 transition-all duration-300 active:scale-95">
+                  <Plus className="w-7 h-7 text-white" />
+                </button>
+              }
+            />
+          </div>
+
+          {/* Material Design Stats Cards */}
+          <div className="flex space-x-3 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+            <div className="flex-shrink-0 bg-white rounded-2xl p-4 min-w-[120px] shadow-lg shadow-green-500/10 border border-green-100">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md shadow-green-500/25">
+                  <Star className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-gray-900 text-lg font-bold">{tournaments.filter(t => t.status === 'open').length}</p>
+                  <p className="text-gray-600 text-xs font-medium">Open</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-shrink-0 bg-white rounded-2xl p-4 min-w-[120px] shadow-lg shadow-blue-500/10 border border-blue-100">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-md shadow-blue-500/25">
+                  <Zap className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-gray-900 text-lg font-bold">{tournaments.filter(t => t.status === 'in_progress').length}</p>
+                  <p className="text-gray-600 text-xs font-medium">Live</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-shrink-0 bg-white rounded-2xl p-4 min-w-[120px] shadow-lg shadow-purple-500/10 border border-purple-100">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md shadow-purple-500/25">
+                  <Trophy className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-gray-900 text-lg font-bold">{myTournaments.length}</p>
+                  <p className="text-gray-600 text-xs font-medium">Mine</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Material Design Search Bar */}
+          <div className="relative mb-6">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search tournaments..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full h-14 pl-12 pr-4 bg-white border-2 border-gray-200 rounded-2xl text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 shadow-sm font-medium"
               />
             </div>
           </div>
 
-          {/* Quick Stats Cards */}
-          <div className="flex space-x-3 mb-4 overflow-x-auto pb-2">
-            <div className="flex-shrink-0 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-3 min-w-[100px]">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                  <Star className="w-4 h-4 text-white" />
-                </div>
-                <div>
-                  <p className="text-white text-sm font-medium">{tournaments.filter(t => t.status === 'open').length}</p>
-                  <p className="text-white/80 text-xs">Open</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex-shrink-0 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl p-3 min-w-[100px]">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                  <Zap className="w-4 h-4 text-white" />
-                </div>
-                <div>
-                  <p className="text-white text-sm font-medium">{tournaments.filter(t => t.status === 'in_progress').length}</p>
-                  <p className="text-white/80 text-xs">Live</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex-shrink-0 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl p-3 min-w-[100px]">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                  <Trophy className="w-4 h-4 text-white" />
-                </div>
-                <div>
-                  <p className="text-white text-sm font-medium">{myTournaments.length}</p>
-                  <p className="text-white/80 text-xs">Mine</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Search Bar */}
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search tournaments..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-12 pl-10 pr-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/20"
-            />
-          </div>
-
-          {/* Filter Pills */}
-          <div className="flex space-x-2 overflow-x-auto pb-2">
+          {/* Material Design Filter Chips */}
+          <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
             {filterButtons.map((filter) => {
               const Icon = filter.icon;
               const isActive = statusFilter === filter.id;
-              
+
               return (
                 <button
                   key={filter.id}
                   onClick={() => setStatusFilter(filter.id as TournamentStatus | 'all')}
-                  className={`flex-shrink-0 flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 ${
+                  className={`flex-shrink-0 flex items-center space-x-2 px-4 py-3 rounded-2xl transition-all duration-200 font-medium ${
                     isActive
-                      ? 'bg-yellow-500 text-black'
-                      : 'bg-white/10 text-white/80 hover:bg-white/20'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-600/25'
+                      : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-gray-300 shadow-sm'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  <span className="text-sm font-medium">{filter.label}</span>
+                  <span className="text-sm font-semibold">{filter.label}</span>
                 </button>
               );
             })}
@@ -623,27 +631,37 @@ const TournamentPage = () => {
         </div>
       </div>
 
-      {/* Mobile Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-xl border-t border-white/10">
-        <div className="flex items-center justify-around py-2">
+      {/* Material Design Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-2xl shadow-black/10">
+        <div className="flex items-center justify-around py-2 safe-area-bottom">
           {[
-            { id: 'browse', label: 'Browse', icon: Search },
-            { id: 'my-tournaments', label: 'My Tournaments', icon: Trophy },
-            { id: 'leaderboard', label: 'Leaderboard', icon: Crown }
+            { id: 'browse', label: 'Browse', icon: Search, color: 'blue' },
+            { id: 'my-tournaments', label: 'My Tournaments', icon: Trophy, color: 'purple' },
+            { id: 'leaderboard', label: 'Leaderboard', icon: Crown, color: 'amber' }
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
-            
+
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex flex-col items-center py-2 px-4 rounded-xl transition-all duration-200 ${
-                  isActive ? 'bg-yellow-500/20' : 'hover:bg-white/10'
+                className={`flex flex-col items-center py-3 px-6 rounded-2xl transition-all duration-200 ${
+                  isActive
+                    ? `bg-${tab.color}-50 shadow-lg shadow-${tab.color}-500/10`
+                    : 'hover:bg-gray-50'
                 }`}
               >
-                <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-yellow-400' : 'text-white/60'}`} />
-                <span className={`text-xs ${isActive ? 'text-yellow-400' : 'text-white/60'}`}>
+                <Icon className={`w-6 h-6 mb-1 transition-colors duration-200 ${
+                  isActive
+                    ? `text-${tab.color}-600`
+                    : 'text-gray-500'
+                }`} />
+                <span className={`text-xs font-semibold transition-colors duration-200 ${
+                  isActive
+                    ? `text-${tab.color}-600`
+                    : 'text-gray-500'
+                }`}>
                   {tab.label.split(' ')[0]}
                 </span>
               </button>
@@ -652,22 +670,24 @@ const TournamentPage = () => {
         </div>
       </div>
 
-      {/* Mobile Content */}
-      <div className="px-4 py-6 pb-20">
+      {/* Material Design Content */}
+      <div className="px-4 py-6 pb-24">
         {/* Browse Tournaments */}
         {activeTab === 'browse' && (
           <div>
             {loading ? (
-              <div className="flex items-center justify-center py-20">
+              <div className="flex items-center justify-center py-32">
                 <div className="text-center">
-                  <Loader2 className="w-12 h-12 animate-spin text-yellow-400 mx-auto mb-4" />
-                  <p className="text-white/60">Loading tournaments...</p>
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-600/25">
+                    <Loader2 className="w-8 h-8 animate-spin text-white" />
+                  </div>
+                  <p className="text-gray-600 font-medium">Loading tournaments...</p>
                 </div>
               </div>
             ) : filteredTournaments.length > 0 ? (
               <div className="space-y-4">
                 {filteredTournaments.map((tournament, index) => (
-                  <MobileTournamentCard 
+                  <FlutterTournamentCard
                     key={tournament.id}
                     tournament={tournament}
                     index={index}
@@ -681,12 +701,12 @@ const TournamentPage = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20">
-                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center">
-                  <Trophy className="w-12 h-12 text-white/60" />
+              <div className="text-center py-32">
+                <div className="w-32 h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-gray-200/50">
+                  <Trophy className="w-16 h-16 text-gray-400" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">No Tournaments Found</h3>
-                <p className="text-white/60 mb-6">Try adjusting your search or create a new tournament</p>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2 font-inter">No Tournaments Found</h3>
+                <p className="text-gray-600 mb-6 font-medium">Try adjusting your search or create a new tournament</p>
               </div>
             )}
           </div>
@@ -696,16 +716,18 @@ const TournamentPage = () => {
         {activeTab === 'my-tournaments' && (
           <div>
             {loading ? (
-              <div className="flex items-center justify-center py-20">
+              <div className="flex items-center justify-center py-32">
                 <div className="text-center">
-                  <Loader2 className="w-12 h-12 animate-spin text-yellow-400 mx-auto mb-4" />
-                  <p className="text-white/60">Loading your tournaments...</p>
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-600/25">
+                    <Loader2 className="w-8 h-8 animate-spin text-white" />
+                  </div>
+                  <p className="text-gray-600 font-medium">Loading your tournaments...</p>
                 </div>
               </div>
             ) : filteredMyTournaments.length > 0 ? (
               <div className="space-y-4">
                 {filteredMyTournaments.map((tournament, index) => (
-                  <MobileMyTournamentCard 
+                  <FlutterMyTournamentCard
                     key={tournament.id}
                     tournament={tournament}
                     index={index}
@@ -713,19 +735,19 @@ const TournamentPage = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20">
-                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center border border-yellow-400/30">
-                  <Trophy className="w-12 h-12 text-yellow-400" />
+              <div className="text-center py-32">
+                <div className="w-32 h-32 bg-gradient-to-br from-amber-100 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-amber-200/50 border border-amber-200">
+                  <Trophy className="w-16 h-16 text-amber-500" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">No Tournaments Yet</h3>
-                <p className="text-white/60 mb-6">Create your first tournament to get started</p>
-                <TournamentCreation 
+                <h3 className="text-2xl font-bold text-gray-900 mb-2 font-inter">No Tournaments Yet</h3>
+                <p className="text-gray-600 mb-6 font-medium">Create your first tournament to get started</p>
+                <TournamentCreation
                   onCreateTournament={handleCreateTournament}
                   trigger={
-                    <Button className="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white rounded-xl px-8 py-3">
-                      <Plus className="w-5 h-5 mr-2" />
-                      Create Tournament
-                    </Button>
+                    <button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-2xl px-8 py-4 font-semibold shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/30 transition-all duration-300 active:scale-95 flex items-center space-x-2">
+                      <Plus className="w-5 h-5" />
+                      <span>Create Tournament</span>
+                    </button>
                   }
                 />
               </div>
@@ -735,13 +757,13 @@ const TournamentPage = () => {
 
         {/* Leaderboard */}
         {activeTab === 'leaderboard' && (
-          <div className="text-center py-20">
-            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center border border-purple-400/30">
-              <Crown className="w-12 h-12 text-purple-400" />
+          <div className="text-center py-32">
+            <div className="w-32 h-32 bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-200/50 border border-purple-200">
+              <Crown className="w-16 h-16 text-purple-500" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Global Leaderboard</h3>
-            <p className="text-white/60 mb-4">Coming soon...</p>
-            <div className="text-white/40 text-sm">Track your victories and climb the rankings</div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2 font-inter">Global Leaderboard</h3>
+            <p className="text-gray-600 mb-4 font-medium">Coming soon...</p>
+            <div className="text-gray-500 text-sm font-medium">Track your victories and climb the rankings</div>
           </div>
         )}
       </div>
