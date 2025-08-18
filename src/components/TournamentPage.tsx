@@ -635,33 +635,41 @@ const TournamentPage = () => {
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-2xl shadow-black/10">
         <div className="flex items-center justify-around py-2 safe-area-bottom">
           {[
-            { id: 'browse', label: 'Browse', icon: Search, color: 'blue' },
-            { id: 'my-tournaments', label: 'My Tournaments', icon: Trophy, color: 'purple' },
-            { id: 'leaderboard', label: 'Leaderboard', icon: Crown, color: 'amber' }
+            { id: 'browse', label: 'Browse', icon: Search },
+            { id: 'my-tournaments', label: 'My Tournaments', icon: Trophy },
+            { id: 'leaderboard', label: 'Leaderboard', icon: Crown }
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
+
+            const getActiveStyles = () => {
+              if (tab.id === 'browse') {
+                return isActive ? 'bg-blue-50 shadow-lg shadow-blue-500/10' : 'hover:bg-gray-50';
+              } else if (tab.id === 'my-tournaments') {
+                return isActive ? 'bg-purple-50 shadow-lg shadow-purple-500/10' : 'hover:bg-gray-50';
+              } else {
+                return isActive ? 'bg-amber-50 shadow-lg shadow-amber-500/10' : 'hover:bg-gray-50';
+              }
+            };
+
+            const getIconStyles = () => {
+              if (tab.id === 'browse') {
+                return isActive ? 'text-blue-600' : 'text-gray-500';
+              } else if (tab.id === 'my-tournaments') {
+                return isActive ? 'text-purple-600' : 'text-gray-500';
+              } else {
+                return isActive ? 'text-amber-600' : 'text-gray-500';
+              }
+            };
 
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex flex-col items-center py-3 px-6 rounded-2xl transition-all duration-200 ${
-                  isActive
-                    ? `bg-${tab.color}-50 shadow-lg shadow-${tab.color}-500/10`
-                    : 'hover:bg-gray-50'
-                }`}
+                className={`flex flex-col items-center py-3 px-6 rounded-2xl transition-all duration-200 ${getActiveStyles()}`}
               >
-                <Icon className={`w-6 h-6 mb-1 transition-colors duration-200 ${
-                  isActive
-                    ? `text-${tab.color}-600`
-                    : 'text-gray-500'
-                }`} />
-                <span className={`text-xs font-semibold transition-colors duration-200 ${
-                  isActive
-                    ? `text-${tab.color}-600`
-                    : 'text-gray-500'
-                }`}>
+                <Icon className={`w-6 h-6 mb-1 transition-colors duration-200 ${getIconStyles()}`} />
+                <span className={`text-xs font-semibold transition-colors duration-200 ${getIconStyles()}`}>
                   {tab.label.split(' ')[0]}
                 </span>
               </button>
