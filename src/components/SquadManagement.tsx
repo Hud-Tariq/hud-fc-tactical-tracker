@@ -451,7 +451,11 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagemen
                     <Icon name={positionIconName} size={20} className="w-5 h-5 text-white" />
                   </div>
                   <div className="mt-1 text-center">
-                    <p className="text-white text-xs font-medium">{position.slice(0, 3)}</p>
+                    <p className="text-white text-xs font-medium">
+                      {position === 'Goalkeeper' ? 'GK' :
+                       position === 'Forward' ? 'FWD' :
+                       position.slice(0, 3)}
+                    </p>
                     <p className="text-white/60 text-xs">{filteredGroupedPlayers[position]?.length || 0}</p>
                   </div>
                   {isSelected && (
