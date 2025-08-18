@@ -524,249 +524,131 @@ const TournamentPage = () => {
     </div>
   );
 
-  // Mobile Layout - Enhanced Gaming Theme
+  // Mobile Layout - Simple and Clean
   const MobileLayout = () => (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
-      {/* Gaming Header with Glass Effect */}
-      <div className="sticky top-0 z-50 bg-gray-900/95 backdrop-blur-xl border-b border-white/10">
-        <div className="px-4 py-6 safe-area-top">
-          {/* Hero Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-3xl flex items-center justify-center shadow-xl shadow-purple-500/30 border border-purple-400/20">
-                <Trophy className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-white font-poppins">Tournaments</h1>
-                <p className="text-purple-200 text-sm font-medium">Battle for glory</p>
-              </div>
-            </div>
-
-            {/* Enhanced FAB */}
-            <TournamentCreation
-              onCreateTournament={handleCreateTournament}
-              trigger={
-                <button className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-3xl shadow-xl shadow-yellow-500/30 flex items-center justify-center hover:shadow-2xl hover:shadow-yellow-500/40 transition-all duration-300 active:scale-95 border border-yellow-400/20">
-                  <Plus className="w-8 h-8 text-white" />
-                </button>
-              }
-            />
-          </div>
-
-          {/* Gaming Stats Cards */}
-          <div className="flex space-x-4 mb-6 overflow-x-auto pb-2 scrollbar-hide">
-            <div className="flex-shrink-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm border border-green-400/30 rounded-2xl p-4 min-w-[140px] shadow-lg shadow-green-500/10">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/30">
-                  <Star className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-white text-xl font-bold">{tournaments.filter(t => t.status === 'open').length}</p>
-                  <p className="text-green-200 text-xs font-medium">Open</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex-shrink-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 backdrop-blur-sm border border-blue-400/30 rounded-2xl p-4 min-w-[140px] shadow-lg shadow-blue-500/10">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-                  <Zap className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-white text-xl font-bold">{tournaments.filter(t => t.status === 'in_progress').length}</p>
-                  <p className="text-blue-200 text-xs font-medium">Live</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex-shrink-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-400/30 rounded-2xl p-4 min-w-[140px] shadow-lg shadow-purple-500/10">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30">
-                  <Trophy className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-white text-xl font-bold">{myTournaments.length}</p>
-                  <p className="text-purple-200 text-xs font-medium">Mine</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Gaming Search Bar */}
-          <div className="relative mb-6">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-300 w-6 h-6" />
-              <input
-                type="text"
-                placeholder="Search tournaments..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full h-16 pl-14 pr-4 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-2xl text-white placeholder:text-purple-200 focus:border-purple-400 focus:outline-none focus:ring-4 focus:ring-purple-400/20 transition-all duration-300 shadow-lg font-medium text-lg"
-              />
-            </div>
-          </div>
-
-          {/* Gaming Filter Pills */}
-          <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
-            {filterButtons.map((filter) => {
-              const Icon = filter.icon;
-              const isActive = statusFilter === filter.id;
-
-              return (
-                <button
-                  key={filter.id}
-                  onClick={() => setStatusFilter(filter.id as TournamentStatus | 'all')}
-                  className={`flex-shrink-0 flex items-center space-x-3 px-6 py-4 rounded-2xl transition-all duration-300 font-semibold ${
-                    isActive
-                      ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/30 border border-purple-400/40'
-                      : 'bg-white/10 backdrop-blur-sm text-purple-200 border border-white/20 hover:bg-white/20 hover:text-white'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span className="text-sm">{filter.label}</span>
-                </button>
-              );
-            })}
-          </div>
+    <div className="floating-section">
+      {/* Simple mobile search and filters */}
+      <div className="mb-6">
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-on-dark-subtle w-5 h-5" />
+          <Input
+            placeholder="Search tournaments..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark placeholder:text-on-dark-subtle focus:border-purple-400"
+          />
         </div>
-      </div>
 
-      {/* Gaming Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-xl border-t border-white/10">
-        <div className="flex items-center justify-around py-4 safe-area-bottom">
-          {[
-            { id: 'browse', label: 'Browse', icon: Search, color: 'blue' },
-            { id: 'my-tournaments', label: 'My Tournaments', icon: Trophy, color: 'purple' },
-            { id: 'leaderboard', label: 'Leaderboard', icon: Crown, color: 'yellow' }
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
+        <div className="flex space-x-2 overflow-x-auto pb-2">
+          {filterButtons.map((filter) => {
+            const Icon = filter.icon;
+            const isActive = statusFilter === filter.id;
 
             return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex flex-col items-center py-3 px-6 rounded-2xl transition-all duration-300 ${
+              <Button
+                key={filter.id}
+                variant={isActive ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setStatusFilter(filter.id as TournamentStatus | 'all')}
+                className={`flex-shrink-0 ${
                   isActive
-                    ? 'bg-white/10 backdrop-blur-sm shadow-lg border border-white/20'
-                    : 'hover:bg-white/5'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white border-0'
+                    : 'bg-white/10 border border-white/20 text-on-dark-muted hover:text-on-dark hover:bg-white/20'
                 }`}
               >
-                <Icon className={`w-7 h-7 mb-2 transition-colors duration-300 ${
-                  isActive
-                    ? 'text-purple-300'
-                    : 'text-gray-400'
-                }`} />
-                <span className={`text-xs font-semibold transition-colors duration-300 ${
-                  isActive
-                    ? 'text-purple-300'
-                    : 'text-gray-400'
-                }`}>
-                  {tab.label.split(' ')[0]}
-                </span>
-              </button>
+                <Icon className="w-4 h-4 mr-2" />
+                {filter.label}
+              </Button>
             );
           })}
         </div>
       </div>
 
-      {/* Gaming Content */}
-      <div className="px-4 py-6 pb-28">
-        {/* Browse Tournaments */}
-        {activeTab === 'browse' && (
-          <div>
-            {loading ? (
-              <div className="flex items-center justify-center py-32">
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-purple-500/30">
-                    <Loader2 className="w-10 h-10 animate-spin text-white" />
-                  </div>
-                  <p className="text-purple-200 font-medium text-lg">Loading tournaments...</p>
-                </div>
-              </div>
-            ) : filteredTournaments.length > 0 ? (
-              <div className="space-y-6">
-                {filteredTournaments.map((tournament, index) => (
-                  <GamingTournamentCard
-                    key={tournament.id}
-                    tournament={tournament}
-                    index={index}
-                    onJoin={() => handleJoinTournament(tournament.id)}
-                    joiningTournament={joiningTournament}
-                    userTeams={userTeams}
-                    selectedTeam={selectedTeam}
-                    setSelectedTeam={setSelectedTeam}
-                    handleCreateTeam={handleCreateTeam}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-32">
-                <div className="w-32 h-32 bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-400/30 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-purple-500/20">
-                  <Trophy className="w-16 h-16 text-purple-300" />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-3 font-poppins">No Tournaments Found</h3>
-                <p className="text-purple-200 mb-6 font-medium">Try adjusting your search or create a new tournament</p>
-              </div>
-            )}
-          </div>
-        )}
+      {/* Mobile tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-3 mb-6 bg-white/10 border border-white/20">
+          <TabsTrigger value="browse" className="text-sm">Browse</TabsTrigger>
+          <TabsTrigger value="my-tournaments" className="text-sm">My Tournaments</TabsTrigger>
+          <TabsTrigger value="leaderboard" className="text-sm">Leaderboard</TabsTrigger>
+        </TabsList>
 
-        {/* My Tournaments */}
-        {activeTab === 'my-tournaments' && (
-          <div>
-            {loading ? (
-              <div className="flex items-center justify-center py-32">
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-purple-500/30">
-                    <Loader2 className="w-10 h-10 animate-spin text-white" />
-                  </div>
-                  <p className="text-purple-200 font-medium text-lg">Loading your tournaments...</p>
-                </div>
+        <TabsContent value="browse" className="space-y-6">
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="text-center">
+                <Loader2 className="w-8 h-8 animate-spin text-purple-400 mx-auto mb-4" />
+                <p className="text-on-dark-muted">Loading tournaments...</p>
               </div>
-            ) : filteredMyTournaments.length > 0 ? (
-              <div className="space-y-6">
-                {filteredMyTournaments.map((tournament, index) => (
-                  <GamingMyTournamentCard
-                    key={tournament.id}
-                    tournament={tournament}
-                    index={index}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-32">
-                <div className="w-32 h-32 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-400/30 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-yellow-500/20">
-                  <Trophy className="w-16 h-16 text-yellow-300" />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-3 font-poppins">No Tournaments Yet</h3>
-                <p className="text-purple-200 mb-6 font-medium">Create your first tournament to get started</p>
-                <TournamentCreation
-                  onCreateTournament={handleCreateTournament}
-                  trigger={
-                    <button className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white rounded-2xl px-8 py-4 font-semibold shadow-xl shadow-yellow-500/30 hover:shadow-2xl hover:shadow-yellow-500/40 transition-all duration-300 active:scale-95 flex items-center space-x-3 border border-yellow-400/20">
-                      <Plus className="w-6 h-6" />
-                      <span className="text-lg">Create Tournament</span>
-                    </button>
-                  }
-                />
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Leaderboard */}
-        {activeTab === 'leaderboard' && (
-          <div className="text-center py-32">
-            <div className="w-32 h-32 bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-400/30 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-purple-500/20">
-              <Crown className="w-16 h-16 text-purple-300" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-3 font-poppins">Global Leaderboard</h3>
-            <p className="text-purple-200 mb-4 font-medium">Coming soon...</p>
-            <div className="text-gray-400 text-sm font-medium">Track your victories and climb the rankings</div>
+          ) : filteredTournaments.length > 0 ? (
+            <div className="space-y-4">
+              {filteredTournaments.map((tournament, index) => (
+                <MobileTournamentCard
+                  key={tournament.id}
+                  tournament={tournament}
+                  index={index}
+                  onJoin={() => handleJoinTournament(tournament.id)}
+                  joiningTournament={joiningTournament}
+                  userTeams={userTeams}
+                  selectedTeam={selectedTeam}
+                  setSelectedTeam={setSelectedTeam}
+                  handleCreateTeam={handleCreateTeam}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="floating-card text-center py-16">
+              <Trophy className="w-16 h-16 text-on-dark-subtle mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-on-dark mb-2">No Tournaments Found</h3>
+              <p className="text-on-dark-muted">Try adjusting your search or create a new tournament</p>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="my-tournaments" className="space-y-6">
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="text-center">
+                <Loader2 className="w-8 h-8 animate-spin text-purple-400 mx-auto mb-4" />
+                <p className="text-on-dark-muted">Loading your tournaments...</p>
+              </div>
+            </div>
+          ) : filteredMyTournaments.length > 0 ? (
+            <div className="space-y-4">
+              {filteredMyTournaments.map((tournament, index) => (
+                <MobileMyTournamentCard
+                  key={tournament.id}
+                  tournament={tournament}
+                  index={index}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="floating-card text-center py-16">
+              <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-on-dark mb-2">No Tournaments Yet</h3>
+              <p className="text-on-dark-muted mb-4">Create your first tournament to get started</p>
+              <TournamentCreation
+                onCreateTournament={handleCreateTournament}
+                trigger={
+                  <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Tournament
+                  </Button>
+                }
+              />
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="leaderboard" className="space-y-6">
+          <div className="floating-card text-center py-16">
+            <Crown className="w-16 h-16 text-purple-400 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-on-dark mb-2">Global Leaderboard</h3>
+            <p className="text-on-dark-muted">Coming soon...</p>
           </div>
-        )}
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 
