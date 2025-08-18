@@ -819,44 +819,55 @@ const TournamentPage = () => {
     </div>
   );
 
-  // Simple Mobile My Tournament Card Component
+  // Enhanced Mobile My Tournament Card Component
   const MobileMyTournamentCard = ({ tournament, index }: any) => (
-    <div className="floating-card animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
-            <h3 className="text-lg font-bold text-on-dark font-poppins mb-1">{tournament.name}</h3>
-            <div className="flex items-center space-x-2">
-              <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status as TournamentStatus)} text-white text-xs px-2 py-1 rounded-full`}>
-                {tournament.status}
-              </Badge>
-              <span className="text-on-dark-muted text-sm">
-                {tournament.tournament_teams?.length || 0}/{tournament.max_teams} teams
-              </span>
+    <div className="floating-card animate-fade-in hover-lift" style={{ animationDelay: `${index * 0.1}s` }}>
+      <div className="p-5">
+        {/* Enhanced header */}
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-start space-x-3 flex-1">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/25 flex-shrink-0">
+              {getFormatIcon(tournament.format as TournamentFormat)}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg font-bold text-on-dark font-poppins mb-2 line-clamp-1">{tournament.name}</h3>
+              <div className="flex items-center space-x-3">
+                <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status as TournamentStatus)} text-white text-xs px-3 py-1.5 rounded-full shadow-lg`}>
+                  {tournament.status}
+                </Badge>
+                <div className="flex items-center space-x-1 text-on-dark-muted text-sm">
+                  <Users className="w-4 h-4" />
+                  <span className="font-medium">
+                    {tournament.tournament_teams?.length || 0}/{tournament.max_teams}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
-            <div className="flex items-center justify-center mb-1">
-              <DollarSign className="w-4 h-4 text-yellow-400 mr-1" />
-              <span className="text-sm font-medium text-on-dark">${tournament.entry_fee}</span>
+        {/* Enhanced stats with better visual design */}
+        <div className="grid grid-cols-2 gap-4 mb-5">
+          <div className="p-4 rounded-2xl bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border border-yellow-400/20 text-center hover:scale-105 transition-transform duration-200">
+            <div className="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl mx-auto mb-2 flex items-center justify-center shadow-md">
+              <DollarSign className="w-4 h-4 text-white" />
             </div>
-            <p className="text-xs text-on-dark-subtle">Entry Fee</p>
+            <div className="text-base font-bold text-on-dark">${tournament.entry_fee}</div>
+            <p className="text-xs text-yellow-300 font-medium">Entry Fee</p>
           </div>
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
-            <div className="flex items-center justify-center mb-1">
-              <Trophy className="w-4 h-4 text-purple-400 mr-1" />
-              <span className="text-sm font-medium text-on-dark">${tournament.prize_pool}</span>
+          <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-400/20 text-center hover:scale-105 transition-transform duration-200">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl mx-auto mb-2 flex items-center justify-center shadow-md">
+              <Trophy className="w-4 h-4 text-white" />
             </div>
-            <p className="text-xs text-on-dark-subtle">Prize Pool</p>
+            <div className="text-base font-bold text-on-dark">${tournament.prize_pool}</div>
+            <p className="text-xs text-purple-300 font-medium">Prize Pool</p>
           </div>
         </div>
 
-        <Button className="w-full h-10 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-medium rounded-xl">
-          <Trophy className="w-4 h-4 mr-2" />
-          Manage Tournament
+        {/* Enhanced management button */}
+        <Button className="w-full h-12 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-semibold rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-xl hover:shadow-orange-500/30 transition-all duration-300">
+          <Trophy className="w-5 h-5 mr-2" />
+          <span>Manage Tournament</span>
         </Button>
       </div>
     </div>
