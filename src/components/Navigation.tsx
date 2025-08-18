@@ -227,9 +227,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
 
                 {/* User Profile Section */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-white/10 bg-gradient-to-t from-black/50 to-transparent">
-                  <div className="bg-gradient-to-r from-white/5 to-white/10 rounded-xl p-4 border border-white/10">
-                    <UserMenu />
-                  </div>
+                  <MobileUserMenu />
                 </div>
               </div>
             </div>
