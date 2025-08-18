@@ -570,6 +570,7 @@ export const useSupabaseFootballData = () => {
     playersLoading,
     matchesLoading,
     addPlayer,
+    removePlayer,
     createMatch,
     completeMatch,
     deleteMatch,
