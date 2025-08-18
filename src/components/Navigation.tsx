@@ -197,7 +197,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
                         />
                       </div>
                       <div>
-                        <h2 className="text-lg font-bold text-white font-poppins">Menu</h2>
+                        <h2 className="text-lg font-bold text-white font-poppins">Hud FC Manager</h2>
                         <p className="text-white/80 text-sm">Navigate your team</p>
                       </div>
                     </div>
