@@ -14,6 +14,7 @@ interface SquadManagementProps {
   players: Player[];
   onAddPlayer: (player: Omit<Player, 'id' | 'matchesPlayed' | 'totalGoals' | 'totalAssists' | 'totalSaves' | 'cleanSheets'>) => void;
   onPlayerClick: (player: Player) => void;
+  onRemovePlayer?: (playerId: string) => void;
 }
 
 const SquadManagement = ({ players, onAddPlayer, onPlayerClick }: SquadManagementProps) => {
