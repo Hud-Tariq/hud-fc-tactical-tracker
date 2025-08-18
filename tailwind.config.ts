@@ -120,7 +120,10 @@ export default {
 				'fade-in': 'fade-in 0.5s ease-out',
 				'slide-up': 'slide-up 0.6s ease-out',
 				'scale-in': 'scale-in 0.4s ease-out',
-				'pulse-glow': 'pulse-glow 2s ease-in-out infinite'
+				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+				'material-enter': 'material-enter 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)',
+				'material-exit': 'material-exit 0.15s cubic-bezier(0.4, 0.0, 1, 1)',
+				'flutter-bounce': 'flutter-bounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)'
 			}
 		}
 	},
