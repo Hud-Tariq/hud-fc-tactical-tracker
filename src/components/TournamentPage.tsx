@@ -524,22 +524,49 @@ const TournamentPage = () => {
     </div>
   );
 
-  // Mobile Layout - Simple and Clean
+  // Mobile Layout - Enhanced and Responsive
   const MobileLayout = () => (
     <div className="floating-section">
-      {/* Simple mobile search and filters */}
-      <div className="mb-6">
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-on-dark-subtle w-5 h-5" />
+      {/* Enhanced mobile header */}
+      <div className="mb-8">
+        {/* Quick stats overview */}
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <div className="floating-card p-4 text-center hover-lift">
+            <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl mx-auto mb-2 flex items-center justify-center">
+              <Star className="w-4 h-4 text-white" />
+            </div>
+            <div className="text-lg font-bold text-on-dark">{tournaments.filter(t => t.status === 'open').length}</div>
+            <div className="text-xs text-on-dark-muted">Open</div>
+          </div>
+          <div className="floating-card p-4 text-center hover-lift">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl mx-auto mb-2 flex items-center justify-center">
+              <Zap className="w-4 h-4 text-white" />
+            </div>
+            <div className="text-lg font-bold text-on-dark">{tournaments.filter(t => t.status === 'in_progress').length}</div>
+            <div className="text-xs text-on-dark-muted">Live</div>
+          </div>
+          <div className="floating-card p-4 text-center hover-lift">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-500 rounded-xl mx-auto mb-2 flex items-center justify-center">
+              <Trophy className="w-4 h-4 text-white" />
+            </div>
+            <div className="text-lg font-bold text-on-dark">{myTournaments.length}</div>
+            <div className="text-xs text-on-dark-muted">Mine</div>
+          </div>
+        </div>
+
+        {/* Enhanced search bar */}
+        <div className="relative mb-6">
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-on-dark-subtle w-5 h-5 z-10" />
           <Input
             placeholder="Search tournaments..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark placeholder:text-on-dark-subtle focus:border-purple-400"
+            className="pl-12 h-14 bg-white/10 border-2 border-white/20 rounded-2xl text-on-dark placeholder:text-on-dark-subtle focus:border-purple-400 focus:ring-4 focus:ring-purple-400/20 transition-all duration-300 text-base"
           />
         </div>
 
-        <div className="flex space-x-2 overflow-x-auto pb-2">
+        {/* Enhanced filter buttons */}
+        <div className="flex space-x-3 overflow-x-auto pb-3 scrollbar-hide">
           {filterButtons.map((filter) => {
             const Icon = filter.icon;
             const isActive = statusFilter === filter.id;
@@ -550,26 +577,32 @@ const TournamentPage = () => {
                 variant={isActive ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setStatusFilter(filter.id as TournamentStatus | 'all')}
-                className={`flex-shrink-0 ${
+                className={`flex-shrink-0 h-12 px-4 rounded-xl transition-all duration-300 ${
                   isActive
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white border-0'
-                    : 'bg-white/10 border border-white/20 text-on-dark-muted hover:text-on-dark hover:bg-white/20'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white border-0 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30'
+                    : 'bg-white/10 border-2 border-white/20 text-on-dark-muted hover:text-on-dark hover:bg-white/20 hover:border-white/30'
                 }`}
               >
                 <Icon className="w-4 h-4 mr-2" />
-                {filter.label}
+                <span className="font-medium">{filter.label}</span>
               </Button>
             );
           })}
         </div>
       </div>
 
-      {/* Mobile tabs */}
+      {/* Enhanced tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-6 bg-white/10 border border-white/20">
-          <TabsTrigger value="browse" className="text-sm">Browse</TabsTrigger>
-          <TabsTrigger value="my-tournaments" className="text-sm">My Tournaments</TabsTrigger>
-          <TabsTrigger value="leaderboard" className="text-sm">Leaderboard</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 mb-8 h-14 p-1 bg-white/10 border-2 border-white/20 rounded-2xl">
+          <TabsTrigger value="browse" className="text-sm font-semibold rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300">
+            Browse
+          </TabsTrigger>
+          <TabsTrigger value="my-tournaments" className="text-sm font-semibold rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300">
+            My Tournaments
+          </TabsTrigger>
+          <TabsTrigger value="leaderboard" className="text-sm font-semibold rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300">
+            Leaderboard
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="browse" className="space-y-6">
