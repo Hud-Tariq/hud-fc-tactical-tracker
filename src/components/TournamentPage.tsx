@@ -652,205 +652,154 @@ const TournamentPage = () => {
     </div>
   );
 
-  // Gaming Tournament Card Component
-  const GamingTournamentCard = ({ tournament, index, onJoin, joiningTournament, userTeams, selectedTeam, setSelectedTeam, handleCreateTeam }: any) => (
-    <div
-      className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden animate-in slide-in-from-bottom duration-300 hover:bg-white/15 hover:border-purple-400/40 transition-all duration-300 shadow-xl shadow-black/20"
-      style={{ animationDelay: `${index * 0.1}s` }}
-    >
-      {/* Gaming Header */}
-      <div className="p-6 border-b border-white/10">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-start space-x-4 flex-1">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl shadow-purple-500/30 border border-purple-400/40">
-              <div className="text-white">
-                {getFormatIcon(tournament.format)}
-              </div>
-            </div>
-            <div className="flex-1">
-              <h3 className="text-xl font-bold text-white mb-2 font-poppins">{tournament.name}</h3>
-              <p className="text-purple-200 text-sm line-clamp-2 font-medium">{tournament.description}</p>
-            </div>
+  // Simple Mobile Tournament Card Component
+  const MobileTournamentCard = ({ tournament, index, onJoin, joiningTournament, userTeams, selectedTeam, setSelectedTeam, handleCreateTeam }: any) => (
+    <div className="floating-card animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+      <div className="p-4">
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex-1">
+            <h3 className="text-lg font-bold text-on-dark font-poppins mb-1">{tournament.name}</h3>
+            <p className="text-sm text-on-dark-muted line-clamp-2">{tournament.description}</p>
           </div>
-          <div className="ml-3">
-            <div className={`bg-gradient-to-r ${getStatusColor(tournament.status)} text-white text-xs font-semibold px-4 py-2 rounded-full shadow-lg border border-white/20`}>
-              {tournament.status}
+          <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status as TournamentStatus)} text-white text-xs px-3 py-1 rounded-full ml-3`}>
+            {tournament.status}
+          </Badge>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
+            <div className="flex items-center justify-center mb-1">
+              <DollarSign className="w-4 h-4 text-yellow-400 mr-1" />
+              <span className="text-sm font-medium text-on-dark">${tournament.entry_fee}</span>
             </div>
+            <p className="text-xs text-on-dark-subtle">Entry Fee</p>
+          </div>
+          <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
+            <div className="flex items-center justify-center mb-1">
+              <Trophy className="w-4 h-4 text-purple-400 mr-1" />
+              <span className="text-sm font-medium text-on-dark">${tournament.prize_pool}</span>
+            </div>
+            <p className="text-xs text-on-dark-subtle">Prize Pool</p>
           </div>
         </div>
 
-        <div className="flex items-center space-x-6 text-sm text-purple-200">
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl flex items-center justify-center">
-              <div className="text-purple-300">
-                {getFormatIcon(tournament.format)}
-              </div>
-            </div>
-            <span className="font-medium">{tournament.format.replace('_', ' ')}</span>
+        <div className="flex items-center space-x-4 text-sm text-on-dark-muted mb-4">
+          <div className="flex items-center space-x-1">
+            {getFormatIcon(tournament.format as TournamentFormat)}
+            <span>{tournament.format.replace('_', ' ')}</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl flex items-center justify-center">
-              <Users className="w-5 h-5 text-purple-300" />
-            </div>
-            <span className="font-medium">{tournament.max_teams} teams</span>
+          <div className="flex items-center space-x-1">
+            <Users className="w-4 h-4" />
+            <span>{tournament.max_teams} teams</span>
           </div>
         </div>
-      </div>
 
-      {/* Gaming Stats Grid */}
-      <div className="p-6 grid grid-cols-2 gap-4">
-        <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-400/30 rounded-2xl p-4 text-center shadow-lg">
-          <div className="flex items-center justify-center mb-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-yellow-500/30">
-              <DollarSign className="w-6 h-6 text-white" />
-            </div>
-          </div>
-          <p className="text-white font-bold text-xl">${tournament.entry_fee}</p>
-          <p className="text-yellow-200 text-xs font-medium">Entry Fee</p>
-        </div>
-        <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-400/30 rounded-2xl p-4 text-center shadow-lg">
-          <div className="flex items-center justify-center mb-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
-              <Trophy className="w-6 h-6 text-white" />
-            </div>
-          </div>
-          <p className="text-white font-bold text-xl">${tournament.prize_pool}</p>
-          <p className="text-purple-200 text-xs font-medium">Prize Pool</p>
-        </div>
-      </div>
-
-      {/* Gaming Action Section */}
-      <div className="p-6 border-t border-white/10 bg-black/20">
         {tournament.status === 'open' ? (
           userTeams.length > 0 ? (
-            <div className="space-y-4">
+            <div className="space-y-3">
               <Select value={selectedTeam} onValueChange={setSelectedTeam}>
-                <SelectTrigger className="w-full h-14 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-2xl text-white font-medium focus:border-purple-400 focus:ring-4 focus:ring-purple-400/20 shadow-lg">
+                <SelectTrigger className="w-full h-10 bg-white/10 border border-white/20 rounded-xl text-on-dark">
                   <SelectValue placeholder="Select your team" />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-900/95 backdrop-blur-xl border-2 border-white/20 rounded-2xl shadow-2xl">
+                <SelectContent className="glass-card-strong border-white/20">
                   {userTeams.map((team: any) => (
-                    <SelectItem key={team.id} value={team.id} className="text-white font-medium hover:bg-white/10 rounded-xl mx-1">
-                      <div className="flex items-center space-x-3">
+                    <SelectItem key={team.id} value={team.id} className="text-on-dark hover:bg-white/10">
+                      <div className="flex items-center gap-2">
                         <div
-                          className="w-5 h-5 rounded-full shadow-sm border border-white/20"
-                          style={{ backgroundColor: team.home_color || '#8b5cf6' }}
+                          className="w-4 h-4 rounded-full"
+                          style={{ backgroundColor: team.home_color || '#6366f1' }}
                         />
-                        <span>{team.name}</span>
+                        {team.name}
                       </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <button
-                onClick={onJoin}
+              <Button
+                className="w-full h-10 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium rounded-xl"
                 disabled={!selectedTeam || joiningTournament === tournament.id}
-                className="w-full h-16 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:from-gray-500 disabled:to-gray-600 text-white rounded-2xl font-bold shadow-xl shadow-green-500/30 hover:shadow-2xl hover:shadow-green-500/40 transition-all duration-300 active:scale-95 flex items-center justify-center space-x-3 text-lg border border-green-400/20"
+                onClick={onJoin}
               >
                 {joiningTournament === tournament.id ? (
                   <>
-                    <Loader2 className="w-6 h-6 animate-spin" />
-                    <span>Joining...</span>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Joining...
                   </>
                 ) : (
                   <>
-                    <Trophy className="w-6 h-6" />
-                    <span>Join Tournament</span>
+                    <Trophy className="w-4 h-4 mr-2" />
+                    Join Tournament
                   </>
                 )}
-              </button>
+              </Button>
             </div>
           ) : (
-            <div className="space-y-4">
-              <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border-2 border-yellow-400/30 rounded-2xl p-4 text-center shadow-lg">
-                <p className="text-yellow-200 text-sm font-semibold">You need a team to join</p>
-              </div>
+            <div className="space-y-3">
+              <p className="text-xs text-yellow-300 text-center p-2 rounded-lg bg-yellow-500/10 border border-yellow-400/30">
+                You need a team to join
+              </p>
               <TeamCreation
                 onCreateTeam={handleCreateTeam}
                 trigger={
-                  <button className="w-full h-16 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white rounded-2xl font-bold shadow-xl shadow-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/40 transition-all duration-300 active:scale-95 flex items-center justify-center space-x-3 text-lg border border-blue-400/20">
-                    <Plus className="w-6 h-6" />
-                    <span>Create Team First</span>
-                  </button>
+                  <Button className="w-full h-10 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-medium rounded-xl">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Team First
+                  </Button>
                 }
               />
             </div>
           )
         ) : (
-          <button
+          <Button
+            className="w-full h-10 bg-white/10 text-on-dark-muted font-medium rounded-xl cursor-not-allowed"
             disabled
-            className="w-full h-16 bg-white/10 text-gray-400 rounded-2xl cursor-not-allowed font-bold flex items-center justify-center space-x-3 text-lg border border-white/10"
           >
-            {tournament.status === 'in_progress' ? (
-              <>
-                <Eye className="w-6 h-6" />
-                <span>View Matches</span>
-              </>
-            ) : (
-              <>
-                <Trophy className="w-6 h-6" />
-                <span>View Results</span>
-              </>
-            )}
-          </button>
+            {tournament.status === 'in_progress' ? 'View Matches' : 'View Results'}
+          </Button>
         )}
       </div>
     </div>
   );
 
-  // Gaming My Tournament Card Component
-  const GamingMyTournamentCard = ({ tournament, index }: any) => (
-    <div
-      className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-xl border border-purple-400/30 rounded-3xl overflow-hidden animate-in slide-in-from-bottom duration-300 hover:from-purple-500/25 hover:to-pink-500/25 hover:border-purple-400/50 transition-all duration-300 shadow-xl shadow-purple-500/20"
-      style={{ animationDelay: `${index * 0.1}s` }}
-    >
-      <div className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-start space-x-4 flex-1">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl shadow-purple-500/30 border border-purple-400/40">
-              <div className="text-white">
-                {getFormatIcon(tournament.format)}
-              </div>
-            </div>
-            <div className="flex-1">
-              <h3 className="text-xl font-bold text-white mb-2 font-poppins">{tournament.name}</h3>
-              <div className="flex items-center space-x-3">
-                <div className={`bg-gradient-to-r ${getStatusColor(tournament.status)} text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg border border-white/20`}>
-                  {tournament.status}
-                </div>
-                <span className="text-purple-200 text-sm font-medium">
-                  {tournament.tournament_teams?.length || 0}/{tournament.max_teams} teams
-                </span>
-              </div>
+  // Simple Mobile My Tournament Card Component
+  const MobileMyTournamentCard = ({ tournament, index }: any) => (
+    <div className="floating-card animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+      <div className="p-4">
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex-1">
+            <h3 className="text-lg font-bold text-on-dark font-poppins mb-1">{tournament.name}</h3>
+            <div className="flex items-center space-x-2">
+              <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status as TournamentStatus)} text-white text-xs px-2 py-1 rounded-full`}>
+                {tournament.status}
+              </Badge>
+              <span className="text-on-dark-muted text-sm">
+                {tournament.tournament_teams?.length || 0}/{tournament.max_teams} teams
+              </span>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-400/30 rounded-2xl p-4 text-center shadow-lg">
-            <div className="flex items-center justify-center mb-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-yellow-500/30">
-                <DollarSign className="w-5 h-5 text-white" />
-              </div>
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
+            <div className="flex items-center justify-center mb-1">
+              <DollarSign className="w-4 h-4 text-yellow-400 mr-1" />
+              <span className="text-sm font-medium text-on-dark">${tournament.entry_fee}</span>
             </div>
-            <p className="text-white font-bold text-lg">${tournament.entry_fee}</p>
-            <p className="text-yellow-200 text-xs font-medium">Entry Fee</p>
+            <p className="text-xs text-on-dark-subtle">Entry Fee</p>
           </div>
-          <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-400/30 rounded-2xl p-4 text-center shadow-lg">
-            <div className="flex items-center justify-center mb-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
-                <Trophy className="w-5 h-5 text-white" />
-              </div>
+          <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
+            <div className="flex items-center justify-center mb-1">
+              <Trophy className="w-4 h-4 text-purple-400 mr-1" />
+              <span className="text-sm font-medium text-on-dark">${tournament.prize_pool}</span>
             </div>
-            <p className="text-white font-bold text-lg">${tournament.prize_pool}</p>
-            <p className="text-purple-200 text-xs font-medium">Prize Pool</p>
+            <p className="text-xs text-on-dark-subtle">Prize Pool</p>
           </div>
         </div>
 
-        <button className="w-full h-14 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-2xl font-bold shadow-xl shadow-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/40 transition-all duration-300 active:scale-95 flex items-center justify-center space-x-3 text-lg border border-orange-400/20">
-          <Trophy className="w-6 h-6" />
-          <span>Manage Tournament</span>
-        </button>
+        <Button className="w-full h-10 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-medium rounded-xl">
+          <Trophy className="w-4 h-4 mr-2" />
+          Manage Tournament
+        </Button>
       </div>
     </div>
   );
