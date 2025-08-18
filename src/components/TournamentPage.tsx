@@ -594,19 +594,17 @@ const TournamentPage = () => {
       {/* Enhanced tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3 mb-8 h-14 p-1 bg-white/10 border-2 border-white/20 rounded-2xl">
-          <TabsTrigger value="browse" className="text-xs sm:text-sm font-semibold rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300 px-2">
-            <span className="hidden xs:inline">Browse</span>
-            <span className="xs:hidden">🔍</span>
+          <TabsTrigger value="browse" className="text-xs sm:text-sm font-semibold rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300 px-1 sm:px-3">
+            <span className="hidden sm:inline">Browse</span>
+            <span className="sm:hidden">Browse</span>
           </TabsTrigger>
-          <TabsTrigger value="my-tournaments" className="text-xs sm:text-sm font-semibold rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300 px-2">
+          <TabsTrigger value="my-tournaments" className="text-xs sm:text-sm font-semibold rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300 px-1 sm:px-3">
             <span className="hidden sm:inline">My Tournaments</span>
-            <span className="sm:hidden hidden xs:inline">My</span>
-            <span className="xs:hidden">🏆</span>
+            <span className="sm:hidden">Mine</span>
           </TabsTrigger>
-          <TabsTrigger value="leaderboard" className="text-xs sm:text-sm font-semibold rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300 px-2">
+          <TabsTrigger value="leaderboard" className="text-xs sm:text-sm font-semibold rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300 px-1 sm:px-3">
             <span className="hidden sm:inline">Leaderboard</span>
-            <span className="sm:hidden hidden xs:inline">Board</span>
-            <span className="xs:hidden">👑</span>
+            <span className="sm:hidden">Board</span>
           </TabsTrigger>
         </TabsList>
 
