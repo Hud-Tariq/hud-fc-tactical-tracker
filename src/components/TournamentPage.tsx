@@ -232,7 +232,294 @@ const TournamentPage = () => {
             <span className="sm:hidden">Board</span>
           </TabsTrigger>
         </TabsList>
-        {/* Desktop tabs content remains the same... */}
+
+        <TabsContent value="browse" className="space-y-8 mt-8 bg-transparent">
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="text-center space-y-4">
+                <div className="relative">
+                  <Loader2 className="w-12 h-12 animate-spin text-purple-400 mx-auto" />
+                  <div className="absolute inset-0 w-12 h-12 border-t-2 border-pink-400 rounded-full animate-spin mx-auto" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+                </div>
+                <p className="text-on-dark-muted text-lg">Loading tournaments...</p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8">
+                {filteredTournaments.map((tournament, index) => (
+                  <div key={tournament.id} className={`floating-card animate-fade-in animate-stagger-${(index % 5) + 1}`}>
+                    <div className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 flex items-center justify-center">
+                            {getFormatIcon(tournament.format as TournamentFormat)}
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-bold text-on-dark font-poppins line-clamp-1">
+                              {tournament.name}
+                            </h3>
+                            <p className="text-sm text-on-dark-muted line-clamp-2">
+                              {tournament.description}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status as TournamentStatus)} text-white text-xs font-medium px-3 py-1 rounded-full`}>
+                          {tournament.status}
+                        </Badge>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3 mb-4">
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 text-center">
+                          <div className="flex items-center justify-center mb-1">
+                            <Users className="w-4 h-4 text-blue-400 mr-1" />
+                            <span className="text-sm font-medium text-on-dark">{tournament.max_teams}</span>
+                          </div>
+                          <p className="text-xs text-on-dark-subtle">Max Teams</p>
+                        </div>
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 text-center">
+                          <div className="flex items-center justify-center mb-1">
+                            <Clock className="w-4 h-4 text-green-400 mr-1" />
+                            <span className="text-sm font-medium text-on-dark">{tournament.match_duration}min</span>
+                          </div>
+                          <p className="text-xs text-on-dark-subtle">Duration</p>
+                        </div>
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 text-center">
+                          <div className="flex items-center justify-center mb-1">
+                            <DollarSign className="w-4 h-4 text-yellow-400 mr-1" />
+                            <span className="text-sm font-medium text-on-dark">${tournament.entry_fee}</span>
+                          </div>
+                          <p className="text-xs text-on-dark-subtle">Entry Fee</p>
+                        </div>
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 text-center">
+                          <div className="flex items-center justify-center mb-1">
+                            <Trophy className="w-4 h-4 text-purple-400 mr-1" />
+                            <span className="text-sm font-medium text-on-dark">${tournament.prize_pool}</span>
+                          </div>
+                          <p className="text-xs text-on-dark-subtle">Prize Pool</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-2 text-sm text-on-dark-muted mb-6 p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10">
+                        <Calendar className="w-4 h-4 text-cyan-400" />
+                        <span>
+                          {new Date(tournament.start_date!).toLocaleDateString()} - {' '}
+                          {new Date(tournament.end_date!).toLocaleDateString()}
+                        </span>
+                      </div>
+
+                      <div className="space-y-3">
+                        {tournament.status === 'open' && (
+                          <>
+                            {userTeams.length > 0 ? (
+                              <>
+                                <Select value={selectedTeam} onValueChange={setSelectedTeam}>
+                                  <SelectTrigger className="w-full h-10 bg-white/10 border border-white/20 rounded-xl text-on-dark focus:border-purple-400">
+                                    <SelectValue placeholder="Select your team" />
+                                  </SelectTrigger>
+                                  <SelectContent className="glass-card-strong border-white/20 rounded-xl">
+                                    {userTeams.map((team) => (
+                                      <SelectItem key={team.id} value={team.id} className="text-on-dark hover:bg-white/10">
+                                        <div className="flex items-center gap-2">
+                                          <div
+                                            className="w-4 h-4 rounded-full"
+                                            style={{ backgroundColor: team.home_color || '#6366f1' }}
+                                          />
+                                          {team.name}
+                                        </div>
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <Button
+                                  className="w-full h-10 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium rounded-xl transition-all duration-300"
+                                  disabled={!selectedTeam || joiningTournament === tournament.id}
+                                  onClick={() => handleJoinTournament(tournament.id)}
+                                >
+                                  {joiningTournament === tournament.id ? (
+                                    <>
+                                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                      Joining...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Trophy className="w-4 h-4 mr-2" />
+                                      Join Tournament
+                                    </>
+                                  )}
+                                </Button>
+                              </>
+                            ) : (
+                              <div className="space-y-3">
+                                <p className="text-xs text-on-dark-muted text-center p-2 rounded-lg bg-yellow-500/10 border border-yellow-400/30 text-yellow-300">
+                                  You need a team to join
+                                </p>
+                                <TeamCreation
+                                  onCreateTeam={handleCreateTeam}
+                                  trigger={
+                                    <Button className="w-full h-10 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-medium rounded-xl transition-all duration-300">
+                                      <Plus className="w-4 h-4 mr-2" />
+                                      Create Team First
+                                    </Button>
+                                  }
+                                />
+                              </div>
+                            )}
+                          </>
+                        )}
+                        {tournament.status !== 'open' && (
+                          <Button
+                            className="w-full h-10 bg-gradient-to-r from-purple-500/50 to-pink-600/50 text-white font-medium rounded-xl cursor-not-allowed"
+                            disabled
+                          >
+                            {tournament.status === 'in_progress' ? 'View Matches' : 'View Results'}
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {filteredTournaments.length === 0 && !loading && (
+                <div className="floating-card text-center py-20">
+                  <div className="space-y-6">
+                    <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center border border-white/20">
+                      <Trophy className="w-16 h-16 text-on-dark-subtle" />
+                    </div>
+                    <div className="space-y-3">
+                      <h3 className="text-2xl font-bold text-on-dark font-poppins">No Tournaments Found</h3>
+                      <p className="text-on-dark-muted text-lg max-w-md mx-auto">
+                        Try adjusting your search or create a new tournament to get started.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </TabsContent>
+
+        <TabsContent value="my-tournaments" className="space-y-8 mt-8 bg-transparent">
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="text-center space-y-4">
+                <Loader2 className="w-12 h-12 animate-spin text-purple-400 mx-auto" />
+                <p className="text-on-dark-muted text-lg">Loading your tournaments...</p>
+              </div>
+            </div>
+          ) : filteredMyTournaments.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 lg:gap-8">
+              {filteredMyTournaments.map((tournament, index) => (
+                <div key={tournament.id} className={`floating-card animate-fade-in animate-stagger-${(index % 5) + 1}`}>
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 flex items-center justify-center">
+                          {getFormatIcon(tournament.format as TournamentFormat)}
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-bold text-on-dark font-poppins">
+                            {tournament.name}
+                          </h3>
+                          <p className="text-sm text-on-dark-muted">
+                            {tournament.description}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge className={`bg-gradient-to-r ${getStatusColor(tournament.status as TournamentStatus)} text-white text-xs font-medium px-3 py-1 rounded-full`}>
+                        {tournament.status}
+                      </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 mb-6">
+                      <div className="p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 text-center">
+                        <div className="flex items-center justify-center mb-1">
+                          <Users className="w-4 h-4 text-blue-400 mr-1" />
+                          <span className="text-sm font-medium text-on-dark">
+                            {tournament.tournament_teams?.length || 0}/{tournament.max_teams}
+                          </span>
+                        </div>
+                        <p className="text-xs text-on-dark-subtle">Teams</p>
+                      </div>
+                      <div className="p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 text-center">
+                        <div className="flex items-center justify-center mb-1">
+                          <Clock className="w-4 h-4 text-green-400 mr-1" />
+                          <span className="text-sm font-medium text-on-dark">{tournament.match_duration}min</span>
+                        </div>
+                        <p className="text-xs text-on-dark-subtle">Duration</p>
+                      </div>
+                      <div className="p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 text-center">
+                        <div className="flex items-center justify-center mb-1">
+                          <DollarSign className="w-4 h-4 text-yellow-400 mr-1" />
+                          <span className="text-sm font-medium text-on-dark">${tournament.entry_fee}</span>
+                        </div>
+                        <p className="text-xs text-on-dark-subtle">Entry Fee</p>
+                      </div>
+                      <div className="p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 text-center">
+                        <div className="flex items-center justify-center mb-1">
+                          <Trophy className="w-4 h-4 text-purple-400 mr-1" />
+                          <span className="text-sm font-medium text-on-dark">${tournament.prize_pool}</span>
+                        </div>
+                        <p className="text-xs text-on-dark-subtle">Prize Pool</p>
+                      </div>
+                    </div>
+
+                    <Button className="w-full h-10 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-medium rounded-xl transition-all duration-300">
+                      <Trophy className="w-4 h-4 mr-2" />
+                      Manage Tournament
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="floating-card text-center py-20">
+              <div className="space-y-6">
+                <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center border border-white/20">
+                  <Trophy className="w-16 h-16 text-on-dark-subtle" />
+                </div>
+                <div className="space-y-3">
+                  <h3 className="text-2xl font-bold text-on-dark font-poppins">No Tournaments Yet</h3>
+                  <p className="text-on-dark-muted text-lg max-w-md mx-auto">
+                    Create your first tournament to get started and build your football empire!
+                  </p>
+                </div>
+                <TournamentCreation
+                  onCreateTournament={handleCreateTournament}
+                  trigger={
+                    <Button
+                      size="lg"
+                      className="px-8 py-3 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-semibold rounded-xl transition-all duration-300"
+                    >
+                      <Plus className="w-5 h-5 mr-2" />
+                      Create Your First Tournament
+                    </Button>
+                  }
+                />
+              </div>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="leaderboard" className="space-y-8 mt-8 bg-transparent">
+          <div className="floating-card text-center py-20">
+            <div className="space-y-6">
+              <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center border border-yellow-400/30">
+                <Medal className="w-16 h-16 text-yellow-400" />
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-2xl font-bold text-on-dark font-poppins">Global Leaderboard</h3>
+                <p className="text-on-dark-muted text-lg max-w-md mx-auto">
+                  Compete in tournaments to earn your ranking and climb the leaderboard!
+                </p>
+              </div>
+              <div className="text-on-dark-subtle text-sm">
+                Coming Soon - Track your victories and compare with other managers
+              </div>
+            </div>
+          </div>
+        </TabsContent>
       </Tabs>
     </div>
   );
