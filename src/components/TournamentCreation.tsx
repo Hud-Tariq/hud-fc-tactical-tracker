@@ -116,7 +116,7 @@ const TournamentCreation = ({ onCreateTournament, trigger }: TournamentCreationP
   const canProceedMobile = () => {
     switch (mobileStep) {
       case 0: return formData.name.trim() !== '';
-      case 1: return ['single_elimination', 'double_elimination', 'league', 'group_stage'].includes(formData.format);
+      case 1: return formData.format !== '';
       case 2: return formData.min_teams <= formData.max_teams;
       case 3: return true; // Prizes are optional
       case 4: return true; // Settings are optional
