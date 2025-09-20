@@ -501,32 +501,6 @@ const MatchCreation = ({ players, onCreateMatch }: MatchCreationProps) => {
                           </SelectContent>
                         </Select>
                       </div>
-
-                      {!goal.isOwnGoal && (
-                        <div className="space-y-2">
-                          <Label className="text-white/80 text-sm">Assist (Optional)</Label>
-                          <Select
-                            value={goal.assister || 'no-assist'}
-                            onValueChange={(value) => updateGoal(index, 'assister', value)}
-                          >
-                            <SelectTrigger className="bg-white/10 border border-white/20 text-white">
-                              <SelectValue placeholder="Select assister" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-gray-900 border-white/20">
-                              <SelectItem value="no-assist" className="text-white/60">
-                                No assist
-                              </SelectItem>
-                              {getTeamPlayers(goal.team)
-                                .filter(player => player.id !== goal.scorer)
-                                .map((player) => (
-                                <SelectItem key={player.id} value={player.id} className="text-white">
-                                  {player.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      )}
                     </div>
                   </div>
                 ))}
