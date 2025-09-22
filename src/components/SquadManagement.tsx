@@ -37,6 +37,8 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    
     if (newPlayer.name && newPlayer.age && newPlayer.position) {
       onAddPlayer({
         name: newPlayer.name,
@@ -49,6 +51,10 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
       setNewPlayer({ name: '', age: '', position: '', rating: 50 });
       setIsDialogOpen(false);
     }
+  };
+
+  const handleInputChange = (field: string, value: string | number) => {
+    setNewPlayer(prev => ({ ...prev, [field]: value }));
   };
 
   const groupedPlayers = players.reduce((groups, player) => {
@@ -247,13 +253,14 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
       <DialogHeader>
         <DialogTitle className="text-2xl font-bold text-on-dark font-poppins">Add New Player</DialogTitle>
       </DialogHeader>
-      <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+      <div className="space-y-6 mt-6">
         <div className="space-y-2">
           <Label htmlFor="name" className="text-on-dark-muted">Player Name</Label>
           <Input
             id="name"
+            type="text"
             value={newPlayer.name}
-            onChange={(e) => setNewPlayer(prev => ({ ...prev, name: e.target.value }))}
+            onChange={(e) => handleInputChange('name', e.target.value)}
             placeholder="Enter player name"
             className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark placeholder:text-on-dark-subtle focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20"
           />
@@ -268,7 +275,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
               min="16"
               max="45"
               value={newPlayer.age}
-              onChange={(e) => setNewPlayer(prev => ({ ...prev, age: e.target.value }))}
+              onChange={(e) => handleInputChange('age', e.target.value)}
               placeholder="Age"
               className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark placeholder:text-on-dark-subtle focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20"
             />
@@ -276,7 +283,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
 
           <div className="space-y-2">
             <Label htmlFor="position" className="text-on-dark-muted">Position</Label>
-            <Select onValueChange={(value) => setNewPlayer(prev => ({ ...prev, position: value }))}>
+            <Select value={newPlayer.position} onValueChange={(value) => handleInputChange('position', value)}>
               <SelectTrigger className="h-12 bg-white/10 border border-white/20 rounded-xl text-on-dark focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20">
                 <SelectValue placeholder="Position" />
               </SelectTrigger>
@@ -304,7 +311,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
             min="1"
             max="100"
             value={newPlayer.rating}
-            onChange={(e) => setNewPlayer(prev => ({ ...prev, rating: parseInt(e.target.value) }))}
+            onChange={(e) => handleInputChange('rating', parseInt(e.target.value))}
             className="w-full h-3 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
           />
           <div className="flex justify-between text-xs text-on-dark-subtle">
@@ -315,12 +322,14 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
         </div>
 
         <Button 
-          type="submit" 
+          type="button"
+          onClick={handleSubmit}
+          disabled={!newPlayer.name || !newPlayer.age || !newPlayer.position}
           className="w-full h-12 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300"
         >
           Add Player to Squad
         </Button>
-      </form>
+      </div>
     </>
   );
 
@@ -594,12 +603,13 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
         </div>
       </DialogHeader>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-4">
         <div>
           <Label className="text-white/80 text-sm mb-2 block">Player Name</Label>
           <Input
+            type="text"
             value={newPlayer.name}
-            onChange={(e) => setNewPlayer(prev => ({ ...prev, name: e.target.value }))}
+            onChange={(e) => handleInputChange('name', e.target.value)}
             placeholder="Enter player name"
             className="h-12 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50"
           />
@@ -613,7 +623,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
               min="16"
               max="45"
               value={newPlayer.age}
-              onChange={(e) => setNewPlayer(prev => ({ ...prev, age: e.target.value }))}
+              onChange={(e) => handleInputChange('age', e.target.value)}
               placeholder="Age"
               className="h-12 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50"
             />
@@ -621,7 +631,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
 
           <div>
             <Label className="text-white/80 text-sm mb-2 block">Position</Label>
-            <Select onValueChange={(value) => setNewPlayer(prev => ({ ...prev, position: value }))}>
+            <Select value={newPlayer.position} onValueChange={(value) => handleInputChange('position', value)}>
               <SelectTrigger className="h-12 bg-white/10 border border-white/20 rounded-xl text-white">
                 <SelectValue placeholder="Position" />
               </SelectTrigger>
@@ -643,23 +653,25 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
               <span className="text-xl font-bold text-white">{newPlayer.rating}</span>
             </div>
           </div>
-          <input
+          <Input
             type="range"
             min="1"
             max="100"
             value={newPlayer.rating}
-            onChange={(e) => setNewPlayer(prev => ({ ...prev, rating: parseInt(e.target.value) }))}
+            onChange={(e) => handleInputChange('rating', parseInt(e.target.value))}
             className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer"
           />
         </div>
 
         <Button 
-          type="submit" 
+          type="button"
+          onClick={handleSubmit}
+          disabled={!newPlayer.name || !newPlayer.age || !newPlayer.position}
           className="w-full h-12 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-xl mt-6"
         >
           Add Player
         </Button>
-      </form>
+      </div>
     </div>
   );
 
