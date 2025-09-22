@@ -588,11 +588,7 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
       <DialogHeader>
         <div className="flex items-center justify-between mb-6">
           <DialogTitle className="text-2xl font-bold text-white">Add Player</DialogTitle>
-          <button 
-            type="button"
-            onClick={() => setIsDialogOpen(false)} 
-            className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
-          >
+          <button onClick={() => setIsDialogOpen(false)} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
             <Plus className="w-5 h-5 text-white rotate-45" />
           </button>
         </div>
@@ -600,42 +596,34 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <Label htmlFor="mobile-name" className="text-white/80 text-sm mb-2 block">Player Name</Label>
+          <Label className="text-white/80 text-sm mb-2 block">Player Name</Label>
           <Input
-            id="mobile-name"
             value={newPlayer.name}
             onChange={(e) => setNewPlayer(prev => ({ ...prev, name: e.target.value }))}
             placeholder="Enter player name"
-            className="h-12 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:border-primary focus:outline-none"
-            required
+            className="h-12 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <Label htmlFor="mobile-age" className="text-white/80 text-sm mb-2 block">Age</Label>
+            <Label className="text-white/80 text-sm mb-2 block">Age</Label>
             <Input
-              id="mobile-age"
               type="number"
               min="16"
               max="45"
               value={newPlayer.age}
               onChange={(e) => setNewPlayer(prev => ({ ...prev, age: e.target.value }))}
               placeholder="Age"
-              className="h-12 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:border-primary focus:outline-none"
-              required
+              className="h-12 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50"
             />
           </div>
 
           <div>
-            <Label htmlFor="mobile-position" className="text-white/80 text-sm mb-2 block">Position</Label>
-            <Select 
-              value={newPlayer.position} 
-              onValueChange={(value) => setNewPlayer(prev => ({ ...prev, position: value }))}
-              required
-            >
-              <SelectTrigger id="mobile-position" className="h-12 bg-white/10 border border-white/20 rounded-xl text-white focus:border-primary focus:outline-none">
-                <SelectValue placeholder="Select" />
+            <Label className="text-white/80 text-sm mb-2 block">Position</Label>
+            <Select onValueChange={(value) => setNewPlayer(prev => ({ ...prev, position: value }))}>
+              <SelectTrigger className="h-12 bg-white/10 border border-white/20 rounded-xl text-white">
+                <SelectValue placeholder="Position" />
               </SelectTrigger>
               <SelectContent className="bg-gray-900 border-white/20 rounded-xl">
                 <SelectItem value="Goalkeeper" className="text-white hover:bg-white/10">Goalkeeper</SelectItem>
@@ -649,14 +637,13 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
 
         <div>
           <div className="flex justify-between items-center mb-3">
-            <Label htmlFor="mobile-rating" className="text-white/80 text-sm">Rating</Label>
+            <Label className="text-white/80 text-sm">Rating</Label>
             <div className="flex items-center space-x-2">
               <Star className="w-4 h-4 text-yellow-400" />
               <span className="text-xl font-bold text-white">{newPlayer.rating}</span>
             </div>
           </div>
           <input
-            id="mobile-rating"
             type="range"
             min="1"
             max="100"
@@ -669,7 +656,6 @@ const SquadManagement = ({ players, onAddPlayer, onPlayerClick, onRemovePlayer }
         <Button 
           type="submit" 
           className="w-full h-12 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-xl mt-6"
-          disabled={!newPlayer.name || !newPlayer.age || !newPlayer.position}
         >
           Add Player
         </Button>
